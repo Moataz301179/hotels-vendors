@@ -167,7 +167,7 @@ export default function HelpPage() {
           <h2 className="text-2xl md:text-3xl font-semibold text-white mb-4">Still Need Help?</h2>
           <p className="text-[14px] text-white/40 mb-8 max-w-md mx-auto">
             Our support team is available Sunday–Thursday, 9AM–6PM Cairo time.
-            We typically respond within 24 hours.
+            We typically respond within 48-hours.
           </p>
           <div className="flex flex-wrap gap-3 justify-center">
             <Link href="/contact" className="inline-flex items-center gap-2 px-8 py-3 text-[13px] font-semibold rounded-xl transition-all hover:shadow-[0_0_20px_rgba(var(--accent-base-rgb),0.15)]" style={{ backgroundColor: "var(--accent-base)", color: "var(--surface)" }}>

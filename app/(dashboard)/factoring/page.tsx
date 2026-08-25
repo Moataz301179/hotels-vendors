@@ -683,7 +683,7 @@ function NewFactoringModal({
                 </div>
                 <div>
                   <h4 className="text-lg font-bold text-white">Funding Executed</h4>
-                  <p className="text-sm text-foreground-muted mt-1">The factoring request has been submitted and funds will be disbursed within 24 hours.</p>
+                  <p className="text-sm text-foreground-muted mt-1">The factoring request has been submitted and funds will be disbursed within 48-hours.</p>
                 </div>
                 <button onClick={onClose} className="px-5 py-2 rounded-xl bg-accent-base hover:bg-accent-base/80 text-white text-sm font-medium transition-colors">Done</button>
               </motion.div>

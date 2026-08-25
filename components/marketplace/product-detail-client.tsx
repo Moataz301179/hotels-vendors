@@ -19,7 +19,6 @@ import {
 import { getCategoryById } from "@/lib/marketplace/categories";
 import { getProductImage } from "@/lib/marketplace/product-images";
 import { MarketingNav } from "@/components/layout/marketing-nav";
-import { MarketingFooter } from "@/components/layout/marketing-footer";
 import { LanguageSwitcher } from "@/components/shared/language-switcher";
 import { useTranslation } from "@/lib/i18n/hooks/use-translation";
 import { useCart } from "@/components/cart/cart-context";
@@ -294,8 +293,6 @@ export default function ProductDetailClient({ product }: { product: MarketplaceP
           </div>
         </div>
       </div>
-
-      <MarketingFooter />
     </div>
   );
 }

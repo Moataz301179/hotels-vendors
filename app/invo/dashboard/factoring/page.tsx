@@ -56,7 +56,7 @@ export default async function FactoringPage() {
           Factoring
         </h1>
         <p className="mt-1 text-sm text-foreground-secondary">
-          Get paid in 24 hours. Zero default risk. Non-recourse.
+          Get paid in 48-hours. Zero default risk. Non-recourse.
         </p>
       </div>
 
@@ -75,7 +75,7 @@ export default async function FactoringPage() {
           <div className="w-9 h-9 rounded-lg bg-orange-base/10 flex items-center justify-center mb-3">
             <Clock className="w-4 h-4 text-orange-base" />
           </div>
-          <p className="text-sm font-medium text-foreground mb-1">Get Paid in 24hr</p>
+          <p className="text-sm font-medium text-foreground mb-1">Get Paid in 48hr</p>
           <p className="text-xs text-foreground-muted leading-relaxed">
             Our partner disburses directly to your bank account
           </p>

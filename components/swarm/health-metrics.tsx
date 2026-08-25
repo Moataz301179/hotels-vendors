@@ -39,7 +39,7 @@ export function HealthMetrics({ health }: HealthMetricsProps) {
     {
       label: "Failed Jobs",
       value: String(summary.failedJobs),
-      sub: "Last 24 hours",
+      sub: "Last 48-hours",
     },
     {
       label: "Needs Approval",
@@ -111,7 +111,7 @@ export function HealthMetrics({ health }: HealthMetricsProps) {
       {/* Event Severity Breakdown */}
       {Object.keys(eventsBySeverity).length > 0 && (
         <div className="rounded-xl border border-white/10 bg-white/[0.03] backdrop-blur-sm p-4">
-          <h3 className="text-sm font-semibold text-white mb-3">Events by Severity (24h)</h3>
+          <h3 className="text-sm font-semibold text-white mb-3">Events by Severity (48h)</h3>
           <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
             {["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"].map((sev) => {
               const count = eventsBySeverity[sev] || 0;

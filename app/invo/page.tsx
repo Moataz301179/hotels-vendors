@@ -25,7 +25,7 @@ export const metadata: Metadata = {
 const STATS = [
   { value: "100+", label: "Suppliers Listed", icon: Building2 },
   { value: "1-2%", label: "Service Fee", icon: Receipt },
-  { value: "24hr", label: "Settlement", icon: Clock },
+  { value: "48hr", label: "Settlement", icon: Clock },
   { value: "0%", label: "Default Risk", icon: ShieldCheck },
 ];
 
@@ -33,7 +33,7 @@ const FEATURES = [
   {
     icon: Banknote,
     title: "Fast Monthly Liquidity",
-    desc: "Subscribe once. Get paid in 24 hours on every invoice. No chasing hotels, no 60-day waits. Your cash flow becomes predictable.",
+    desc: "Subscribe once. Get paid in 48-hours on every invoice. No chasing hotels, no 60-day waits. Your cash flow becomes predictable.",
   },
   {
     icon: ShieldCheck,
@@ -65,8 +65,8 @@ const HOW_IT_WORKS = [
   },
   {
     num: "03",
-    title: "Get Paid in 24 Hours",
-    desc: "Choose factoring on any invoice. We pay you within 24 hours. The hotel pays us later. You get liquidity, we take the risk.",
+    title: "Get Paid in 48-hours",
+    desc: "Choose factoring on any invoice. We pay you within 48-hours. The hotel pays us later. You get liquidity, we take the risk.",
   },
   {
     num: "04",
@@ -85,7 +85,7 @@ const PRICING = [
       "List up to 50 SKUs",
       "Access to all hotels",
       "ETA-compliant invoicing",
-      "24hr factoring settlement",
+      "48hr factoring settlement",
       "Email support",
     ],
     cta: "Start Free Trial",
@@ -150,7 +150,7 @@ export default function InvoPage() {
             <p className="mt-6 text-[16px] text-white/45 leading-relaxed max-w-lg">
               INVO is the financial layer for suppliers on Egypt&apos;s largest hospitality
               procurement network. A flat monthly subscription gets you listed. A small
-              service fee on factored invoices gets you paid in 24 hours. No commission.
+              service fee on factored invoices gets you paid in 48-hours. No commission.
               No hidden costs. No default risk.
             </p>
 
@@ -177,7 +177,7 @@ export default function InvoPage() {
               </span>
               <span className="flex items-center gap-1.5">
                 <Check className="w-3.5 h-3.5 text-orange-base" />
-                24hr settlement
+                48hr settlement
               </span>
               <span className="flex items-center gap-1.5">
                 <Check className="w-3.5 h-3.5 text-orange-base" />

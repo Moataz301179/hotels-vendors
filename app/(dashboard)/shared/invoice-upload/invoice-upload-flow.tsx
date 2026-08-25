@@ -629,7 +629,7 @@ function ResultStep({
         </div>
 
         <div className="w-full rounded-lg border border-[#64b5f6]/20 bg-[#64b5f6]/10 p-3 text-xs text-[#64b5f6]">
-          Next step: Our team will review and verify the invoice within 24 hours. You will receive a
+          Next step: Our team will review and verify the invoice within 48-hours. You will receive a
           notification once the financing is approved and funds are disbursed.
         </div>
 

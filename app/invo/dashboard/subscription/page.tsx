@@ -24,7 +24,7 @@ const TIERS = [
       "List up to 50 SKUs",
       "Access to all hotels",
       "ETA-compliant invoicing",
-      "24hr factoring settlement",
+      "48hr factoring settlement",
       "Email support",
     ],
     current: false,

@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter_Tight, Playfair_Display, JetBrains_Mono, Cairo } from "next/font/google";
+import { Inter_Tight, Playfair_Display, JetBrains_Mono, Cairo, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme/theme-provider";
 import { NotificationProvider } from "@/components/notifications/notification-context";
@@ -34,6 +34,13 @@ const jetbrainsMono = JetBrains_Mono({
   variable: "--font-mono",
   display: "swap",
   weight: ["400", "500", "600", "700"],
+});
+
+const jakarta = Plus_Jakarta_Sans({
+  subsets: ["latin"],
+  variable: "--font-jakarta",
+  display: "swap",
+  weight: ["400", "500", "600", "700", "800"],
 });
 
 const cairo = Cairo({
@@ -138,7 +145,7 @@ export default function RootLayout({
     <html
       lang="en"
       dir="ltr"
-      className={`h-full ${interTight.variable} ${playfair.variable} ${jetbrainsMono.variable} ${cairo.variable}`}
+      className={`h-full ${interTight.variable} ${playfair.variable} ${jetbrainsMono.variable} ${cairo.variable} ${jakarta.variable}`}
     >
       <head>
         <link rel="dns-prefetch" href="https://www.hotelsvendors.com" />

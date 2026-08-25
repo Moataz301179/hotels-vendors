@@ -25,7 +25,6 @@ import { useCart } from "@/components/cart/cart-context";
 import { HOTEL_CATEGORIES, getCategoryById } from "@/lib/marketplace/categories";
 import { getProductImage, getCategoryImage } from "@/lib/marketplace/product-images";
 import { MarketingNav } from "@/components/layout/marketing-nav";
-import { MarketingFooter } from "@/components/layout/marketing-footer";
 import { LanguageSwitcher } from "@/components/shared/language-switcher";
 import { useTranslation } from "@/lib/i18n/hooks/use-translation";
 import type { MarketplaceProduct } from "@/lib/marketplace/category-mapper";
@@ -573,7 +572,6 @@ export default function MarketplacePage() {
         </div>
       </div>
 
-      <MarketingFooter />
     </div>
   );
 }

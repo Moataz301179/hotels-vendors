@@ -28,8 +28,8 @@ const solutions = [
   {
     icon: Store,
     title: "For Suppliers & Vendors",
-    desc: "Get discovered by Egypt's largest hotel groups. Upload catalogs, receive POs, issue ETA-compliant invoices, and get paid in 24 hours via embedded factoring. Stop chasing payments.",
-    features: ["Catalog management", "PO notifications", "ETA invoicing", "24hr payment", "Analytics dashboard"],
+    desc: "Get discovered by Egypt's largest hotel groups. Upload catalogs, receive POs, issue ETA-compliant invoices, and get paid in 48-hours via embedded factoring. Stop chasing payments.",
+    features: ["Catalog management", "PO notifications", "ETA invoicing", "48hr payment", "Analytics dashboard"],
     href: "/register?sector=procurement",
     cta: "Become a Supplier",
     color: "var(--accent-base)",
@@ -37,8 +37,8 @@ const solutions = [
   {
     icon: Landmark,
     title: "For Factoring Companies",
-    desc: "Access a curated pool of pre-verified hospitality invoices. Competitive bidding, non-recourse settlement, and bank-direct payment flows. Egypt's hospitality sector is an EGP 12B market.",
-    features: ["Pre-verified invoices", "Competitive bidding", "Non-recourse", "Bank-direct settlement", "Risk scoring"],
+    desc: "Access a curated pool of pre-verified hospitality invoices. Funder-run settlement, non-recourse terms, and instant credit lines. Egypt's hospitality sector is an EGP 12B market.",
+    features: ["Pre-verified invoices", "Non-recourse", "Funder-run settlement", "Risk scoring"],
     href: "/register?sector=cashflow",
     cta: "Register Grantor",
     color: "var(--orange-base)",
@@ -78,7 +78,7 @@ export default function SolutionsPage() {
             {[
               { icon: FileCheck, label: "ETA Compliant", desc: "Phase 1 & 2" },
               { icon: ShieldCheck, label: "FRA Aligned", desc: "Anti-fraud" },
-              { icon: Banknote, label: "24hr Settlement", desc: "Bank-direct" },
+              { icon: Banknote, label: "48hr Settlement", desc: "Funder-run" },
               { icon: MapPin, label: "6 Governorates", desc: "Full coverage" },
             ].map((b) => (
               <div key={b.label} className="flex items-center gap-3">

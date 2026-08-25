@@ -1,152 +1,160 @@
-import type { Metadata } from "next";
-import { canonicalUrl } from "@/lib/seo";
+"use client";
+
 import Link from "next/link";
-import { ArrowRight, Banknote, Clock, Shield, TrendingUp, Check, Landmark, FileCheck, BarChart3, Users } from "lucide-react";
+import { FileCheck2, Landmark, Clock, ShieldCheck, ArrowRight } from "lucide-react";
 
-export const metadata: Metadata = {
-  alternates: { canonical: canonicalUrl("/factoring-service") },
-  title: "Embedded Reverse Factoring for Hotels | Bank-Direct IBAN Settlement Egypt | HotelsVendors",
-  description: "Hotel-initiated reverse factoring with competitive bidding among 4+ licensed grantors. Bank-direct IBAN settlement, suppliers paid in 24 hours, non-recourse by design.",
-  keywords: ["B2B hospitality procurement Egypt", "automated factoring lines Cairo", "hotel supply chain management Egypt", "ETA e-invoicing compliance", "hospitality vendor marketplace", "digital invoice Egypt", "coastal hotel suppliers Red Sea", "تجهيزات الفنادق بالجملة", "منصة المشتريات الفندقية مصر", "الفوترة الإلكترونية هيئة الضرائب"],
-  openGraph: {
-    title: "Embedded Reverse Factoring for Hotels | Bank-Direct IBAN Settlement Egypt | HotelsVendors",
-    description: "Hotel-initiated reverse factoring with competitive bidding among 4+ licensed grantors. Bank-direct IBAN settlement, suppliers paid in 24 hours, non-recourse by design.",
-    type: "website",
-  },
-};
+/* Factoring service — Bold Typography.
+   CORRECT MODEL (owner-locked):
+   • Credit line: activated INSTANTLY once funder onboarding completes
+   • Invoice payment: suppliers paid in 48 HOURS (not 24)
+   • All settlement/payment flows run SOLELY through the funder per their T&Cs
+   • HotelsVendors = smart management layer: agentic cashflow engines, invoice/order/
+     fund/credit-line synchronization, integration with the user's accounting +
+     payables modules. HV is NOT a bank, holds no funds, offers no bank products.
+   • Virtual bank accounts = user-created LEDGERS for cashflow management
+     (name them Bank 1/2/3; no IBAN/SWIFT required) — ledger records, not bank accounts.
+   • No "competitive bidding" / "grantors bid" claims (no multi-lender marketplace yet). */
 
-const flow = [
-  { step: "01", title: "Invoice Cleared", desc: "Three-way match: PO + ETA UUID + Signed Digital Delivery Note verified automatically. No manual reconciliation.", icon: Check },
-  { step: "02", title: "Enter Factoring Pool", desc: "Pre-cleared invoice enters competitive bidding pool visible to all licensed grantors. Full transparency.", icon: TrendingUp },
-  { step: "03", title: "Grantors Bid", desc: "4+ licensed grantors compete on rate. Best offer selected automatically. Market-driven pricing every time.", icon: Banknote },
-  { step: "04", title: "Settlement", desc: "Supplier paid in 24 hours via bank-direct transfer. Hotel settles at net-60. Zero recourse risk.", icon: Clock },
+const STEPS = [
+  { n: "01", t: "Onboard with the funder", d: "Complete KYB with the liquidity partner inside your dashboard. Approval activates your credit line instantly." },
+  { n: "02", t: "Credit line active", d: "Your revolving line appears in the wallet the moment onboarding completes. Draw against verified invoices immediately." },
+  { n: "03", t: "Invoice verified", d: "Deliver, scan the GRN QR, invoice auto-generates and submits to ETA. Verification is automatic." },
+  { n: "04", t: "Paid in 48 hours", d: "The funder pays suppliers within 48 hours of verification, per their terms. Hotels settle at net-60." },
 ];
 
-const funderFeatures = [
-  { icon: FileCheck, title: "Pre-Verified Invoice Pool", desc: "Every invoice has passed three-way matching: PO + ETA UUID + Signed Digital Delivery Note. You buy cleared assets, not paper promises." },
-  { icon: BarChart3, title: "Risk Scoring Engine", desc: "AI-driven risk scoring on every invoice. Hotel creditworthiness, repayment velocity, and sector concentration metrics in real-time." },
-  { icon: TrendingUp, title: "Competitive Bidding", desc: "Bid on invoice pools with full visibility into competing rates. Transparent, fair, and optimized for your return targets." },
-  { icon: Banknote, title: "24-Hour Settlement", desc: "Bank-direct settlement to supplier IBANs. Automated interest accrual and late repayment protocols. No intermediary accounts." },
-  { icon: Shield, title: "Non-Recourse by Design", desc: "Once settled, the invoice is your risk — not the hotel&apos;s. Clean balance-sheet treatment for all parties." },
-  { icon: Landmark, title: "$12B Market Access", desc: "Egypt&apos;s hospitality sector is a $12B industry with 480+ properties on our pipeline. High-velocity corporate deal flow." },
+const PILLARS = [
+  {
+    icon: Landmark,
+    title: "Funder-run settlement",
+    desc: "All payment and settlement flows execute solely through the licensed funder, under their terms and conditions. HotelsVendors never touches or holds funds.",
+  },
+  {
+    icon: FileCheck2,
+    title: "Smart cashflow management",
+    desc: "Agentic engines synchronize invoices, orders, funds, and your credit line, then direct the workflow into your accounting system and payables module.",
+  },
+  {
+    icon: Clock,
+    title: "Instant line, 48h cash",
+    desc: "Credit line activates the moment funder onboarding completes. Verified invoices convert to supplier cash in 48 hours.",
+  },
+  {
+    icon: ShieldCheck,
+    title: "Non-recourse by design",
+    desc: "The funder carries the hotel default risk. Suppliers have zero recourse liability. FRA-regulated partners only.",
+  },
 ];
 
 export default function FactoringServicePage() {
   return (
-    <main style={{ backgroundColor: "#0c0c12", color: "#ffffff", minHeight: "100vh" }}>
-      {/* Hero */}
-      <section className="pt-28 pb-16 relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-[600px] h-[400px] rounded-full blur-[120px] pointer-events-none" style={{ background: "radial-gradient(circle, rgba(255,126,26,0.04) 0%, transparent 70%)" }} />
-        <div className="relative z-10 mx-auto max-w-7xl px-6">
-          <span className="text-[11px] font-medium text-white/30 uppercase tracking-[0.15em] mb-3 block">Factoring</span>
-          <h1 className="text-[clamp(30px,5vw,52px)] font-medium leading-[1.05] tracking-tight mb-5 text-white">
-            Pre-Verified Hospitality<br />Invoices. Bank-Direct<br />Settlement. <span className="text-white">Non-Recourse<br />by Design.</span>
-          </h1>
-          <p className="text-[15px] text-white/40 max-w-2xl leading-relaxed mb-8">
-            Access a curated pool of pre-cleared, three-way-matched invoices from Egypt&apos;s coastal hotel sector. Competitive bidding. 24-hour settlement. Zero paper chase. Built for licensed grantors who want corporate deal flow without SME risk.
-          </p>
-          <div className="flex flex-wrap gap-3">
-            <Link href="/register?sector=cashflow" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(var(--accent-base-rgb),0.2)]" style={{ backgroundColor: "var(--accent-base)", color: "var(--surface)" }}>
-              Register as Grantor <ArrowRight size={14} />
-            </Link>
-            <Link href="/platform" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]" style={{ border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)" }}>
-              How It Works
-            </Link>
-          </div>
+    <div className="min-h-[100dvh] bg-[#0A0A0A] text-[#FAFAFA]">
+      <style>{`
+        .fs-label { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: .18em; text-transform: uppercase; color: #737373; }
+        .fs-link { position: relative; color: #FF3D00; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; font-size: 13px; }
+        .fs-link::after { content: ""; position: absolute; left: 0; bottom: -4px; height: 2px; width: 100%; background: #FF3D00; transition: transform .15s cubic-bezier(.25,0,0,1); transform-origin: left; }
+        .fs-link:hover::after { transform: scaleX(1.1); }
+        .fs-outline { display: inline-flex; align-items: center; gap: 8px; border: 1px solid #FAFAFA; color: #FAFAFA;
+          font-weight: 600; letter-spacing: .1em; text-transform: uppercase; font-size: 13px; padding: 14px 28px;
+          transition: all .15s cubic-bezier(.25,0,0,1); }
+        .fs-outline:hover { background: #FAFAFA; color: #0A0A0A; }
+        @media (prefers-reduced-motion: reduce) { .fs-link::after { transition: none; } }
+      `}</style>
+
+      {/* HERO */}
+      <section className="mx-auto max-w-[1200px] px-6 md:px-12 pt-32 md:pt-40 pb-16 md:pb-20">
+        <p className="fs-label mb-6">Factoring</p>
+        <h1 className="text-[40px] md:text-[64px] font-semibold leading-[1.02] tracking-[-0.05em] max-w-[16ch]">
+          Verified invoices. Instant credit line. <span className="text-[#FF3D00]">Paid in 48 hours.</span>
+        </h1>
+        <p className="mt-8 text-[16px] leading-[1.65] text-[#A3A3A3] max-w-[58ch]">
+          Complete funder onboarding and your credit line activates instantly. Every
+          verified invoice converts to supplier cash within 48 hours, settled solely by
+          the licensed funder under their terms. HotelsVendors provides the smart
+          management layer: agentic cashflow engines that synchronize invoices, orders,
+          funds, and credit into your accounting and payables.
+        </p>
+        <div className="mt-10 flex flex-wrap gap-8 items-center">
+          <Link href="/register" className="fs-link">Start onboarding</Link>
+          <Link href="/financing" className="fs-outline">How financing works <ArrowRight size={14} /></Link>
         </div>
       </section>
 
-      {/* Trust Bar */}
-      <section className="py-8 border-y" style={{ borderColor: "rgba(255,255,255,0.04)", backgroundColor: "#12121a" }}>
-        <div className="mx-auto max-w-7xl px-6">
-          <div className="flex flex-wrap justify-center gap-8">
-            {[
-              { icon: Shield, label: "Non-Recourse", desc: "Clean risk transfer" },
-              { icon: Banknote, label: "Bank-Direct Settlement", desc: "No intermediary accounts" },
-              { icon: FileCheck, label: "Three-Way Matched", desc: "Pre-cleared invoices" },
-              { icon: Clock, label: "24-Hour Payment", desc: "Programmatic settlement" },
-            ].map((b) => (
-              <div key={b.label} className="flex items-center gap-3">
-                <b.icon size={16} style={{ color: "var(--orange-base)" }} />
-                <div>
-                  <p className="text-[11px] font-medium text-white/60">{b.label}</p>
-                  <p className="text-[9px] text-white/25">{b.desc}</p>
-                </div>
+      {/* STEPS */}
+      <section className="border-t border-[#262626]">
+        <div className="mx-auto max-w-[1200px] px-6 md:px-12 py-16 md:py-24">
+          <h2 className="text-[28px] md:text-[40px] font-semibold tracking-[-0.04em] leading-[1.05]">
+            From onboarding to cash, on one rail.
+          </h2>
+          <div className="mt-12 space-y-px bg-[#262626] border border-[#262626]">
+            {STEPS.map((s) => (
+              <div key={s.n} className="bg-[#0A0A0A] px-8 py-6 flex flex-col sm:flex-row gap-2 sm:gap-6 items-baseline hover:bg-[#111111] transition-colors duration-150">
+                <span className="font-mono text-[13px] text-[#FF3D00]">{s.n}</span>
+                <span className="text-[15px] font-semibold tracking-[-0.01em] whitespace-nowrap">{s.t}</span>
+                <span className="text-[13.5px] leading-[1.6] text-[#A3A3A3]">{s.d}</span>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Flow */}
-      <section className="py-16" style={{ backgroundColor: "#12121a" }}>
-        <div className="mx-auto max-w-7xl px-6">
-          <h2 className="text-[11px] font-medium text-white/30 uppercase tracking-[0.15em] mb-8 text-center">The Factoring Flow</h2>
-          <div className="grid md:grid-cols-4 gap-4 max-w-4xl mx-auto">
-            {flow.map((item) => (
-              <div key={item.step} className="text-center">
-                <div className="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-3" style={{ backgroundColor: "rgba(255,126,26,0.1)" }}>
-                  <item.icon size={20} style={{ color: "var(--orange-base)" }} />
-                </div>
-                <span className="text-[10px] font-medium text-white/25 uppercase tracking-wider">Step {item.step}</span>
-                <h3 className="text-[13px] font-medium text-white mt-1 mb-1.5">{item.title}</h3>
-                <p className="text-[11px] text-white/30 leading-relaxed">{item.desc}</p>
+      {/* PILLARS */}
+      <section className="border-t border-[#262626] bg-[#0F0F0F]">
+        <div className="mx-auto max-w-[1200px] px-6 md:px-12 py-16 md:py-24">
+          <div className="grid sm:grid-cols-2 gap-px bg-[#262626] border border-[#262626]">
+            {PILLARS.map((p) => (
+              <div key={p.title} className="bg-[#0F0F0F] p-8 md:p-10 hover:bg-[#111111] transition-colors duration-150">
+                <p.icon size={24} strokeWidth={1.5} className="text-[#FF3D00]" />
+                <h2 className="mt-5 text-[20px] font-semibold tracking-[-0.02em]">{p.title}</h2>
+                <p className="mt-3 text-[14px] leading-[1.65] text-[#A3A3A3]">{p.desc}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Funder Features */}
-      <section className="py-16">
-        <div className="mx-auto max-w-7xl px-6">
-          <h2 className="text-[11px] font-medium text-white/30 uppercase tracking-[0.15em] mb-8">Why Funders Choose HotelsVendors</h2>
-          <div className="grid md:grid-cols-3 gap-4">
-            {funderFeatures.map((f) => (
-              <div key={f.title} className="rounded-xl p-6 transition-all hover:border-orange-base/20" style={{ backgroundColor: "#12121a", border: "1px solid rgba(255,255,255,0.06)" }}>
-                <f.icon size={20} className="mb-3" style={{ color: "var(--orange-base)" }} />
-                <h3 className="text-[14px] font-medium text-white mb-2">{f.title}</h3>
-                <p className="text-[12px] text-white/35 leading-relaxed">{f.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Oliv Partner Section */}
-      <section className="py-16 border-y" style={{ borderColor: "rgba(var(--success-rgb),0.18)" }}>
-        <div className="mx-auto max-w-4xl px-6">
-          <div className="rounded-2xl border p-8 text-center" style={{ borderColor: "rgba(var(--success-rgb),0.22)", backgroundColor: "rgba(var(--success-rgb),0.06)" }}>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border mb-4" style={{ borderColor: "rgba(var(--success-rgb),0.33)", backgroundColor: "rgba(var(--success-rgb),0.10)" }}>
-              <span className="text-[11px] font-medium uppercase tracking-[0.12em]" style={{ color: "var(--success)" }}>Oliv Partnership</span>
-            </div>
-            <h2 className="text-2xl font-semibold text-white mb-3">Supplier Invoice Financing</h2>
-            <p className="text-[13px] text-white/40 max-w-lg mx-auto mb-6">
-              HotelsVendors partners with Oliv — Egypt&apos;s first FRA-licensed digital factoring platform — to give suppliers instant access to working capital against verified invoices.
+      {/* VIRTUAL LEDGER ACCOUNTS */}
+      <section className="border-t border-[#262626]">
+        <div className="mx-auto max-w-[1200px] px-6 md:px-12 py-16 md:py-24 grid md:grid-cols-[7fr_5fr] gap-12 items-center">
+          <div>
+            <h2 className="text-[28px] md:text-[40px] font-semibold tracking-[-0.04em] leading-[1.05] max-w-[20ch]">
+              Virtual ledger accounts for real cashflow control.
+            </h2>
+            <p className="mt-6 text-[15px] leading-[1.65] text-[#A3A3A3] max-w-[58ch]">
+              Create named ledger accounts (Bank 1, Bank 2, Bank 3) in seconds. No IBAN,
+              no SWIFT, no bank paperwork. These are cashflow-management ledgers that
+              mirror where money actually sits, while the agentic engine keeps invoices,
+              orders, funds, and your credit line synchronized with your accounting and
+              payables modules.
             </p>
-            <Link href="/financing" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-semibold rounded-xl transition-all hover:shadow-[0_0_20px_rgba(var(--success-rgb),0.2)]" style={{ backgroundColor: "var(--success)", color: "#ffffff" }}>
-              Learn More <ArrowRight size={14} />
-            </Link>
+            <div className="mt-8">
+              <Link href="/register" className="fs-link">Set up your ledgers</Link>
+            </div>
+          </div>
+          <div className="border border-[#262626] p-8 font-mono text-[12.5px] leading-[2.1] text-[#A3A3A3]">
+            <div className="text-[#FAFAFA]">Ledgers</div>
+            <div>Bank 1 <span className="text-[#737373]">operating</span></div>
+            <div>Bank 2 <span className="text-[#737373]">payroll</span></div>
+            <div>Bank 3 <span className="text-[#737373]">capex reserve</span></div>
+            <div className="pt-3 mt-3 border-t border-[#262626] text-[#737373]">Credit line: active · synced</div>
           </div>
         </div>
       </section>
 
       {/* CTA */}
-      <section className="py-16">
-        <div className="mx-auto max-w-7xl px-6 text-center">
-          <Users size={28} className="mx-auto mb-6" style={{ color: "var(--orange-base)" }} />
-          <h2 className="text-[24px] font-medium mb-4 text-white">Access Egypt&apos;s Hospitality Invoice Market</h2>
-          <p className="text-[13px] text-white/40 mb-8 max-w-lg mx-auto">4+ licensed grantors already bidding on pre-verified invoices. High-velocity corporate deal flow with cryptographic verification.</p>
-          <div className="flex flex-wrap justify-center gap-3">
-            <Link href="/register?sector=cashflow" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(var(--accent-base-rgb),0.2)]" style={{ backgroundColor: "var(--accent-base)", color: "var(--surface)" }}>
-              Register as Grantor <ArrowRight size={14} />
-            </Link>
-            <Link href="/register?sector=procurement" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]" style={{ border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)" }}>
-              Register Your Hotel
-            </Link>
+      <section className="border-t border-[#262626] bg-[#0F0F0F]">
+        <div className="mx-auto max-w-[1200px] px-6 md:px-12 py-20 md:py-28 text-center">
+          <h2 className="text-[36px] md:text-[56px] font-semibold tracking-[-0.05em] leading-[1.02]">
+            Your invoices are already <span className="text-[#FF3D00]">capital.</span>
+          </h2>
+          <p className="mt-6 text-[15px] text-[#A3A3A3] max-w-[50ch] mx-auto leading-relaxed">
+            Onboard with the funder once. Every verified invoice after that is 48 hours from cash.
+          </p>
+          <div className="mt-10 flex flex-wrap justify-center gap-8">
+            <Link href="/register" className="fs-link">Create an account</Link>
+            <Link href="/financing" className="fs-outline">Explore financing</Link>
           </div>
         </div>
       </section>
-    </main>
+    </div>
   );
 }
