@@ -151,165 +151,6 @@ function SectionHeading({ title, subtitle }: { title: string; subtitle?: string 
   )
 }
 
-function ComplianceSandbox() {
-  const [taxId, setTaxId] = useState("")
-  const [amount, setAmount] = useState("")
-  const [result, setResult] = useState<Record<string, unknown> | null>(null)
-  const [loading, setLoading] = useState(false)
-
-  const handleCheck = async () => {
-    setLoading(true)
-    try {
-      const res = await fetch("/api/v1/vat/compliance-check", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          companyTaxId: taxId,
-          companyName: "Demo Company",
-          invoiceAmount: parseFloat(amount) || 0,
-          items: [{ description: "Demo Item", quantity: 1, unitPrice: parseFloat(amount) || 0, vatRate: 14 }],
-        }),
-      })
-      const data = await res.json()
-      setResult(data)
-    } catch {
-      setResult({ compliant: false, issues: ["Network error — try again"] })
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  return (
-    <section className="py-24 relative">
-      <div
-        className="absolute inset-0"
-        style={{
-          background: "linear-gradient(to bottom, var(--accent-base) 0%, transparent 60%)",
-          opacity: 0.03,
-        }}
-      />
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <SectionHeading
-          title="Try the Compliance Check"
-          subtitle="Enter your Tax ID and invoice amount to see if your invoice would pass ETA compliance."
-        />
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="max-w-lg mx-auto rounded-2xl p-8"
-          style={{
-            backgroundColor: "rgba(255,255,255,0.03)",
-            border: "1px solid rgba(255,255,255,0.06)",
-          }}
-        >
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-white mb-1.5" style={{ fontFamily: "var(--font-sans)" }}>
-                Egyptian Tax ID
-              </label>
-              <input
-                type="text"
-                value={taxId}
-                onChange={(e) => setTaxId(e.target.value)}
-                placeholder="9-15 digit Tax ID"
-                className="w-full px-4 py-3 rounded-xl text-sm text-white placeholder-text-white/30 outline-none transition-all"
-                style={{
-                  backgroundColor: "rgba(255,255,255,0.05)",
-                  border: "1px solid rgba(255,255,255,0.08)",
-                  fontFamily: "var(--font-sans)",
-                }}
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-white mb-1.5" style={{ fontFamily: "var(--font-sans)" }}>
-                Invoice Amount (EGP)
-              </label>
-              <input
-                type="number"
-                value={amount}
-                onChange={(e) => setAmount(e.target.value)}
-                placeholder="e.g. 50000"
-                className="w-full px-4 py-3 rounded-xl text-sm text-white placeholder-text-white/30 outline-none transition-all"
-                style={{
-                  backgroundColor: "rgba(255,255,255,0.05)",
-                  border: "1px solid rgba(255,255,255,0.08)",
-                  fontFamily: "var(--font-sans)",
-                }}
-              />
-            </div>
-            <button
-              onClick={handleCheck}
-              disabled={loading}
-              className="w-full px-6 py-3 rounded-xl text-sm font-semibold text-white flex items-center justify-center gap-2 transition-all duration-300 disabled:opacity-50"
-              style={{ backgroundColor: "var(--accent-base)" }}
-            >
-              {loading ? (
-                "Checking..."
-              ) : (
-                <>
-                  <Search className="w-4 h-4" />
-                  Check Compliance
-                </>
-              )}
-            </button>
-          </div>
-          {result && (
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="mt-6 p-4 rounded-xl"
-              style={{
-                backgroundColor: result.compliant
-                  ? "rgba(var(--success-rgb),0.1)"
-                  : "rgba(var(--error-rgb),0.1)",
-                border: `1px solid ${
-                  result.compliant ? "rgba(var(--success-rgb),0.2)" : "rgba(var(--error-rgb),0.2)"
-                }`,
-              }}
-            >
-              <div className="flex items-center gap-2 mb-2">
-                {result.compliant ? (
-                  <CheckCircle2 className="w-5 h-5 text-accent-base" />
-                ) : (
-                  <AlertTriangle className="w-5 h-5 text-[var(--error)]" />
-                )}
-                <span className="text-sm font-semibold text-white">
-                  {result.compliant ? "Compliant" : "Issues Found"}
-                </span>
-              </div>
-              <div className="space-y-1">
-                {Array.isArray(result.issues) && result.issues.length > 0 ? (
-                  result.issues.map((issue: string, i: number) => (
-                    <p key={i} className="text-xs text-[var(--error)]" style={{ fontFamily: "var(--font-sans)" }}>
-                      {issue}
-                    </p>
-                  ))
-                ) : (
-                  <p className="text-xs text-accent-base" style={{ fontFamily: "var(--font-sans)" }}>
-                    All checks passed. ETA-compliant invoice can be issued.
-                  </p>
-                )}
-              </div>
-              <div className="mt-2 flex items-center gap-4 text-xs" style={{ color: "var(--text-secondary)" }}>
-                <span>
-                  Risk Score: <span className="font-medium text-white">{String(result.riskScore || "?")}</span>
-                </span>
-                <span>
-                  Max Allowed:{" "}
-                  <span className="font-medium text-white">
-                    EGP {Number(result.maxAllowed || 0).toLocaleString()}
-                  </span>
-                </span>
-              </div>
-            </motion.div>
-          )}
-        </motion.div>
-      </div>
-    </section>
-  )
-}
 
 export default function VatInvoicingPage() {
   return (
@@ -629,11 +470,6 @@ export default function VatInvoicingPage() {
         </div>
       </section>
 
-      {/* Compliance Sandbox */}
-      <div id="sandbox">
-        <ComplianceSandbox />
-      </div>
-
       {/* FAQ Section */}
       <section className="py-24 relative">
         <div
@@ -761,7 +597,7 @@ export default function VatInvoicingPage() {
                 }}
               >
                 <Search className="w-5 h-5" />
-                Try Sandbox
+                Browse marketplace
               </a>
             </div>
             <div

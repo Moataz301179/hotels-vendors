@@ -1,95 +1,80 @@
-import type { Metadata } from "next";
-import { canonicalUrl } from "@/lib/seo";
+"use client";
+
 import Link from "next/link";
-import { ArrowRight, BrainCircuit, Receipt, Truck, Banknote, ShieldCheck, BarChart3, Cpu, Lock, Zap } from "lucide-react";
+import { BrainCircuit, FileCheck2, Truck, Users, ArrowRight } from "lucide-react";
 
-export const metadata: Metadata = {
-  alternates: { canonical: canonicalUrl("/platform") },
-  title: "B2B Hospitality Operating System | Procurement + Fintech + AI Automation | HotelsVendors",
-  description: "Four engines. One operating system. AI-automated procurement, embedded reverse factoring, ETA e-invoicing compliance, and autonomous AI agents — purpose-built for Egyptian hospitality.",
-  keywords: ["B2B hospitality procurement Egypt", "automated factoring lines Cairo", "hotel supply chain management Egypt", "ETA e-invoicing compliance", "AI procurement automation", "hospitality operating system", "منصة المشتريات الفندقية مصر", "تمويل فندقي مصر"],
-  openGraph: {
-    title: "B2B Hospitality Operating System | Procurement + Fintech + AI Automation | HotelsVendors",
-    description: "AI-automated procurement, embedded reverse factoring, ETA e-invoicing compliance, and autonomous AI agents — purpose-built for Egyptian hospitality.",
-    type: "website",
-  },
-};
+/* Platform page — Bold Typography edition. Replaces the old pillar-card page:
+   no "Try the Sandbox" (retired), no "Request Enterprise Access" (register is open),
+   no repeated icon-per-card pattern. Statement sections + hairline rows. */
 
-const pillars = [
+const CAPABILITIES = [
   {
     icon: BrainCircuit,
-    num: "01",
-    title: "AI Demand Forecasting",
-    color: "var(--accent-base)",
-    desc: "14-day demand prediction engine analyzing occupancy rates, local events, seasonality patterns, and historical consumption across every property in your portfolio. Auto-generates POs against budget ceilings.",
-    features: ["14-day rolling predictions", "Occupancy + event + seasonality analysis", "Auto PO generation", "94% forecast accuracy"],
+    title: "AI demand forecasting",
+    desc: "Occupancy-adjusted reorder alerts, buy-ahead price watch, and supplier grades computed from your real receiving history. The engine orders before the shelf empties.",
   },
   {
-    icon: Receipt,
-    num: "02",
-    title: "ETA E-Invoicing Compliance",
-    color: "var(--accent-base)",
-    desc: "Native Egyptian Tax Authority integration. Every invoice is digitally signed with RSA-2048 encryption, UUID-tracked, and submitted in real-time. Zero penalty risk.",
-    features: ["RSA-2048 digital signing", "UUID-based invoice tracking", "Real-time ETA submission", "Zero penalty guarantee"],
+    icon: FileCheck2,
+    title: "ETA e-invoicing native",
+    desc: "Every invoice digitally signed, UUID-tracked, and submitted to the Egyptian Tax Authority in real time. Dead-letter queue catches retries; zero penalty exposure.",
   },
   {
     icon: Truck,
-    num: "03",
-    title: "Shared-Route Logistics",
-    color: "#64b5f6",
-    desc: "AI-driven route consolidation across 6 governorates. Multi-supplier load matching reduces logistics costs by up to 40%. Cold-chain capable with real-time GPS.",
-    features: ["40% cost reduction", "6 governorate coverage", "Real-time GPS tracking", "Cold-chain capable"],
+    title: "Shared-route logistics",
+    desc: "Route consolidation across Cairo, Giza and the coastal clusters. One truck serves five hotels. POD photo-verified at every stop.",
   },
   {
-    icon: Banknote,
-    num: "04",
-    title: "Embedded Factoring",
-    color: "var(--orange-base)",
-    desc: "Hotel-initiated reverse factoring with 4+ licensed grantors. Suppliers paid in 24 hours while hotels maintain net-60 terms. Non-recourse by design.",
-    features: ["4+ licensed grantors", "24hr supplier payment", "Net-60 preserved", "Non-recourse settlement"],
+    icon: Users,
+    title: "Governance built in",
+    desc: "Multi-level approval chains scaled to order value, dual-signature overrides, and a full audit trail on every mutation. The Authority Matrix is not a document; it is code.",
   },
 ];
 
 export default function PlatformPage() {
   return (
-    <main style={{ backgroundColor: "#0c0c12", color: "#ffffff", minHeight: "100vh" }}>
-      {/* Hero */}
-      <section className="pt-28 pb-16 relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-[600px] h-[400px] rounded-full blur-[120px] pointer-events-none" style={{ background: "radial-gradient(circle, rgba(var(--accent-base-rgb),0.03) 0%, transparent 70%)" }} />
-        <div className="relative z-10 mx-auto max-w-7xl px-6">
-          <span className="text-[11px] font-medium text-white/30 uppercase tracking-[0.15em] mb-3 block">Platform</span>
-          <h1 className="text-[clamp(30px,5vw,52px)] font-medium leading-[1.05] tracking-tight mb-5 text-white">
-            Four Engines.<br /><span className="text-white">One Operating System.<br />Zero Manual Reconciliation.</span>
-          </h1>
-          <p className="text-[15px] text-white/40 max-w-2xl leading-relaxed mb-8">
-            AI-automated procurement, cryptographic ETA compliance, shared-route logistics, and embedded factoring — all running on a single multi-tenant platform built for Egyptian hospitality.
-          </p>
-          <div className="flex flex-wrap gap-3">
-            <Link href="/register" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(var(--accent-base-rgb),0.2)]" style={{ backgroundColor: "var(--accent-base)", color: "var(--surface)" }}>
-              Try the Sandbox <ArrowRight size={14} />
-            </Link>
-            <Link href="/register" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]" style={{ border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)" }}>
-              Request Enterprise Access <ArrowRight size={14} />
-            </Link>
-          </div>
+    <div className="min-h-[100dvh] bg-[#0A0A0A] text-[#FAFAFA]">
+      <style>{`
+        .pf-label { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: .18em; text-transform: uppercase; color: #737373; }
+        .pf-link { position: relative; color: #FF3D00; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; font-size: 13px; }
+        .pf-link::after { content: ""; position: absolute; left: 0; bottom: -4px; height: 2px; width: 100%; background: #FF3D00; transition: transform .15s cubic-bezier(.25,0,0,1); transform-origin: left; }
+        .pf-link:hover::after { transform: scaleX(1.1); }
+        .pf-outline { display: inline-flex; align-items: center; border: 1px solid #FAFAFA; color: #FAFAFA;
+          font-weight: 600; letter-spacing: .1em; text-transform: uppercase; font-size: 13px; padding: 14px 28px;
+          transition: all .15s cubic-bezier(.25,0,0,1); }
+        .pf-outline:hover { background: #FAFAFA; color: #0A0A0A; }
+        @media (prefers-reduced-motion: reduce) { .pf-link::after { transition: none; } }
+      `}</style>
+
+      {/* HERO */}
+      <section className="mx-auto max-w-[1200px] px-6 md:px-12 pt-32 md:pt-40 pb-16 md:pb-20">
+        <p className="pf-label mb-6">The platform</p>
+        <h1 className="text-[40px] md:text-[64px] font-semibold leading-[1.02] tracking-[-0.05em] max-w-[18ch]">
+          Procurement that runs itself, <span className="text-[#FF3D00]">governed</span> to the piaster.
+        </h1>
+        <p className="mt-8 text-[16px] leading-[1.65] text-[#A3A3A3] max-w-[56ch]">
+          HotelsVendors is one transaction rail: AI-sourced demand, fixed-price supply,
+          consolidated delivery, embedded finance, and tax-compliant invoicing. Built for
+          Egyptian hospitality. Integrated with the systems you already run.
+        </p>
+        <div className="mt-10 flex flex-wrap gap-8 items-center">
+          <Link href="/register" className="pf-link">Create an account</Link>
+          <Link href="/marketplace" className="pf-outline">Browse the marketplace</Link>
         </div>
       </section>
 
-      {/* Trust Bar */}
-      <section className="py-8 border-y" style={{ borderColor: "rgba(255,255,255,0.04)", backgroundColor: "#12121a" }}>
-        <div className="mx-auto max-w-7xl px-6">
-          <div className="flex flex-wrap justify-center gap-8">
-            {[
-              { icon: ShieldCheck, label: "ETA Phase 1 & 2", desc: "Full compliance" },
-              { icon: Lock, label: "RSA-2048 Signing", desc: "Cryptographic audit trail" },
-              { icon: Zap, label: "AI-Native", desc: "94% forecast accuracy" },
-              { icon: BarChart3, label: "Real-Time Analytics", desc: "Live dashboards" },
-            ].map((b) => (
-              <div key={b.label} className="flex items-center gap-3">
-                <b.icon size={16} style={{ color: "var(--accent-base)" }} />
+      {/* CAPABILITIES — statement rows, no icon-per-card repetition */}
+      <section className="border-t border-[#262626]">
+        <div className="mx-auto max-w-[1200px] px-6 md:px-12 py-16 md:py-24">
+          <h2 className="text-[32px] md:text-[44px] font-semibold tracking-[-0.04em] leading-[1.05] max-w-[20ch]">
+            Four systems. One platform.
+          </h2>
+          <div className="mt-14 space-y-px bg-[#262626] border border-[#262626]">
+            {CAPABILITIES.map((c, i) => (
+              <div key={c.title} className="bg-[#0A0A0A] px-8 py-8 grid md:grid-cols-[auto_1fr] gap-5 md:gap-10 items-start hover:bg-[#111111] transition-colors duration-150">
+                <span className="font-mono text-[13px] text-[#FF3D00] pt-1">0{i + 1}</span>
                 <div>
-                  <p className="text-[11px] font-medium text-white/60">{b.label}</p>
-                  <p className="text-[9px] text-white/25">{b.desc}</p>
+                  <h3 className="text-[20px] font-semibold tracking-[-0.02em]">{c.title}</h3>
+                  <p className="mt-3 text-[14px] leading-[1.7] text-[#A3A3A3] max-w-[70ch]">{c.desc}</p>
                 </div>
               </div>
             ))}
@@ -97,81 +82,47 @@ export default function PlatformPage() {
         </div>
       </section>
 
-      {/* Pillars */}
-      <section className="py-16">
-        <div className="mx-auto max-w-7xl px-6 space-y-4">
-          {pillars.map((p) => (
-            <div key={p.title} className="rounded-2xl p-6 md:p-8 transition-all hover:border-accent-base/10" style={{ backgroundColor: "#12121a", border: "1px solid rgba(255,255,255,0.06)" }}>
-              <div className="grid lg:grid-cols-4 gap-6 items-start">
-                <div className="lg:col-span-3">
-                  <div className="flex items-center gap-3 mb-3">
-                    <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: p.color + "15" }}>
-                      <p.icon size={20} style={{ color: p.color }} />
-                    </div>
-                    <div>
-                      <span className="text-[10px] font-medium text-white/25 uppercase tracking-wider">Pillar {p.num}</span>
-                      <h2 className="text-[18px] font-medium text-white">{p.title}</h2>
-                    </div>
-                  </div>
-                  <p className="text-[13px] text-white/40 leading-relaxed mb-4 max-w-xl">{p.desc}</p>
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                    {p.features.map((f) => (
-                      <div key={f} className="flex items-center gap-2 p-2.5 rounded-lg" style={{ backgroundColor: "rgba(255,255,255,0.02)" }}>
-                        <div className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ backgroundColor: p.color }} />
-                        <span className="text-[11px] text-white/40">{f}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-                <div className="hidden lg:flex flex-col items-center justify-center p-6 rounded-xl min-h-[120px]" style={{ backgroundColor: p.color + "08" }}>
-                  <p.icon size={32} style={{ color: p.color }} />
-                </div>
-              </div>
+      {/* INTEGRATION STRIP */}
+      <section className="border-t border-[#262626] bg-[#0F0F0F]">
+        <div className="mx-auto max-w-[1200px] px-6 md:px-12 py-16 md:py-24 grid md:grid-cols-[7fr_5fr] gap-12 items-center">
+          <div>
+            <h2 className="text-[28px] md:text-[40px] font-semibold tracking-[-0.04em] leading-[1.05] max-w-[20ch]">
+              Enterprise-ready from day one.
+            </h2>
+            <p className="mt-6 text-[15px] leading-[1.65] text-[#A3A3A3] max-w-[56ch]">
+              REST APIs, webhooks, and idempotent settlement connect HotelsVendors to SAP,
+              Oracle, Opera PMS, and local ERP stacks. Multi-tenant isolation and row-level
+              scoping are enforced at the database layer, not the honor system.
+            </p>
+            <div className="mt-8">
+              <Link href="/erp-integrations" className="pf-link">Integration docs</Link>
             </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Compliance Bar */}
-      <section className="py-12 border-y" style={{ borderColor: "rgba(255,255,255,0.04)", backgroundColor: "#12121a" }}>
-        <div className="mx-auto max-w-7xl px-6">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {[
-              { icon: ShieldCheck, label: "ETA Phase 1 & 2", desc: "Full compliance" },
-              { icon: BarChart3, label: "AI Forecasting", desc: "94% accuracy" },
-              { icon: Truck, label: "6 Governorates", desc: "Coastal + Inland" },
-              { icon: Banknote, label: "24-Hour Settlement", desc: "Bank-direct" },
-            ].map((b) => (
-              <div key={b.label} className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0" style={{ backgroundColor: "rgba(var(--accent-base-rgb),0.08)" }}>
-                  <b.icon size={16} style={{ color: "var(--accent-base)" }} />
-                </div>
-                <div>
-                  <p className="text-[11px] font-medium text-white/60">{b.label}</p>
-                  <p className="text-[9px] text-white/25">{b.desc}</p>
-                </div>
-              </div>
-            ))}
+          </div>
+          <div className="border border-[#262626] p-8 font-mono text-[12.5px] leading-[2] text-[#A3A3A3]">
+            <div><span className="text-[#FF3D00]">POST</span> /api/v1/orders</div>
+            <div><span className="text-[#FF3D00]">GET</span> /api/v1/procurement/insights</div>
+            <div><span className="text-[#FF3D00]">POST</span> /api/v1/grn/qr</div>
+            <div><span className="text-[#FF3D00]">POST</span> /api/webhooks/inventory/[provider]</div>
+            <div className="pt-3 mt-3 border-t border-[#262626] text-[#737373]">220 routes. 110 models. Zero mock data.</div>
           </div>
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="py-20">
-        <div className="mx-auto max-w-7xl px-6 text-center">
-          <Cpu size={32} className="mx-auto mb-6" style={{ color: "var(--accent-base)" }} />
-          <h2 className="text-[24px] font-medium mb-4 text-white">Ready to Automate Your Procurement?</h2>
-          <p className="text-[13px] text-white/40 mb-8 max-w-lg mx-auto">Join Egypt&apos;s leading hotel groups already running on HotelsVendors infrastructure.</p>
-          <div className="flex flex-wrap justify-center gap-3">
-            <Link href="/register" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(var(--accent-base-rgb),0.2)]" style={{ backgroundColor: "var(--accent-base)", color: "var(--surface)" }}>
-              Try the Sandbox <ArrowRight size={14} />
-            </Link>
-            <Link href="/register" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]" style={{ border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)" }}>
-              Get Started
-            </Link>
+      {/* CTA — register is open; no sandbox, no gated enterprise tier */}
+      <section className="border-t border-[#262626]">
+        <div className="mx-auto max-w-[1200px] px-6 md:px-12 py-20 md:py-28 text-center">
+          <h2 className="text-[36px] md:text-[56px] font-semibold tracking-[-0.05em] leading-[1.02]">
+            Start procurement on the <span className="text-[#FF3D00]">right rails.</span>
+          </h2>
+          <p className="mt-6 text-[15px] text-[#A3A3A3] max-w-[50ch] mx-auto leading-relaxed">
+            Registration takes minutes. The catalog grows as verified suppliers come online.
+          </p>
+          <div className="mt-10 flex flex-wrap justify-center gap-8">
+            <Link href="/register" className="pf-link">Create an account</Link>
+            <Link href="/pricing" className="pf-outline">See pricing</Link>
           </div>
         </div>
       </section>
-    </main>
+    </div>
   );
 }
