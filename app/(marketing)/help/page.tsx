@@ -85,7 +85,7 @@ export default function HelpPage() {
           </div>
           <h1 className="text-[clamp(30px,5vw,52px)] font-semibold leading-[1.05] tracking-tight mb-5">
             How Can We<br />
-            <span style={{ color: "var(--accent-base)" }}>Help You?</span>
+            Help You?
           </h1>
           <p className="text-[15px] text-white/40 max-w-2xl mx-auto leading-relaxed mb-8">
             Find answers to common questions, explore documentation, or contact our support team.

@@ -110,7 +110,7 @@ export default async function OpenClawHubPage() {
         <div>
           <h1 className="text-2xl font-bold tracking-tight flex items-center gap-2">
             <Globe size={22} className="text-accent-base" />
-            <span className="gradient-text-animated">OpenClaw Integration Hub</span>
+            <span className="text-white">OpenClaw Integration Hub</span>
           </h1>
           <p className="text-sm text-[rgba(255,255,255,0.40)] mt-0.5">
             Visual testing, automation workflows, and gateway orchestration

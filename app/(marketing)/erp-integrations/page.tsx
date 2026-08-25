@@ -1,33 +1,56 @@
 "use client";
 
 import Link from "next/link";
+import { Reveal } from "@/components/shared/reveal";
 
-export default function Page() {
+const CONNECTORS = [
+  { name: "SAP", what: "BAPI PO creation", dir: "OUT" },
+  { name: "Odoo", what: "Purchase order sync", dir: "BOTH" },
+  { name: "Oracle Opera", what: "PMS procurement", dir: "OUT" },
+  { name: "cXML / Local", what: "eProcurement adapters", dir: "BOTH" },
+];
+
+export default function ERPPage() {
   return (
-    <main className="bg-slate-50 min-h-screen pt-16">
-      <div className="max-w-7xl mx-auto px-5 lg:px-8 py-10">
-        <header className="mb-10 max-w-3xl">
-          <div className="text-[11px] font-semibold uppercase tracking-widest text-[#8a6d3b]">Integrations</div>
-          <h1 className="text-3xl font-bold text-[#111827] mt-1">ERP Integrations</h1>
-          <p className="text-slate-600 text-sm mt-2">Bi-directional synchronisation with the systems hotels already run: SAP, Odoo, Oracle Opera PMS, and local Egyptian accounting packages.</p>
-        </header>
-<div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {[
-            { name: "SAP", what: "BAPI PO creation", dir: "OUT" },
-            { name: "Odoo", what: "Purchase order sync", dir: "BOTH" },
-            { name: "Oracle Opera", what: "PMS procurement", dir: "OUT" },
-            { name: "cXML / Local", what: "eProcurement adapters", dir: "BOTH" },
-          ].map((e) => (
-            <div key={e.name} className="bg-white border border-slate-200 rounded-lg p-4">
-              <div className="text-sm font-semibold text-[#111827]">{e.name}</div>
-              <div className="text-xs text-slate-500 mt-0.5">{e.what}</div>
-              <span className="inline-block text-[10px] mt-2 px-1.5 py-0.5 rounded bg-[#ABA294] text-[#4D4A46] border border-[#ABA294]">{e.dir}</span>
-            </div>
+    <main className="bg-[#0A0A0A] text-[#FAFAFA] min-h-screen pt-16">
+      <div className="mx-auto max-w-[1200px] px-6 md:px-12 py-16 md:py-24">
+        <Reveal>
+          <header className="max-w-3xl">
+            <p className="font-mono text-[11px] tracking-[0.18em] uppercase text-[#737373] mb-6">Integrations</p>
+            <h1 className="text-[40px] md:text-[64px] font-semibold leading-[1.02] tracking-[-0.05em]">
+              ERP Integrations
+            </h1>
+            <p className="mt-8 text-[15px] leading-[1.7] text-[#A3A3A3] max-w-[60ch]">
+              Bi-directional synchronisation with the systems hotels already run: SAP, Odoo,
+              Oracle Opera PMS, and local Egyptian accounting packages.
+            </p>
+          </header>
+        </Reveal>
+
+        <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-px bg-[#262626] border border-[#262626]">
+          {CONNECTORS.map((e, i) => (
+            <Reveal key={e.name} delay={i * 0.06} className="bg-[#0A0A0A]">
+              <div className="px-7 py-10 hover:bg-[#111111] transition-colors h-full">
+                <h3 className="text-[16px] font-semibold tracking-[-0.02em]">{e.name}</h3>
+                <p className="text-[12px] text-[#737373] mt-1.5">{e.what}</p>
+                <span className="inline-block font-mono text-[10px] tracking-[0.12em] mt-5 px-2 py-1 border border-[#404040] text-[#FF3D00]">
+                  {e.dir}
+                </span>
+              </div>
+            </Reveal>
           ))}
         </div>
-        <div className="mt-10">
-          <Link href="/register" className="inline-flex items-center px-5 py-2.5 bg-[#314B43] text-white text-sm font-semibold rounded-md hover:bg-[#3a544a]">Get started free</Link>
-        </div>
+
+        <Reveal delay={0.15}>
+          <div className="mt-16">
+            <Link
+              href="/register"
+              className="inline-flex items-center px-7 py-3.5 bg-[#FAFAFA] text-[#0A0A0A] text-[13px] font-semibold uppercase tracking-[0.1em] hover:bg-white transition-colors"
+            >
+              Get started free
+            </Link>
+          </div>
+        </Reveal>
       </div>
     </main>
   );

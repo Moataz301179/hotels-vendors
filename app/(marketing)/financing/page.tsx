@@ -51,7 +51,7 @@ export default function FinancingPage() {
       <section className="mx-auto max-w-[1200px] px-6 md:px-12 pt-32 md:pt-40 pb-16 md:pb-20">
         <p className="fin-label mb-6">Financing and liquidity</p>
         <h1 className="text-[40px] md:text-[64px] font-semibold leading-[1.02] tracking-[-0.05em] max-w-[16ch]">
-          Cash flow that moves at the speed of <span className="text-[#FF3D00]">hospitality.</span>
+          Cash flow that moves at the speed of hospitality.
         </h1>
         <p className="mt-8 text-[16px] leading-[1.65] text-[#A3A3A3] max-w-[56ch]">
           Whatever your bottleneck: inventory, cash, or payments. One integrated system
@@ -112,7 +112,7 @@ export default function FinancingPage() {
       <section className="border-t border-[#262626]">
         <div className="mx-auto max-w-[1200px] px-6 md:px-12 py-20 md:py-28 text-center">
           <h2 className="text-[32px] md:text-[52px] font-semibold tracking-[-0.05em] leading-[1.05]">
-            Your invoices are already <span className="text-[#FF3D00]">capital.</span>
+            Your invoices are already capital.
           </h2>
           <p className="mt-6 text-[15px] text-[#A3A3A3] max-w-[50ch] mx-auto leading-relaxed">
             Register, deliver, and let the platform turn verified invoices into working capital.

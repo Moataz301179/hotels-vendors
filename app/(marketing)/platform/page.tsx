@@ -49,7 +49,7 @@ export default function PlatformPage() {
       <section className="mx-auto max-w-[1200px] px-6 md:px-12 pt-32 md:pt-40 pb-16 md:pb-20">
         <p className="pf-label mb-6">The platform</p>
         <h1 className="text-[40px] md:text-[64px] font-semibold leading-[1.02] tracking-[-0.05em] max-w-[18ch]">
-          Procurement that runs itself, <span className="text-[#FF3D00]">governed</span> to the piaster.
+          Procurement that runs itself, governed to the piaster.
         </h1>
         <p className="mt-8 text-[16px] leading-[1.65] text-[#A3A3A3] max-w-[56ch]">
           HotelsVendors is one transaction rail: AI-sourced demand, fixed-price supply,
@@ -112,7 +112,7 @@ export default function PlatformPage() {
       <section className="border-t border-[#262626]">
         <div className="mx-auto max-w-[1200px] px-6 md:px-12 py-20 md:py-28 text-center">
           <h2 className="text-[36px] md:text-[56px] font-semibold tracking-[-0.05em] leading-[1.02]">
-            Start procurement on the <span className="text-[#FF3D00]">right rails.</span>
+            Start procurement on the right rails.
           </h2>
           <p className="mt-6 text-[15px] text-[#A3A3A3] max-w-[50ch] mx-auto leading-relaxed">
             Registration takes minutes. The catalog grows as verified suppliers come online.

@@ -1,31 +1,65 @@
 "use client";
 
 import Link from "next/link";
+import { Reveal } from "@/components/shared/reveal";
 
-export default function Page() {
+const FEATURES = [
+  {
+    n: "01",
+    t: "Single-instance lock",
+    d: "Each ETA invoice is registered once at the FRA registry — no double financing across any buyer or platform.",
+  },
+  {
+    n: "02",
+    t: "Audit trail",
+    d: "Every approval, disbursement, and lock is written to an immutable audit log with before/after snapshots.",
+  },
+  {
+    n: "03",
+    t: "Multi-buyer visibility",
+    d: "Cross-check whether an invoice is already financed elsewhere before a single EGP is disbursed.",
+  },
+];
+
+export default function FRAShieldPage() {
   return (
-    <main className="bg-slate-50 min-h-screen pt-16">
-      <div className="max-w-7xl mx-auto px-5 lg:px-8 py-10">
-        <header className="mb-10 max-w-3xl">
-          <div className="text-[11px] font-semibold uppercase tracking-widest text-[#8a6d3b]">Compliance</div>
-          <h1 className="text-3xl font-bold text-[#111827] mt-1">FRA Regulatory Shield</h1>
-          <p className="text-slate-600 text-sm mt-2">Automated Financial Regulatory Authority non-duplication checks. Every invoice is locked against the FRA electronic factoring registry before a single EGP is disbursed.</p>
-        </header>
-<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {[
-            { t: "Single-instance lock", d: "Each ETA invoice is registered once at the FRA registry — no double financing." },
-            { t: "Audit trail", d: "Every approval, disbursement, and lock is written to an immutable audit log." },
-            { t: "Multi-buyer visibility", d: "Cross-check whether an invoice is already financed on another platform." },
-          ].map((f) => (
-            <div key={f.t} className="bg-white border border-slate-200 rounded-lg p-4">
-              <div className="text-sm font-semibold text-[#111827] mb-1">{f.t}</div>
-              <p className="text-xs text-slate-500 leading-relaxed">{f.d}</p>
-            </div>
+    <main className="bg-[#0A0A0A] text-[#FAFAFA] min-h-screen pt-16">
+      <div className="mx-auto max-w-[1200px] px-6 md:px-12 py-16 md:py-24">
+        <Reveal>
+          <header className="max-w-3xl">
+            <p className="font-mono text-[11px] tracking-[0.18em] uppercase text-[#737373] mb-6">Compliance</p>
+            <h1 className="text-[40px] md:text-[64px] font-semibold leading-[1.02] tracking-[-0.05em]">
+              FRA Regulatory Shield
+            </h1>
+            <p className="mt-8 text-[15px] leading-[1.7] text-[#A3A3A3] max-w-[60ch]">
+              Automated Financial Regulatory Authority non-duplication checks. Every invoice is
+              locked against the FRA electronic factoring registry before a single EGP is disbursed.
+            </p>
+          </header>
+        </Reveal>
+
+        <div className="mt-16 grid md:grid-cols-3 gap-px bg-[#262626] border border-[#262626]">
+          {FEATURES.map((f, i) => (
+            <Reveal key={f.n} delay={i * 0.08} className="bg-[#0A0A0A]">
+              <div className="px-8 py-10 hover:bg-[#111111] transition-colors h-full">
+                <div className="font-mono text-[13px] text-[#FF3D00]">{f.n}</div>
+                <h3 className="mt-4 text-[18px] font-semibold tracking-[-0.02em]">{f.t}</h3>
+                <p className="mt-3 text-[13px] leading-[1.7] text-[#A3A3A3]">{f.d}</p>
+              </div>
+            </Reveal>
           ))}
         </div>
-        <div className="mt-10">
-          <Link href="/register" className="inline-flex items-center px-5 py-2.5 bg-[#314B43] text-white text-sm font-semibold rounded-md hover:bg-[#3a544a]">Get started free</Link>
-        </div>
+
+        <Reveal delay={0.15}>
+          <div className="mt-16">
+            <Link
+              href="/register"
+              className="inline-flex items-center px-7 py-3.5 bg-[#FAFAFA] text-[#0A0A0A] text-[13px] font-semibold uppercase tracking-[0.1em] hover:bg-white transition-colors"
+            >
+              Get started free
+            </Link>
+          </div>
+        </Reveal>
       </div>
     </main>
   );

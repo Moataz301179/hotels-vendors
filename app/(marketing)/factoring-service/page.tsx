@@ -64,7 +64,7 @@ export default function FactoringServicePage() {
       <section className="mx-auto max-w-[1200px] px-6 md:px-12 pt-32 md:pt-40 pb-16 md:pb-20">
         <p className="fs-label mb-6">Factoring</p>
         <h1 className="text-[40px] md:text-[64px] font-semibold leading-[1.02] tracking-[-0.05em] max-w-[16ch]">
-          Verified invoices. Instant credit line. <span className="text-[#FF3D00]">Paid in 48 hours.</span>
+          Verified invoices. Instant credit line. Paid in 48 hours.
         </h1>
         <p className="mt-8 text-[16px] leading-[1.65] text-[#A3A3A3] max-w-[58ch]">
           Complete funder onboarding and your credit line activates instantly. Every
@@ -144,7 +144,7 @@ export default function FactoringServicePage() {
       <section className="border-t border-[#262626] bg-[#0F0F0F]">
         <div className="mx-auto max-w-[1200px] px-6 md:px-12 py-20 md:py-28 text-center">
           <h2 className="text-[36px] md:text-[56px] font-semibold tracking-[-0.05em] leading-[1.02]">
-            Your invoices are already <span className="text-[#FF3D00]">capital.</span>
+            Your invoices are already capital.
           </h2>
           <p className="mt-6 text-[15px] text-[#A3A3A3] max-w-[50ch] mx-auto leading-relaxed">
             Onboard with the funder once. Every verified invoice after that is 48 hours from cash.

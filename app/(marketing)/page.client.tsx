@@ -59,7 +59,7 @@ export default function MarketingPage() {
             <p className="hv-label mb-6">Egypt&apos;s B2B hospitality procurement and fintech platform</p>
             <h1 className="font-semibold text-[44px] leading-[1.02] md:text-[72px] md:leading-[0.98] tracking-[-0.05em]">
               Procurement,<br />
-              <span className="text-[#FF3D00]">financed.</span><br />
+              financed.<br />
               Compliance, built in.
             </h1>
             <p className="mt-8 text-[17px] leading-[1.6] text-[#A3A3A3] max-w-[52ch]">
@@ -127,7 +127,7 @@ export default function MarketingPage() {
         <div className="mx-auto max-w-[1200px] px-6 md:px-12 py-20 md:py-28 grid md:grid-cols-[5fr_7fr] gap-12 items-center">
           <div>
             <h2 className="text-[32px] md:text-[44px] font-semibold tracking-[-0.04em] leading-[1.05]">
-              The brain that<br />orders before<br /><span className="text-[#FF3D00]">you run out.</span>
+              The brain that<br />orders before<br />you run out.
             </h2>
           </div>
           <div className="space-y-px bg-[#262626] border border-[#262626]">
@@ -210,7 +210,7 @@ export default function MarketingPage() {
         <div className="mx-auto max-w-[1200px] px-6 md:px-12 py-24 md:py-36 text-center">
           <h2 className="text-[40px] md:text-[64px] font-semibold tracking-[-0.05em] leading-[1.02]">
             Move with the technology,<br />
-            <span className="text-[#FF3D00]">or get left behind by the gap.</span>
+            or get left behind by the gap.
           </h2>
           <p className="mt-8 text-[15px] text-[#A3A3A3] max-w-[52ch] mx-auto leading-relaxed">
             Egyptian hospitality is a $21.5B market growing at 7% a year.

@@ -559,17 +559,7 @@ export default function VatInvoicingPage() {
               className="text-4xl md:text-5xl font-bold text-white mb-6 leading-tight"
               style={{ fontFamily: "var(--font-sans)" }}
             >
-              Ready to Issue Your First{" "}
-              <span
-                className="text-transparent bg-clip-text"
-                style={{
-                  backgroundImage:
-                    "linear-gradient(to right, var(--accent-base), #b07b3e)",
-                }}
-              >
-                ETA-Compliant Invoice
-              </span>
-              ?
+              Ready to Issue Your First ETA-Compliant Invoice?
             </h2>
             <p
               className="text-lg mb-10 max-w-xl mx-auto"

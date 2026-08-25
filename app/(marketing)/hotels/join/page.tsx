@@ -183,10 +183,8 @@ export default function HotelJoinPage() {
             Hotel Onboarding
           </div>
 
-          <h1 className="max-w-3xl text-[clamp(32px,5.5vw,56px)] font-semibold leading-[1.05] tracking-tight">
-            Onboard your hotel onto a{" "}
-            <span style={{ color: "#8a6d3b" }}>compliant procurement</span>{" "}
-            operating system.
+          <h1 className="max-w-3xl text-[clamp(32px,5.5vw,56px)] font-semibold leading-[1.05] tracking-tight text-white">
+            Onboard your hotel onto a compliant procurement operating system.
           </h1>
 
           <p className="mt-6 max-w-2xl text-[16px] leading-relaxed" style={{ color: "#ABA294" }}>

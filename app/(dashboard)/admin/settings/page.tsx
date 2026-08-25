@@ -16,7 +16,7 @@ export default function AdminSettingsPage() {
         <div>
           <h1 className="text-2xl font-bold tracking-tight flex items-center gap-2">
             <Settings size={22} className="text-accent-base" />
-            <span className="gradient-text-animated">Platform Settings</span>
+            <span className="text-white">Platform Settings</span>
           </h1>
           <p className="text-sm text-[rgba(255,255,255,0.40)] mt-0.5">
             Configure global platform behavior, notifications, and compliance
