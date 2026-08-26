@@ -7,13 +7,14 @@ export function HeroSection() {
       <div className="relative z-10 w-full max-w-6xl mx-auto grid lg:grid-cols-2 gap-12 items-center">
         <div className="text-center lg:text-left">
           <span className="inline-block px-4 py-1.5 text-xs font-bold text-orange-500 bg-orange-500/10 border border-orange-500/20 rounded-full mb-6 tracking-widest uppercase">
-            Built for Egyptian Hospitality
+            End stockouts. Unlock cashflow. One platform.
           </span>
-          <h1 className="font-bold text-5xl md:text-6xl lg:text-7xl text-white leading-[1.05] tracking-tight mb-6">
-            Procurement, Powered.
+          <h1 className="font-semibold text-4xl md:text-6xl lg:text-7xl text-white leading-[1.02] tracking-[-0.04em] mb-6">
+            Your inventory gap and your cashflow gap.<br />
+            Closed by one system.
           </h1>
           <p className="text-white/70 text-lg max-w-xl mx-auto lg:mx-0 mb-10 leading-relaxed">
-            Sourcing • ETA-compliant invoicing • Embedded factoring • Multi-property governance
+            Hotels: end stockouts with AI forecasting · Suppliers: fixed prices, paid in 48 hours — ETA-compliant on every order
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
             <Link href="/marketplace" className="px-8 py-4 bg-orange-500 text-black font-bold text-sm tracking-wider uppercase rounded hover:bg-orange-400 transition-colors">Try the Sandbox</Link>
