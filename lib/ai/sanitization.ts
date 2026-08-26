@@ -15,7 +15,7 @@ const MAX_INPUT_LENGTH = 4000;
 const MAX_MESSAGE_LENGTH = 8000;
 
 // Characters that could be used for injection or to confuse the tokenizer
-// eslint-disable-next-line no-control-regex
+ 
 const CONTROL_CHAR_REGEX = /[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g;
 
 // Known prompt injection patterns (lowercased for matching)

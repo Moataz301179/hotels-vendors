@@ -99,7 +99,7 @@ describe("credit gate - atomic check-and-reserve (SELECT FOR UPDATE)", () => {
     const makeSharedTx = () => {
       const id = Symbol();
       return {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+         
         $queryRaw: async () => {
           while (lockOwner !== null && lockOwner !== id) await sleep(1);
           if (lockOwner === null) {
