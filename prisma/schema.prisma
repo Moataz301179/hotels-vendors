@@ -98,6 +98,7 @@ model Tenant {
   pushTokens             PushToken[]
   scheduledOrders        ScheduledOrder[]
   supportTickets         SupportTicket[]
+  rfqs                   Rfq[]
 
   @@index([deletedAt], map: "Tenant_deleted_idx")
   @@index([parentTenantId], map: "Tenant_parent_idx")
@@ -460,6 +461,7 @@ model Product {
   productVariations  ProductVariation[]
   reconciliationLineItems ReconciliationLineItem[] @relation("ProductReconciliationLineItems")
   scheduledOrderItems ScheduledOrderItem[]
+  rfqItems          RfqItem[]
 
   @@index([tenantId])
   @@index([supplierId])

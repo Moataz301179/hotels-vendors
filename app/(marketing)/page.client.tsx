@@ -59,9 +59,9 @@ export default function MarketingPage() {
           <div>
             <p className="hv-label mb-6">Egypt&apos;s B2B hospitality procurement and fintech platform</p>
             <h1 className="font-semibold text-[44px] leading-[1.02] md:text-[72px] md:leading-[0.98] tracking-[-0.05em]">
-              Procurement,<br />
-              financed.<br />
-              Compliance, built in.
+              Supplier payments in 48 hours.<br />
+              ETA compliance, built in.
+              
             </h1>
             <p className="mt-8 text-[17px] leading-[1.6] text-[#A3A3A3] max-w-[52ch]">
               The operating system for hotel procurement in Egypt. AI-powered sourcing,

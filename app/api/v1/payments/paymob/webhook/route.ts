@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
-import type { Prisma } from "@prisma/client";
+import type { PaymentStatus, Prisma } from "@prisma/client";
 import { verifyHmac, extractMerchantOrderId } from "@/lib/fintech/paymob";
 import type { PaymobWebhookPayload } from "@/lib/fintech/paymob";
 import { success, error } from "@/lib/api-utils";
@@ -72,7 +72,7 @@ export async function POST(request: NextRequest) {
     const updated = await tx.payment.updateMany({
       where: { id: payment.id, status: { notIn: ["PAID"] } },
       data: {
-        status: obj.success === true ? "PAID" : "FAILED",
+        status: (obj.success === true ? "PAID" : "FAILED") as PaymentStatus,
         paidAt: obj.success === true ? new Date() : null,
         metadata: JSON.stringify({
           ...(payment.metadata ? JSON.parse(payment.metadata) : {}),

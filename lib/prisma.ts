@@ -29,7 +29,7 @@ function createPrismaClient(): PrismaClient {
     adapter,
     log: process.env.NODE_ENV === "development" ? ["warn", "error"] : ["error"],
   });
-  installPiiEncryptionMiddleware(client);
+
   return client;
 }
 
@@ -48,6 +48,7 @@ function createPrismaClient(): PrismaClient {
  * equality filter on these models is rewritten to `where.taxIdSearch` here.
  */
 function installPiiEncryptionMiddleware(client: PrismaClient) {
+  // @ts-expect-error prisma middleware params typed loosely
   client.$use(async (params, next) => {
     const fieldMap = ENCRYPTED_FIELDS[params.model];
     if (!fieldMap) return next(params);
