@@ -39,7 +39,7 @@ const solutions = [
     title: "For Factoring Companies",
     desc: "Access a curated pool of pre-verified hospitality invoices. Funder-run settlement, non-recourse terms, and instant credit lines. Egypt's hospitality sector is an EGP 12B market.",
     features: ["Pre-verified invoices", "Non-recourse", "Funder-run settlement", "Risk scoring"],
-    href: "/register?sector=cashflow",
+    href: "/register?type=factoring",
     cta: "Register Grantor",
     color: "var(--orange-base)",
   },
@@ -48,9 +48,9 @@ const solutions = [
     title: "For Logistics Providers",
     desc: "Fill your trucks with consolidated multi-supplier loads. Shared-route optimization, guaranteed volume, and on-time payment. Cover 6 governorates with AI-driven route planning.",
     features: ["Load consolidation", "Route optimization", "Guaranteed volume", "On-time payment", "GPS tracking"],
-    href: "/register?sector=procurement",
+    href: "/register?type=shipping",
     cta: "Register Carrier",
-    color: "#64b5f6",
+    color: "var(--text-secondary)",
   },
 ];
 

@@ -26,13 +26,34 @@ import {
   CreditCard,
 } from "lucide-react";
 
-type StakeholderRole = "HOTEL" | "SUPPLIER";
+type StakeholderRole = "HOTEL" | "SUPPLIER" | "FACTORING" | "SHIPPING";
 type PropertyType = "SINGLE" | "CHAIN" | "MANAGEMENT";
 
 const ROLES: { value: StakeholderRole; label: string; icon: React.ElementType; color: string }[] = [
   { value: "HOTEL", label: "Hotel / Property", icon: Hotel, color: "var(--accent-base)" },
   { value: "SUPPLIER", label: "Supplier / Vendor", icon: Store, color: "var(--orange-base)" },
+  { value: "FACTORING", label: "Factoring / Funder (Grantor)", icon: Landmark, color: "var(--orange-base)" },
+  { value: "SHIPPING", label: "Logistics / Carrier", icon: Truck, color: "var(--text-secondary)" },
 ];
+
+const ROLE_BADGES: Record<StakeholderRole, { label: string; blurb: string }> = {
+  HOTEL: {
+    label: "Hotel Registration",
+    blurb: "Join Egypt&apos;s leading B2B hospitality procurement platform. Net-60 terms via embedded factoring.",
+  },
+  SUPPLIER: {
+    label: "Supplier Registration",
+    blurb: "List your products, reach 480+ hotels, get paid in 48 hours via embedded factoring.",
+  },
+  FACTORING: {
+    label: "Grantor (Funder) Registration",
+    blurb: "Access pre-verified hospitality invoices, run non-recourse settlement, and deploy instant credit lines.",
+  },
+  SHIPPING: {
+    label: "Carrier Registration",
+    blurb: "Consolidate multi-supplier loads, optimize shared routes, and get paid on time across 6 governorates.",
+  },
+};
 
 // Factoring & Logistics partners onboard via the dedicated Partner Portal
 const PARTNER_PORTAL_URL = "/partners";
@@ -57,7 +78,12 @@ function RegisterContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const typeParam = searchParams.get("type");
-  const initialRole = typeParam === "supplier" ? "SUPPLIER" : typeParam === "hotel" ? "HOTEL" : "HOTEL";
+  const initialRole =
+    typeParam === "supplier" ? "SUPPLIER"
+    : typeParam === "hotel" ? "HOTEL"
+    : typeParam === "factoring" ? "FACTORING"
+    : typeParam === "shipping" ? "SHIPPING"
+    : "HOTEL";
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -72,6 +98,8 @@ function RegisterContent() {
     governorate: "",
     propertyType: "SINGLE" as PropertyType,
     numberOfProperties: "1",
+    licenseNumber: "",
+    fleetSize: "",
     marketingConsent: false,
     termsAccepted: false,
   });
@@ -118,6 +146,7 @@ function RegisterContent() {
           password: form.password,
           city: form.city,
           governorate: form.governorate,
+          taxId: form.role === "FACTORING" && form.licenseNumber ? form.licenseNumber : undefined,
           accountType: "business",
           marketingConsent: form.marketingConsent,
           termsAccepted: form.termsAccepted,
@@ -147,6 +176,8 @@ function RegisterContent() {
   const roleColorMap: Record<StakeholderRole, string> = {
     HOTEL: "var(--accent-base)",
     SUPPLIER: "var(--orange-base)",
+    FACTORING: "var(--orange-base)",
+    SHIPPING: "var(--text-secondary)",
   };
 
   const ptColorMap: Record<string, string> = {
@@ -175,18 +206,14 @@ function RegisterContent() {
     <div className="space-y-8">
       <div>
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border text-[11px] font-medium uppercase tracking-[0.15em] mb-5" style={{ borderColor: "var(--border-accent)", background: "var(--accent-muted)", color: "var(--accent-base)" }}>
-          {form.role === "HOTEL" ? <Hotel size={11} /> : <Store size={11} />}
-          {form.role === "HOTEL" ? "Hotel Registration" : "Supplier Registration"}
+          {form.role === "HOTEL" ? <Hotel size={11} /> : form.role === "SUPPLIER" ? <Store size={11} /> : form.role === "FACTORING" ? <Landmark size={11} /> : <Truck size={11} />}
+          {ROLE_BADGES[form.role].label}
         </div>
         <h1 className="text-[28px] font-semibold text-foreground tracking-[-0.02em]">
           Create Account
         </h1>
         <p className="mt-2 text-[14px] text-foreground-secondary">
-          {form.role === "HOTEL"
-            ? "Join Egypt&apos;s leading B2B hospitality procurement platform. Net-60 terms via embedded factoring."
-            : form.role === "SUPPLIER"
-            ? "List your products, reach 480+ hotels, get paid in 48 hours via embedded factoring."
-            : "Join Egypt&apos;s leading B2B hospitality procurement platform."}
+          {ROLE_BADGES[form.role].blurb}
         </p>
 
         {/* Trust bar — real compliance badges, brand-colored */}
@@ -245,7 +272,7 @@ function RegisterContent() {
           </div>
 
           <div className="pt-1">
-            <RoleBenefits role={form.role} />
+            <RoleBenefits role={form.role === "FACTORING" ? "FACTOR" : form.role === "SHIPPING" ? "LOGISTICS" : form.role} />
           </div>
 
           <div className="space-y-2">
@@ -413,6 +440,60 @@ function RegisterContent() {
                 <strong style={{ color: "var(--orange-base)" }}>7-day free trial:</strong> Full access to all features — list products, receive orders, apply for invoice financing. <strong>Transactional fees</strong> (factoring, commissions) still apply during trial. No commitment required.
               </p>
             </div>
+          )}
+
+          {form.role === "FACTORING" && (
+            <>
+              <div className="space-y-2">
+                <label className="block text-[13px] font-medium text-foreground-secondary">
+                  FRA / Factoring License Number
+                </label>
+                <div className="relative">
+                  <Landmark size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-foreground-muted" />
+                  <input
+                    type="text"
+                    value={form.licenseNumber}
+                    onChange={(e) => updateForm("licenseNumber", e.target.value)}
+                    placeholder="e.g. FRA-2026-000123"
+                    className={fieldCls}
+                  />
+                </div>
+              </div>
+              <div className="rounded-xl p-4" style={{ backgroundColor: "rgba(255,126,26,0.05)", border: "1px solid rgba(255,126,26,0.13)" }}>
+                <p className="text-[12px] text-foreground-secondary leading-relaxed">
+                  <strong style={{ color: "var(--orange-base)" }}>Grantor workflow:</strong> Browse pre-verified hospitality invoices, run non-recourse settlement, and deploy instant credit lines. License verification is completed during onboarding review.
+                </p>
+              </div>
+            </>
+          )}
+
+          {form.role === "SHIPPING" && (
+            <>
+              <div className="space-y-2">
+                <label className="block text-[13px] font-medium text-foreground-secondary">
+                  Fleet Size
+                </label>
+                <div className="relative">
+                  <Truck size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-foreground-muted" />
+                  <select
+                    value={form.fleetSize}
+                    onChange={(e) => updateForm("fleetSize", e.target.value)}
+                    className={`${fieldCls} appearance-none`}
+                  >
+                    <option value="" className="bg-surface-1 text-foreground-secondary">Select fleet size</option>
+                    <option value="1-5" className="bg-surface-1 text-foreground">1&ndash;5 vehicles</option>
+                    <option value="6-20" className="bg-surface-1 text-foreground">6&ndash;20 vehicles</option>
+                    <option value="21-50" className="bg-surface-1 text-foreground">21&ndash;50 vehicles</option>
+                    <option value="50+" className="bg-surface-1 text-foreground">50+ vehicles</option>
+                  </select>
+                </div>
+              </div>
+              <div className="rounded-xl p-4" style={{ backgroundColor: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.10)" }}>
+                <p className="text-[12px] text-foreground-secondary leading-relaxed">
+                  <strong style={{ color: "var(--text-secondary)" }}>Carrier workflow:</strong> Fill your trucks with consolidated multi-supplier loads across 6 governorates. Vehicle and route details can be configured in the shipping dashboard after registration.
+                </p>
+              </div>
+            </>
           )}
 
           <div className="space-y-3 pt-2">
