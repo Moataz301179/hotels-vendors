@@ -7,7 +7,7 @@ export function HeroSection() {
       <div className="relative z-10 w-full max-w-6xl mx-auto grid lg:grid-cols-2 gap-12 items-center">
         <div className="text-center lg:text-left">
           <span className="inline-block px-4 py-1.5 text-xs font-bold text-orange-500 bg-orange-500/10 border border-orange-500/20 rounded-full mb-6 tracking-widest uppercase">
-            The Amazon of Egyptian Hospitality
+            Built for Egyptian Hospitality
           </span>
           <h1 className="font-bold text-5xl md:text-6xl lg:text-7xl text-white leading-[1.05] tracking-tight mb-6">
             Procurement, Powered.
@@ -16,11 +16,11 @@ export function HeroSection() {
             Sourcing • ETA-compliant invoicing • Embedded factoring • Multi-property governance
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-            <Link href="/demo" className="px-8 py-4 bg-orange-500 text-black font-bold text-sm tracking-wider uppercase rounded hover:bg-orange-400 transition-colors">Request Demo</Link>
-            <Link href="/solutions" className="px-8 py-4 border border-white/20 text-white font-bold text-sm tracking-wider uppercase rounded hover:border-orange-500 hover:bg-white/5 transition-colors">Explore Solutions</Link>
+            <Link href="/marketplace" className="px-8 py-4 bg-orange-500 text-black font-bold text-sm tracking-wider uppercase rounded hover:bg-orange-400 transition-colors">Try the Sandbox</Link>
+            <a href="#sandbox" className="px-8 py-4 border border-white/20 text-white font-bold text-sm tracking-wider uppercase rounded hover:border-orange-500 hover:bg-white/5 transition-colors">How It Works</a>
           </div>
         </div>
-        <div className="hidden lg:flex justify-center">
+        <div id="sandbox" className="hidden lg:flex justify-center">
           <iframe
             src="/arena-sandbox.html"
             title="HOVIN App Sandbox"
