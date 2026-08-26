@@ -155,7 +155,11 @@ model Hotel {
   tenantId             String
   name                 String
   legalName            String?
+  /// SEC-03 (chunk 1C): taxId is AES-256-GCM encrypted at rest via lib/crypto/field-encryption.ts.
+  /// Exact-match lookups MUST use taxIdSearch (HMAC-SHA256 digest), not taxId.
   taxId                String                @unique
+  /// Deterministic keyed HMAC of the plaintext taxId for exact-match search/uniqueness.
+  taxIdSearch          String?               @unique
   commercialReg        String?
   address              String?
   city                 String
@@ -334,7 +338,11 @@ model Supplier {
   id                   String               @id @default(cuid())
   name                 String
   legalName            String?
+  /// SEC-03 (chunk 1C): taxId is AES-256-GCM encrypted at rest via lib/crypto/field-encryption.ts.
+  /// Exact-match lookups MUST use taxIdSearch (HMAC-SHA256 digest), not taxId.
   taxId                String               @unique
+  /// Deterministic keyed HMAC of the plaintext taxId for exact-match search/uniqueness.
+  taxIdSearch          String?              @unique
   commercialReg        String?
   address              String?
   city                 String
@@ -352,6 +360,7 @@ model Supplier {
   rating               Float?               @default(0)
   reviewCount          Int                  @default(0)
   certifications       String?
+  /// SEC-03 (chunk 1C): encrypted at rest via Prisma middleware (lib/prisma.ts).
   bankAccount          String?
   bankName             String?
   tenantId             String
@@ -3710,4 +3719,35 @@ enum ResponseStatus {
   ACCEPTED
   REJECTED
   EXPIRED
+}
+
+// ── ETA e-invoicing submission tracking (chunk 3E) ──
+
+enum EtaSubmissionStatus {
+  PENDING_SUBMISSION
+  SUBMITTED
+  ACCEPTED
+  REJECTED
+  CANCELLED
+}
+
+model EtaSubmission {
+  id            String             @id @default(cuid())
+  documentUuid  String             @unique(map: "EtaSubmission_documentUuid_uniq")
+  invoiceId     String
+  tenantId      String
+  status        EtaSubmissionStatus @default(PENDING_SUBMISSION)
+  attemptCount  Int                @default(0)
+  lastError     String?
+  etaLongId     String?
+  etaStatus     String?
+  payloadHash   String?
+  responseJson  Json?
+  nextRetryAt   DateTime?
+  createdAt     DateTime           @default(now())
+  updatedAt     DateTime           @updatedAt
+
+  @@index([status, nextRetryAt])
+  @@index([tenantId])
+  @@index([invoiceId])
 }
