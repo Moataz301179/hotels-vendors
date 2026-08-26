@@ -24,7 +24,7 @@ export default function FoodCostCalculatorPage() {
   const pct = (n: number) => n.toFixed(1) + "%";
 
   return (
-    <main className="bg-slate-50 min-h-screen pt-16">
+    <main className="bg-black/40 min-h-screen pt-16">
       <div className="max-w-3xl mx-auto px-5 lg:px-8 py-10">
         <header className="mb-8">
           <div className="text-[11px] font-semibold uppercase tracking-widest text-[#8a6d3b] flex items-center gap-1.5">
@@ -44,7 +44,7 @@ export default function FoodCostCalculatorPage() {
         </header>
 
         {/* Inputs */}
-        <div className="bg-white border border-slate-200 rounded-lg p-6 space-y-6">
+        <div className="bg-white/5 border border-white/10 rounded-lg p-6 space-y-6">
           <div>
             <label className="block text-xs text-slate-600 mb-2 flex justify-between">
               <span>Monthly F&amp;B revenue (EGP)</span>
@@ -82,9 +82,9 @@ export default function FoodCostCalculatorPage() {
           </div>
 
           {/* Results */}
-          <div className="grid grid-cols-2 gap-3 pt-4 border-t border-slate-200">
-            <div className="p-3 rounded bg-slate-50 border border-slate-200">
-              <div className="text-[10px] text-slate-500 uppercase">Standard food cost</div>
+          <div className="grid grid-cols-2 gap-3 pt-4 border-t border-white/10">
+            <div className="p-3 rounded bg-black/40 border border-white/10">
+              <div className="text-[10px] text-white/50 uppercase">Standard food cost</div>
               <div className="text-lg font-bold text-[#111827] mt-1 tabular-nums">{pct(stdCostPct)}</div>
             </div>
             <div className="p-3 rounded bg-emerald-50 border border-emerald-200">
@@ -104,14 +104,14 @@ export default function FoodCostCalculatorPage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            <div className="rounded-lg border border-slate-200 bg-white p-4 flex items-start gap-3">
+            <div className="rounded-lg border border-white/10 bg-white/5 p-4 flex items-start gap-3">
               <PackageCheck size={18} className="text-[#314B43] mt-0.5 shrink-0" />
               <div>
                 <div className="text-sm font-semibold text-[#111827]">Price-lock procurement</div>
                 <p className="text-xs text-slate-600 mt-1">Fixed-price supplier catalogs hedge your imports against EGP moves.</p>
               </div>
             </div>
-            <div className="rounded-lg border border-slate-200 bg-white p-4 flex items-start gap-3">
+            <div className="rounded-lg border border-white/10 bg-white/5 p-4 flex items-start gap-3">
               <Wallet size={18} className="text-[#8a6d3b] mt-0.5 shrink-0" />
               <div>
                 <div className="text-sm font-semibold text-[#111827]">48h factoring</div>

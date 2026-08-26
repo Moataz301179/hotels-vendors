@@ -4,7 +4,7 @@ import Link from "next/link";
 
 export default function Page() {
   return (
-    <main className="bg-slate-50 min-h-screen pt-16">
+    <main className="bg-black/40 min-h-screen pt-16">
       <div className="max-w-7xl mx-auto px-5 lg:px-8 py-10">
         <header className="mb-10 max-w-3xl">
           <div className="text-[11px] font-semibold uppercase tracking-widest text-[#8a6d3b]">Solutions</div>
@@ -17,9 +17,9 @@ export default function Page() {
             { t: "Verified receiving proof", d: "Digital GRNs confirm goods before you fund." },
             { t: "FRA-backed invoice locks", d: "Single-instance locks prevent double-financing." },
           ].map((f) => (
-            <div key={f.t} className="bg-white border border-slate-200 rounded-lg p-4">
+            <div key={f.t} className="bg-white/5 border border-white/10 rounded-lg p-4">
               <div className="text-sm font-semibold text-[#111827] mb-1">{f.t}</div>
-              <p className="text-xs text-slate-500 leading-relaxed">{f.d}</p>
+              <p className="text-xs text-white/50 leading-relaxed">{f.d}</p>
             </div>
           ))}
         </div>

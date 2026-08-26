@@ -184,7 +184,7 @@ export default function SupplierOnboardingPage() {
 
             <div className="flex gap-4 justify-center">
               <Link href="/" className="px-6 py-3 rounded-xl bg-[#12121a] border border-white/[0.06] text-white/60 text-sm font-medium hover:bg-white/[0.04] transition-colors">Back to Home</Link>
-              <button onClick={() => { setSubmitted(false); setStep(1); setForm({ name: "", legalName: "", taxId: "", commercialReg: "", description: "", address: "", city: "", governorate: "", phone: "", email: "", website: "", bankName: "", bankAccount: "", categories: [], minOrderValue: "", deliveryAreas: [], certifications: [] }); }} className="px-6 py-3 rounded-xl bg-orange-base text-black text-sm font-medium hover:bg-[#a68b5a] transition-colors">Apply Another Business</button>
+              <button onClick={() => { setSubmitted(false); setStep(1); setForm({ name: "", legalName: "", taxId: "", commercialReg: "", description: "", address: "", city: "", governorate: "", phone: "", email: "", website: "", bankName: "", bankAccount: "", categories: [], minOrderValue: "", deliveryAreas: [], certifications: [] }); }} className="px-6 py-3 rounded-xl bg-orange-base text-white text-sm font-medium hover:bg-[#a68b5a] transition-colors">Apply Another Business</button>
             </div>
           </motion.div>
         </div>
@@ -231,7 +231,7 @@ export default function SupplierOnboardingPage() {
                     <div key={s.id} className="flex items-center flex-1">
                       <div className="flex flex-col items-center">
                         <div className={`w-11 h-11 rounded-xl flex items-center justify-center transition-all ${
-                          isActive ? "bg-orange-base text-black" : isCompleted ? "bg-accent-base/10 text-accent-base border border-accent-base/20" : "bg-white/[0.04] text-white/20 border border-white/[0.06]"
+                          isActive ? "bg-orange-base text-white" : isCompleted ? "bg-accent-base/10 text-accent-base border border-accent-base/20" : "bg-white/[0.04] text-white/20 border border-white/[0.06]"
                         }`}>
                           {isCompleted ? <CheckCircle2 size={20} /> : <Icon size={20} />}
                         </div>
@@ -474,11 +474,11 @@ export default function SupplierOnboardingPage() {
                   <ArrowLeft size={16} />Back
                 </button>
                 {step < 5 ? (
-                  <button onClick={nextStep} className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-orange-base text-black text-[13px] font-medium hover:bg-[#a68b5a] transition-colors">
+                  <button onClick={nextStep} className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-orange-base text-white text-[13px] font-medium hover:bg-[#a68b5a] transition-colors">
                     Continue<ArrowRight size={16} />
                   </button>
                 ) : (
-                  <button onClick={handleSubmit} disabled={submitting} className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-orange-base text-black text-[13px] font-medium hover:bg-[#a68b5a] disabled:opacity-50 transition-colors">
+                  <button onClick={handleSubmit} disabled={submitting} className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-orange-base text-white text-[13px] font-medium hover:bg-[#a68b5a] disabled:opacity-50 transition-colors">
                     {submitting ? <Loader2 size={16} className="animate-spin" /> : <CheckCircle2 size={16} />}
                     {submitting ? "Submitting..." : "Submit Application"}
                   </button>

@@ -117,7 +117,7 @@ export default function RfqPage() {
   }
 
   return (
-    <main className="bg-slate-50 min-h-screen pt-16">
+    <main className="bg-black/40 min-h-screen pt-16">
       <div className="max-w-7xl mx-auto px-5 lg:px-8 py-10">
         <header className="mb-8">
           <div className="text-[11px] font-semibold uppercase tracking-widest text-[#8a6d3b] flex items-center gap-1.5">
@@ -134,19 +134,19 @@ export default function RfqPage() {
 
         {/* Empty / dynamic state */}
         {loading ? (
-          <div className="bg-white border border-slate-200 rounded-lg p-12 text-center text-slate-400 text-sm">Loading real catalog…</div>
+          <div className="bg-white/5 border border-white/10 rounded-lg p-12 text-center text-slate-400 text-sm">Loading real catalog…</div>
         ) : products.length === 0 ? (
-          <div className="bg-white border border-dashed border-slate-300 rounded-xl p-12 text-center">
+          <div className="bg-white/5 border border-dashed border-white/20 rounded-xl p-12 text-center">
             <Package size={30} className="mx-auto text-slate-300 mb-3" />
             <h2 className="text-lg font-bold text-[#111827]">No supplier catalog connected yet</h2>
-            <p className="text-sm text-slate-500 mt-1 max-w-md mx-auto">
+            <p className="text-sm text-white/50 mt-1 max-w-md mx-auto">
               The RFQ engine needs real supplier stock to quote against. This page shows live catalog only — connect a supplier portal or API key, or onboard as a vendor, to activate bulk auctioning.
             </p>
             <div className="mt-5 flex flex-wrap justify-center gap-3">
               <Link href="/register?type=supplier" className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#314B43] text-white text-sm font-semibold rounded-lg hover:bg-[#3a544a]">
                 Join as Supplier <ArrowRight size={14} />
               </Link>
-              <Link href="/marketplace" className="inline-flex items-center gap-2 px-5 py-2.5 bg-white border border-slate-300 text-slate-700 text-sm font-semibold rounded-lg hover:bg-slate-50">
+              <Link href="/marketplace" className="inline-flex items-center gap-2 px-5 py-2.5 bg-white/5 border border-white/20 text-white/70 text-sm font-semibold rounded-lg hover:bg-black/40">
                 Browse marketplace
               </Link>
             </div>
@@ -154,19 +154,19 @@ export default function RfqPage() {
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
             {/* Product select (real) */}
-            <div className="bg-white border border-slate-200 rounded-lg p-4">
+            <div className="bg-white/5 border border-white/10 rounded-lg p-4">
               <h2 className="text-sm font-semibold text-[#111827] mb-3">1. Select product</h2>
               <div className="relative mb-3">
                 <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
                 <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search real catalog…"
-                  className="w-full pl-9 pr-3 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-[#314B43] outline-none" />
+                  className="w-full pl-9 pr-3 py-2 border border-white/10 rounded-lg text-sm focus:ring-2 focus:ring-[#314B43] outline-none" />
               </div>
               <div className="space-y-2 max-h-80 overflow-auto">
                 {visible.slice(0, 30).map((p) => (
                   <button key={p.id} onClick={() => { setSelectedId(p.id); setStatus("idle"); setBids([]); }}
-                    className={`w-full text-left p-3 rounded border transition-colors ${selectedId === p.id ? "border-slate-900 bg-slate-50" : "border-slate-200 bg-white hover:border-slate-300"}`}>
-                    <div className="text-sm font-medium text-slate-900">{p.name}</div>
-                    <div className="text-[11px] text-slate-500 mt-0.5">{p.category || "Catalog"} · {p.supplier?.name || "Verified Supplier"}</div>
+                    className={`w-full text-left p-3 rounded border transition-colors ${selectedId === p.id ? "border-slate-900 bg-black/40" : "border-white/10 bg-white/5 hover:border-white/20"}`}>
+                    <div className="text-sm font-medium text-white">{p.name}</div>
+                    <div className="text-[11px] text-white/50 mt-0.5">{p.category || "Catalog"} · {p.supplier?.name || "Verified Supplier"}</div>
                   </button>
                 ))}
                 {visible.length === 0 && <div className="text-xs text-slate-400 text-center py-6">No items match {`"${query}"`}.</div>}
@@ -174,16 +174,16 @@ export default function RfqPage() {
             </div>
 
             {/* Configure */}
-            <div className="bg-white border border-slate-200 rounded-lg p-4">
+            <div className="bg-white/5 border border-white/10 rounded-lg p-4">
               <h2 className="text-sm font-semibold text-[#111827] mb-3">2. Configure order</h2>
               {product ? (
                 <div className="space-y-4">
                   <div>
                     <label className="block text-xs text-slate-600 mb-1.5">Quantity</label>
                     <input type="number" min={1} value={qty} onChange={(e) => { setQty(Number(e.target.value) || 0); setStatus("idle"); }}
-                      className="w-full px-3 py-2.5 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-[#314B43] outline-none" />
+                      className="w-full px-3 py-2.5 border border-white/10 rounded-lg text-sm focus:ring-2 focus:ring-[#314B43] outline-none" />
                   </div>
-                  <div className="text-xs text-slate-500">Unit pricing: <span className="font-semibold text-[#111827]">EGP {product.unitPrice ?? "—"}</span> · Bulk auction at qty ≥ {threshold}</div>
+                  <div className="text-xs text-white/50">Unit pricing: <span className="font-semibold text-[#111827]">EGP {product.unitPrice ?? "—"}</span> · Bulk auction at qty ≥ {threshold}</div>
                   <div className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold border ${isRfq ? "bg-amber-50 text-amber-800 border-amber-200" : "bg-emerald-50 text-emerald-800 border-emerald-200"}`}>
                     {isRfq ? "RFQ auction mode" : "Instant fixed checkout"}
                   </div>
@@ -200,15 +200,15 @@ export default function RfqPage() {
             </div>
 
             {/* Real bids */}
-            <div className="bg-white border border-slate-200 rounded-lg p-4">
+            <div className="bg-white/5 border border-white/10 rounded-lg p-4">
               <h2 className="text-sm font-semibold text-[#111827] mb-3">3. Supplier bids</h2>
               {status === "done" && bids.length > 0 ? (
                 <div className="space-y-2">
                   {bids.map((b, i) => (
-                    <div key={i} className="border border-slate-200 rounded-lg p-3 flex items-center justify-between">
+                    <div key={i} className="border border-white/10 rounded-lg p-3 flex items-center justify-between">
                       <div>
-                        <div className="text-sm font-medium text-slate-900">{b.supplier}</div>
-                        <div className="text-[11px] text-slate-500">{b.deliveryDays} day delivery</div>
+                        <div className="text-sm font-medium text-white">{b.supplier}</div>
+                        <div className="text-[11px] text-white/50">{b.deliveryDays} day delivery</div>
                       </div>
                       <div className="text-right">
                         <div className="text-sm font-bold text-[#111827] tabular-nums">EGP {b.unitPrice.toLocaleString()}</div>
@@ -218,7 +218,7 @@ export default function RfqPage() {
                   ))}
                 </div>
               ) : status === "done" ? (
-                <div className="text-sm text-slate-500 py-6 text-center">RFQ created. Suppliers are being notified — real bids will appear here as they respond.</div>
+                <div className="text-sm text-white/50 py-6 text-center">RFQ created. Suppliers are being notified — real bids will appear here as they respond.</div>
               ) : (
                 <div className="text-sm text-slate-400 py-6 text-center">Bids from the live auction appear here.</div>
               )}

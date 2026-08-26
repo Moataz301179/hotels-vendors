@@ -4,7 +4,7 @@ import Link from "next/link";
 
 export default function Page() {
   return (
-    <main className="bg-slate-50 min-h-screen pt-16">
+    <main className="bg-black/40 min-h-screen pt-16">
       <div className="max-w-7xl mx-auto px-5 lg:px-8 py-10">
         <header className="mb-10 max-w-3xl">
           <div className="text-[11px] font-semibold uppercase tracking-widest text-[#8a6d3b]">Fintech</div>
@@ -18,9 +18,9 @@ export default function Page() {
             { name: "Fawry", role: "Bill payment network", fee: "Variable" },
             { name: "SWIFT / Local bank", role: "48h settlement", fee: "~1%" },
           ].map((r) => (
-            <div key={r.name} className="bg-white border border-slate-200 rounded-lg p-4">
+            <div key={r.name} className="bg-white/5 border border-white/10 rounded-lg p-4">
               <div className="text-sm font-semibold text-[#111827]">{r.name}</div>
-              <div className="text-xs text-slate-500 mt-0.5">{r.role}</div>
+              <div className="text-xs text-white/50 mt-0.5">{r.role}</div>
               <div className="text-[11px] text-slate-400 mt-2">{r.fee}</div>
             </div>
           ))}

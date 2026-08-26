@@ -30,7 +30,7 @@ export function HeroSection() {
             Fixed-price marketplace • ETA-compliant invoicing • Embedded factoring • Multi-property governance
           </p>
           <div className="flex flex-col sm:flex-row gap-4">
-            <a href="/marketplace" className="px-8 py-4 bg-orange-500 text-black font-bold text-sm tracking-wider uppercase rounded hover:bg-orange-400 transition-colors">Explore Marketplace</a>
+            <a href="/marketplace" className="px-8 py-4 bg-orange-500 text-white font-bold text-sm tracking-wider uppercase rounded hover:bg-orange-400 transition-colors">Explore Marketplace</a>
             <a href="/demo" className="px-8 py-4 border border-white/20 text-white font-bold text-sm tracking-wider uppercase rounded hover:border-orange-500 hover:bg-white/5 transition-colors">Request Demo</a>
           </div>
         </div>
@@ -40,7 +40,7 @@ export function HeroSection() {
               <div className="flex gap-2">
                 {views.map((t, i) => (
                   <button key={t.key} onClick={() => setTab(i)}
-                    className={"px-3 py-1.5 rounded-full text-xs font-bold tracking-wide transition-colors " + (i === tab ? "bg-orange-500 text-black" : "bg-white/5 text-white/60")}>
+                    className={"px-3 py-1.5 rounded-full text-xs font-bold tracking-wide transition-colors " + (i === tab ? "bg-orange-500 text-white" : "bg-white/5 text-white/60")}>
                     {t.label}
                   </button>
                 ))}

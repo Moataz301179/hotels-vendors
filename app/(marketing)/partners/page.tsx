@@ -154,7 +154,7 @@ export default function PartnerPortalPage() {
             <button
               onClick={submit}
               disabled={loading}
-              className="w-full h-14 bg-foreground text-canvas font-semibold uppercase tracking-[0.1em] text-sm hover:bg-white transition-colors disabled:opacity-50 mt-4"
+              className="w-full h-14 bg-foreground text-canvas font-semibold uppercase tracking-[0.1em] text-sm hover:bg-white/5 transition-colors disabled:opacity-50 mt-4"
             >
               {loading ? "Submitting…" : "Request Partner Access"}
             </button>

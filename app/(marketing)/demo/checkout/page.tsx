@@ -26,7 +26,7 @@ export default function DemoCheckout() {
             </div>
 
             <div className="flex gap-3">
-              <button onClick={placeOrder} className="px-4 py-2 bg-accent-base text-black rounded font-semibold">Place Order (No Payment)</button>
+              <button onClick={placeOrder} className="px-4 py-2 bg-accent-base text-white rounded font-semibold">Place Order (No Payment)</button>
               <Link href="/marketplace" className="px-4 py-2 bg-white/5 border border-white/10 rounded">Back to Sandbox</Link>
             </div>
           </div>
@@ -35,7 +35,7 @@ export default function DemoCheckout() {
             <h1 className="text-2xl font-bold mb-2">Order Placed</h1>
             <p className="text-white/60 mb-4">Order ID: <strong className="text-white">{orderId}</strong></p>
             <p className="mb-6 text-white/60">In a real demo this would enqueue ETA submission, create delivery, and trigger factoring workflows.</p>
-            <Link href="/" className="px-4 py-2 bg-white text-black rounded">Return Home</Link>
+            <Link href="/" className="px-4 py-2 bg-white/5 text-white rounded">Return Home</Link>
           </div>
         )}
       </div>

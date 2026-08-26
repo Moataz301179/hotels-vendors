@@ -64,7 +64,7 @@ export default function DemoPage() {
                     <div className="font-medium">{it.name}</div>
                     <div className="text-sm text-white/50">{it.qty} {it.unit} · EGP {it.price}</div>
                   </div>
-                  <button onClick={() => addToCart(it)} className="ml-4 px-3 py-1 bg-accent-base text-black rounded">Add</button>
+                  <button onClick={() => addToCart(it)} className="ml-4 px-3 py-1 bg-accent-base text-white rounded">Add</button>
                 </li>
               ))}
             </ul>
@@ -90,7 +90,7 @@ export default function DemoPage() {
             <div className="mt-4 border-t pt-3 text-right">
               <div className="text-sm text-white/60">Total</div>
               <div className="text-lg font-bold">EGP {total.toFixed(2)}</div>
-              <Link href="/demo/checkout" className="inline-block mt-3 px-4 py-2 bg-white text-black rounded">Proceed to Checkout (No Payment)</Link>
+              <Link href="/demo/checkout" className="inline-block mt-3 px-4 py-2 bg-white/5 text-white rounded">Proceed to Checkout (No Payment)</Link>
             </div>
           </div>
         </div>

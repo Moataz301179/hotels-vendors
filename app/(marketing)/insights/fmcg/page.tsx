@@ -66,7 +66,7 @@ export default function FmcgIntelligencePage() {
 
           {/* Share table */}
           {loading ? (
-            <div className="text-slate-500 text-sm py-16 text-center">Loading anonymized aggregation…</div>
+            <div className="text-white/50 text-sm py-16 text-center">Loading anonymized aggregation…</div>
           ) : (
             <div className="overflow-x-auto border border-slate-800 rounded-xl">
               <table className="w-full text-sm">
@@ -103,7 +103,7 @@ export default function FmcgIntelligencePage() {
             </div>
           )}
 
-          <p className="mt-6 text-[11px] text-slate-500">
+          <p className="mt-6 text-[11px] text-white/50">
             Data anonymized at source. No buyer PII exposed. Available via Manufacturer Insights — Enterprise SaaS subscription tier.
           </p>
         </div>

@@ -45,7 +45,7 @@ export default function ERPPage() {
           <div className="mt-16">
             <Link
               href="/register"
-              className="inline-flex items-center px-7 py-3.5 bg-[#FAFAFA] text-[#0A0A0A] text-[13px] font-semibold uppercase tracking-[0.1em] hover:bg-white transition-colors"
+              className="inline-flex items-center px-7 py-3.5 bg-[#FAFAFA] text-[#0A0A0A] text-[13px] font-semibold uppercase tracking-[0.1em] hover:bg-white/5 transition-colors"
             >
               Get started free
             </Link>

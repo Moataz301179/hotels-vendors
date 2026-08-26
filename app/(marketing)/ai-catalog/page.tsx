@@ -99,7 +99,7 @@ export default function AICatalogPage() {
       typeof result.totalRows === "number");
 
   return (
-    <main className="bg-slate-50 min-h-screen pt-16">
+    <main className="bg-black/40 min-h-screen pt-16">
       <div className="max-w-7xl mx-auto px-5 lg:px-8 py-14">
         {/* Hero */}
         <section className="max-w-3xl">
@@ -146,10 +146,10 @@ export default function AICatalogPage() {
             {STEPS.map((step, i) => (
               <div
                 key={step.title}
-                className="bg-white border border-slate-200 rounded-lg p-5"
+                className="bg-white/5 border border-white/10 rounded-lg p-5"
               >
                 <div className="flex items-center justify-between">
-                  <div className="w-10 h-10 rounded-md bg-slate-100 border border-slate-200 flex items-center justify-center">
+                  <div className="w-10 h-10 rounded-md bg-white/10 border border-white/10 flex items-center justify-center">
                     <step.icon className="w-5 h-5 text-[#314B43]" />
                   </div>
                   <div className="text-2xl font-bold text-slate-200">
@@ -159,7 +159,7 @@ export default function AICatalogPage() {
                 <div className="text-base font-semibold text-[#111827] mt-4">
                   {step.title}
                 </div>
-                <p className="text-[13px] text-slate-500 leading-relaxed mt-1">
+                <p className="text-[13px] text-white/50 leading-relaxed mt-1">
                   {step.copy}
                 </p>
               </div>
@@ -169,27 +169,27 @@ export default function AICatalogPage() {
 
         {/* Upload widget */}
         <section className="mt-16">
-          <div className="bg-white border border-slate-200 rounded-lg p-6 md:p-8">
+          <div className="bg-white/5 border border-white/10 rounded-lg p-6 md:p-8">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-md bg-slate-100 border border-slate-200 flex items-center justify-center">
+              <div className="w-10 h-10 rounded-md bg-white/10 border border-white/10 flex items-center justify-center">
                 <Upload className="w-5 h-5 text-[#314B43]" />
               </div>
               <div>
                 <h2 className="text-lg font-bold text-[#111827]">
                   Ingest a catalog
                 </h2>
-                <p className="text-[13px] text-slate-500">
+                <p className="text-[13px] text-white/50">
                   Upload one price sheet for instant parsing and AI enrichment.
                 </p>
               </div>
             </div>
 
-            <div className="mt-6 rounded-md border border-dashed border-slate-300 bg-slate-50 p-8 text-center">
+            <div className="mt-6 rounded-md border border-dashed border-white/20 bg-black/40 p-8 text-center">
               <FileUp className="w-8 h-8 text-slate-400 mx-auto" />
-              <p className="mt-3 text-sm font-semibold text-slate-700">
+              <p className="mt-3 text-sm font-semibold text-white/70">
                 {fileName ?? "Choose a .csv, .xlsx, or .pdf price sheet"}
               </p>
-              <p className="mt-1 text-xs text-slate-500">
+              <p className="mt-1 text-xs text-white/50">
                 Max 10 MB · parsed and mapped automatically
               </p>
               <button
@@ -292,7 +292,7 @@ export default function AICatalogPage() {
             {TAXONOMY.map((cat) => (
               <span
                 key={cat}
-                className="px-4 py-2 rounded-full border border-slate-300 bg-white text-[13px] font-medium text-slate-700"
+                className="px-4 py-2 rounded-full border border-white/20 bg-white/5 text-[13px] font-medium text-white/70"
               >
                 {cat}
               </span>

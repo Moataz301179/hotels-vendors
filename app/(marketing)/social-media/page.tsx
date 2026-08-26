@@ -73,7 +73,7 @@ export default function SocialMediaPage() {
             <motion.div variants={fadeUp} className="mt-8 flex flex-wrap items-center gap-4">
               <Link
                 href="#beta-waiting-list"
-                className="inline-flex items-center gap-2 px-6 py-3.5 bg-orange-base text-black text-[14px] font-medium rounded-xl hover:bg-[var(--orange-light)] transition-colors"
+                className="inline-flex items-center gap-2 px-6 py-3.5 bg-orange-base text-white text-[14px] font-medium rounded-xl hover:bg-[var(--orange-light)] transition-colors"
               >
                 Join the Waiting List
                 <ArrowRight className="w-4 h-4" />
@@ -451,7 +451,7 @@ export default function SocialMediaPage() {
             <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
               <Link
                 href="#beta-waiting-list"
-                className="inline-flex items-center gap-2 px-7 py-3.5 bg-orange-base text-black text-[14px] font-medium rounded-xl hover:bg-[var(--orange-light)] transition-colors"
+                className="inline-flex items-center gap-2 px-7 py-3.5 bg-orange-base text-white text-[14px] font-medium rounded-xl hover:bg-[var(--orange-light)] transition-colors"
               >
                 Join Beta Waiting List
                 <ArrowRight className="w-4 h-4" />
@@ -545,7 +545,7 @@ function BetaWaitingListForm() {
       <button
         type="submit"
         disabled={loading || !email || !role}
-        className="w-full py-3 text-[14px] font-medium bg-orange-base text-black rounded-xl hover:bg-[var(--orange-light)] transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+        className="w-full py-3 text-[14px] font-medium bg-orange-base text-white rounded-xl hover:bg-[var(--orange-light)] transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
       >
         {loading ? "Joining..." : "Join Waiting List"}
       </button>

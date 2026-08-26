@@ -63,7 +63,7 @@ const AUDIENCE_ROLES = [
 
 export default function HOVINPage() {
   return (
-    <main className="min-h-screen bg-white">
+    <main className="min-h-screen bg-white/5">
       {/* Hero */}
       <section className="relative overflow-hidden">
         <div className="max-w-6xl mx-auto px-5 lg:px-8 pt-32 pb-16 text-center">
@@ -120,7 +120,7 @@ export default function HOVINPage() {
       </section>
 
       {/* ▸ Exploring HOVIN — phone mockup section */}
-      <section id="explore-hovin" className="bg-white py-16">
+      <section id="explore-hovin" className="bg-white/5 py-16">
         <div className="max-w-6xl mx-auto px-5 lg:px-8">
           <div className="text-center mb-10">
             <p className="text-[11px] font-semibold uppercase tracking-widest text-[#8a6d3b] mb-3">Exploring HOVIN</p>
@@ -149,14 +149,14 @@ export default function HOVINPage() {
       </section>
 
       {/* Features */}
-      <section className="bg-slate-50 border-y border-slate-200 py-14">
+      <section className="bg-black/40 border-y border-white/10 py-14">
         <div className="max-w-6xl mx-auto px-5 lg:px-8">
           <h2 className="text-2xl md:text-3xl font-bold text-[#4D4A46] tracking-tight text-center mb-8">Everything the field needs</h2>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {FEATURES.map((f) => {
               const Icon = f.icon;
               return (
-                <div key={f.title} className="bg-white border border-slate-200 rounded-xl p-5">
+                <div key={f.title} className="bg-white/5 border border-white/10 rounded-xl p-5">
                   <div className="w-10 h-10 rounded-lg bg-[#314B43] flex items-center justify-center mb-3">
                     <Icon size={18} className="text-white" />
                   </div>
@@ -170,7 +170,7 @@ export default function HOVINPage() {
       </section>
 
       {/* Who HOVIN serves — per-audience roles */}
-      <section className="bg-white py-16">
+      <section className="bg-white/5 py-16">
         <div className="max-w-6xl mx-auto px-5 lg:px-8">
           <div className="text-center mb-10">
             <p className="text-[11px] font-semibold uppercase tracking-widest text-[#8a6d3b] mb-3">Who It&apos;s For</p>
@@ -186,7 +186,7 @@ export default function HOVINPage() {
             {AUDIENCE_ROLES.map((a) => {
               const Icon = a.icon;
               return (
-                <div key={a.title} className="border border-slate-200 rounded-xl p-6 flex flex-col">
+                <div key={a.title} className="border border-white/10 rounded-xl p-6 flex flex-col">
                   <div className="w-11 h-11 rounded-xl bg-[#314B43] flex items-center justify-center mb-4">
                     <Icon size={20} className="text-white" />
                   </div>
@@ -226,7 +226,7 @@ export default function HOVINPage() {
 
 function MockHighlight({ icon: Icon, title, desc }: { icon: React.ElementType; title: string; desc: string }) {
   return (
-    <div className="flex items-start gap-3 bg-slate-50 border border-slate-200 rounded-xl p-4">
+    <div className="flex items-start gap-3 bg-black/40 border border-white/10 rounded-xl p-4">
       <div className="w-9 h-9 rounded-lg bg-[#314B43] flex items-center justify-center shrink-0">
         <Icon size={16} className="text-white" />
       </div>
