@@ -134,7 +134,7 @@ export function SiteNav() {
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/brand/hv-mark.png" alt="HotelsVendors" width={30} height={30} className="object-contain" />
           <span
-            className="hidden sm:block font-semibold uppercase text-[13px] text-[#FAFAFA]"
+            className="font-semibold uppercase text-[13px] text-[#FAFAFA]"
             style={{ letterSpacing: "0.22em" }}
           >
             HotelsVendors
