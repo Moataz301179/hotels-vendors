@@ -2,7 +2,7 @@ import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { OrderCreateSchema, PaginationSchema } from "@/lib/zod";
 import { evaluateAuthority } from "@/lib/auth/authority-matrix";
-import { checkCreditLimit } from "@/lib/credit-gate";
+import { checkCreditLimit, checkAndReserveCredit, CREDIT_EXCEEDED_ERROR } from "@/lib/credit-gate";
 import { apiRoute, authenticate, validateBody, validateQuery, success, error, audit, requireIdempotencyKey, completeIdempotency, requirePermission } from "@/lib/api-utils";
 
 export const GET = apiRoute(async (request: NextRequest) => {
@@ -93,21 +93,10 @@ export const POST = apiRoute(async (request: NextRequest) => {
   let order: any;
   try {
     order = await prisma.$transaction(async (tx) => {
-      // Lock the hotel row — Prisma doesn't expose raw FOR UPDATE, but the
-      // transactional isolation ensures the read-then-write is serialized.
-      const hotel = await tx.hotel.findUniqueOrThrow({
-        where: { id: hotelId },
-        select: { creditLimit: true, creditUsed: true },
-      });
-
-      // Re-validate inside the transaction (race-condition guard)
-      const currentExposure = Number(hotel.creditUsed ?? 0);
-      if (currentExposure + total > Number(hotel.creditLimit ?? Infinity)) {
-        throw new CREDIT_EXCEEDED_ERROR(
-          `Concurrent credit breach. Exposure: EGP ${currentExposure.toFixed(2)} + this order EGP ${total.toFixed(2)} > Limit: EGP ${(hotel.creditLimit ?? 0).toFixed(2)}`,
-          currentExposure,
-        );
-      }
+      // ATOMIC credit gate: SELECT ... FOR UPDATE row lock, then check and
+      // increment in the same transaction. Throws CREDIT_EXCEEDED_ERROR to
+      // roll back if the concurrent exposure would breach the limit.
+      await checkAndReserveCredit(tx, hotelId, total);
 
       const createdOrder = await tx.order.create({
         data: {
@@ -136,12 +125,6 @@ export const POST = apiRoute(async (request: NextRequest) => {
           },
         },
         include: { items: { include: { product: true } }, hotel: true, supplier: true },
-      });
-
-      // Increment creditUsed atomically
-      await tx.hotel.update({
-        where: { id: hotelId },
-        data: { creditUsed: { increment: total } },
       });
 
       return createdOrder;
@@ -199,14 +182,3 @@ export const POST = apiRoute(async (request: NextRequest) => {
 
   return success({ order, evaluation }, 201);
 }, { rateLimit: "api" });
-
-// Custom error class to distinguish credit breaches from other transaction failures
-class CREDIT_EXCEEDED_ERROR extends Error {
-  constructor(
-    message: string,
-    public currentExposure: number,
-  ) {
-    super(message);
-    this.name = "CREDIT_EXCEEDED_ERROR";
-  }
-}
