@@ -37,6 +37,7 @@ jobs:
           DATABASE_URL: "postgresql://dummy:***@localhost:5432/dummy"
           HOTELSVENDORS_HMAC_SECRET: "dummy-hmac-secret-for-ci-build-only-32chars-minimum"
           ENCRYPTION_MASTER_KEY: "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
+          NEXT_PUBLIC_APP_URL: "https://www.hotelsvendors.com"
 
   deploy-hostinger:
     name: Deploy to Hostinger VPS (PM2)
