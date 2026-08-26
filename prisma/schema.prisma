@@ -192,6 +192,7 @@ model Hotel {
   consumptionForecasts ConsumptionForecast[]
   inventoryReconciliations InventoryReconciliation[]
   scheduledOrders      ScheduledOrder[]
+  rfqs                 Rfq[]
 
   @@index([tenantId])
   @@index([city])
@@ -375,6 +376,7 @@ model Supplier {
   users                User[]
   goodsReceiptNotes    GoodsReceiptNote[]
   scheduledOrders      ScheduledOrder[]
+  rfqResponses         RfqResponse[]
 
   @@index([tenantId])
   @@index([city])
@@ -3575,6 +3577,11 @@ enum ReconciliationStatus {
 }
 
 enum RfqStatus {
+  DRAFT
+  OPEN
+  CLOSED
+  AWARDED
+  CANCELLED
   PENDING
   QUOTED
   ACCEPTED
@@ -3635,4 +3642,72 @@ enum ProductSource {
   ECOMMERCE
   DROPSHIP
   MANUAL
+}
+
+model Rfq {
+  id        String    @id @default(cuid())
+  rfqNumber String    @unique
+  hotelId   String
+  status    RfqStatus @default(DRAFT)
+  deadline  DateTime?
+  tenantId  String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  uuid      String?   @unique(map: "Rfq_uuid_uniq") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  deletedAt DateTime?
+  items     RfqItem[]
+  responses RfqResponse[]
+  hotel     Hotel     @relation(fields: [hotelId], references: [id])
+  tenant    Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId])
+  @@index([hotelId])
+  @@index([status])
+  @@index([deletedAt], map: "Rfq_deleted_idx")
+}
+
+model RfqItem {
+  id         String         @id @default(cuid())
+  rfqId      String
+  productId  String?
+  category   ProductCategory
+  quantity   Int
+  specs      String?
+  createdAt  DateTime       @default(now())
+  uuid       String?        @unique(map: "RfqItem_uuid_uniq") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  deletedAt  DateTime?
+  product    Product?       @relation(fields: [productId], references: [id])
+  rfq        Rfq            @relation(fields: [rfqId], references: [id], onDelete: Cascade)
+
+  @@index([rfqId])
+  @@index([productId])
+  @@index([deletedAt], map: "RfqItem_deleted_idx")
+}
+
+model RfqResponse {
+  id          String         @id @default(cuid())
+  rfqId       String
+  supplierId  String
+  totalAmount Decimal?       @db.Decimal(12, 2)
+  validUntil  DateTime?
+  status      ResponseStatus @default(SUBMITTED)
+  notes       String?
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  uuid        String?        @unique(map: "RfqResponse_uuid_uniq") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  deletedAt   DateTime?
+  rfq         Rfq            @relation(fields: [rfqId], references: [id], onDelete: Cascade)
+  supplier    Supplier       @relation(fields: [supplierId], references: [id])
+
+  @@index([rfqId])
+  @@index([supplierId])
+  @@index([status])
+  @@index([deletedAt], map: "RfqResponse_deleted_idx")
+}
+
+enum ResponseStatus {
+  SUBMITTED
+  ACCEPTED
+  REJECTED
+  EXPIRED
 }
