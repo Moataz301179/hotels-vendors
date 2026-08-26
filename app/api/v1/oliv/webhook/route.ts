@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { verifyOlivWebhook, handleOlivWebhook } from "@/lib/payments/oliv/index";
+import { guardWebhookIp } from "@/lib/security/webhook-whitelist";
 
 const OlivStatusUpdateSchema = z.object({
   factoringRequestId: z.string(),
@@ -27,6 +28,12 @@ const OlivWebhookPayloadSchema = z.object({
 
 export async function POST(request: NextRequest) {
   try {
+    // IP whitelisting - reject untrusted sources before signature verification
+    const ipGuard = guardWebhookIp(request, "oliv", "Oliv Webhook");
+    if (ipGuard) {
+      return NextResponse.json(ipGuard.body, { status: ipGuard.status });
+    }
+
     const rawBody = await request.text();
 
     let parsed: unknown;

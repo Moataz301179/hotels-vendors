@@ -3,10 +3,12 @@
  *
  * Receives invoice status updates from the Egyptian Tax Authority.
  *
- * SECURITY: Every request is verified using HMAC SHA256 signature validation.
- * ETA signs each callback with a shared secret. We recompute the signature
- * from the raw request body and compare using timing-safe comparison to
- * prevent spoofed callbacks from corrupting invoice statuses.
+ * SECURITY: Requests are first filtered by IP whitelist (strict mode in
+ * production / WEBHOOK_STRICT_MODE=true), then verified using HMAC SHA256
+ * signature validation. ETA signs each callback with a shared secret. We
+ * recompute the signature from the raw request body and compare using
+ * timing-safe comparison to prevent spoofed callbacks from corrupting
+ * invoice statuses.
  *
  * IDEMPOTENCY: Duplicate callbacks (same UUID + same status) are silently
  * acknowledged without creating duplicate audit log entries.
@@ -16,16 +18,17 @@ import { NextRequest, NextResponse } from "next/server";
 import { createHmac, timingSafeEqual } from "crypto";
 import { prisma } from "@/lib/prisma";
 import { EtaStatus } from "@prisma/client";
+import { guardWebhookIp } from "@/lib/security/webhook-whitelist";
 
 const ETA_WEBHOOK_SECRET = process.env.ETA_WEBHOOK_SECRET || "";
 
-// ─────────────────────────────────────────
+// -----------------------------------------
 // HMAC SIGNATURE VERIFICATION
-// ─────────────────────────────────────────
+// -----------------------------------------
 
 function verifySignature(rawBody: string, signature: string | null): boolean {
   if (!ETA_WEBHOOK_SECRET) {
-    console.error("[ETA Callback] ETA_WEBHOOK_SECRET not configured — rejecting all callbacks");
+    console.error("[ETA Callback] ETA_WEBHOOK_SECRET not configured - rejecting all callbacks");
     return false;
   }
 
@@ -49,9 +52,9 @@ function verifySignature(rawBody: string, signature: string | null): boolean {
   return timingSafeEqual(expectedBuf, providedBuf);
 }
 
-// ─────────────────────────────────────────
+// -----------------------------------------
 // STATUS MAPPING
-// ─────────────────────────────────────────
+// -----------------------------------------
 
 const ETA_STATUS_MAP: Record<string, EtaStatus> = {
   Submitted: "SUBMITTING",
@@ -61,11 +64,17 @@ const ETA_STATUS_MAP: Record<string, EtaStatus> = {
   Cancelled: "MANUAL_RESOLUTION",
 };
 
-// ─────────────────────────────────────────
+// -----------------------------------------
 // ROUTE HANDLER
-// ─────────────────────────────────────────
+// -----------------------------------------
 
 export async function POST(request: NextRequest) {
+  // STEP 0: IP whitelist guard - reject untrusted sources before HMAC check
+  const ipGuard = guardWebhookIp(request, "eta", "ETA Callback");
+  if (ipGuard) {
+    return NextResponse.json(ipGuard.body, { status: ipGuard.status });
+  }
+
   // STEP 1: Read raw body for signature verification
   const rawBody = await request.text();
 
@@ -124,12 +133,12 @@ export async function POST(request: NextRequest) {
   if (!invoice) {
     // Acknowledge to stop ETA retries, but don't process
     return NextResponse.json(
-      { success: true, message: "UUID not found — acknowledged" },
+      { success: true, message: "UUID not found - acknowledged" },
       { status: 200 }
     );
   }
 
-  // STEP 6: Idempotency check — skip if this exact callback was already processed
+  // STEP 6: Idempotency check - skip if this exact callback was already processed
   if (invoice.submissionLog) {
     try {
       const log = JSON.parse(invoice.submissionLog);
@@ -138,12 +147,12 @@ export async function POST(request: NextRequest) {
         log.lastCallback?.status === payload.status
       ) {
         return NextResponse.json(
-          { success: true, message: "Duplicate callback — already processed" },
+          { success: true, message: "Duplicate callback - already processed" },
           { status: 200 }
         );
       }
     } catch {
-      // submissionLog is malformed — continue processing
+      // submissionLog is malformed - continue processing
     }
   }
 
