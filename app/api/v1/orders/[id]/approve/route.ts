@@ -1,6 +1,7 @@
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { recordApproval } from "@/lib/auth/authority-matrix";
+import { enforceAuthorityMatrix } from "@/lib/auth/enforce-matrix";
 import { apiRoute, authenticate, success, error, audit, requirePermission, requireIdempotencyKey, completeIdempotency } from "@/lib/api-utils";
 import { z } from "zod";
 
@@ -42,6 +43,19 @@ export const POST = apiRoute(async (request: NextRequest, { params }: { params?:
   if (!canApprove && !user.canOverride) {
     return error("Insufficient permissions to approve orders", 403);
   }
+
+  // Authority Matrix gate: must pass BEFORE any status change.
+  const targetStatus = data.action === "APPROVED" ? "APPROVED" : data.action === "REJECTED" ? "REJECTED" : "PENDING_APPROVAL";
+  const matrixCtx = {
+    userId: auth.userId,
+    userRole: user.role,
+    tenantId: auth.tenantId,
+    ipAddress: request.headers.get("x-forwarded-for") || undefined,
+    userAgent: request.headers.get("user-agent") ?? undefined,
+  };
+  const gate = await enforceAuthorityMatrix(id, matrixCtx, targetStatus);
+  if (!gate.ok) return gate.response;
+  const evaluation = gate.evaluation;
 
   await recordApproval(id, auth.userId, auth.tenantId, data.action, data.reason);
 

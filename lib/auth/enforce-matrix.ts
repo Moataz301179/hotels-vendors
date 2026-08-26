@@ -25,12 +25,20 @@ export type MatrixGate =
   | { ok: true; evaluation: AuthorityEvaluationResult }
   | { ok: false; response: NextResponse };
 
+export type MatrixAuthContext = Omit<AuthorityContext, "userRole"> & {
+  /** Role as stored on the user record (UserRole union at runtime). */
+  userRole: string;
+};
+
 export async function enforceAuthorityMatrix(
   orderId: string,
-  ctx: AuthorityContext,
+  ctx: MatrixAuthContext,
   targetStatus?: string
 ): Promise<MatrixGate> {
-  const evaluation = await evaluateAuthority(orderId, ctx);
+  const evaluation = await evaluateAuthority(orderId, {
+    ...ctx,
+    userRole: ctx.userRole as AuthorityContext["userRole"],
+  });
 
   if (!evaluation.canProceed) {
     // Audit the blocked attempt (best-effort; never block on audit failure).

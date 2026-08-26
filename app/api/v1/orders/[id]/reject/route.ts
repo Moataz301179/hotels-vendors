@@ -1,6 +1,7 @@
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { recordApproval } from "@/lib/auth/authority-matrix";
+import { enforceAuthorityMatrix } from "@/lib/auth/enforce-matrix";
 import { apiRoute, authenticate, success, error, audit, requirePermission } from "@/lib/api-utils";
 import { z } from "zod";
 
@@ -38,6 +39,21 @@ export const POST = apiRoute(async (request: NextRequest, { params }: { params?:
     where: { id },
     select: { status: true, paymentGuaranteed: true, paymentGuaranteeMethod: true },
   });
+
+  // Authority Matrix gate: must pass BEFORE any status change.
+  const gateUser = await prisma.user.findUnique({ where: { id: auth.userId }, select: { role: true } });
+  const matrixGate = await enforceAuthorityMatrix(
+    id,
+    {
+      userId: auth.userId,
+      userRole: gateUser?.role ?? "CLERK",
+      tenantId: auth.tenantId,
+      ipAddress: request.headers.get("x-forwarded-for") || undefined,
+      userAgent: request.headers.get("user-agent") ?? undefined,
+    },
+    "REJECTED"
+  );
+  if (!matrixGate.ok) return matrixGate.response;
 
   await recordApproval(
     id,
