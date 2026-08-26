@@ -101,10 +101,30 @@ async function fetchWithRetry(
     });
 
     clearTimeout(timeoutId);
+
+    // Exponential backoff on 429 (rate limit) and 5xx (server errors)
+    const retryableStatus =
+      response.status === 429 || (response.status >= 500 && response.status < 600);
+    if (retryableStatus && retries > 0) {
+      const attempt = (ETA_CONFIG.maxRetries ?? 3) - retries + 1;
+      // Respect Retry-After when ETA provides it, else exponential backoff
+      const retryAfterHeader = response.headers.get("retry-after");
+      const retryAfterMs = retryAfterHeader ? Number(retryAfterHeader) * 1000 : null;
+      const backoffMs = Math.min(
+        retryAfterMs ?? (ETA_CONFIG.retryDelayMs ?? 2000) * 2 ** (attempt - 1),
+        60000
+      );
+      console.warn(`[ETA Client] ${response.status} from ${url} — retry ${attempt} in ${backoffMs}ms`);
+      await delay(backoffMs);
+      return fetchWithRetry(url, options, retries - 1);
+    }
+
     return response;
   } catch (error) {
     if (retries > 0) {
-      await delay((ETA_CONFIG.retryDelayMs ?? 2000) * ((ETA_CONFIG.maxRetries ?? 3) - retries + 1));
+      const attempt = (ETA_CONFIG.maxRetries ?? 3) - retries + 1;
+      const backoffMs = Math.min((ETA_CONFIG.retryDelayMs ?? 2000) * 2 ** (attempt - 1), 60000);
+      await delay(backoffMs);
       return fetchWithRetry(url, options, retries - 1);
     }
     throw error;
@@ -242,6 +262,19 @@ export async function getInvoiceStatus(uuid: string): Promise<EtaDocumentStatus 
 /**
  * Cancel a submitted invoice (before validation).
  */
+/**
+ * Spec-named wrapper: GET /api/v1/documents/{uuid}
+ * Fetch a single document's current state from ETA.
+ */
+export async function getDocument(
+  uuid: string
+): Promise<EtaDocumentStatus | null> {
+  return etaFetch(`/documents/${encodeURIComponent(uuid)}`).then(async (res) => {
+    if (!res.ok) return null;
+    return (await res.json()) as EtaDocumentStatus;
+  });
+}
+
 export async function cancelInvoice(uuid: string, reason: string): Promise<void> {
   const response = await etaFetch(`/documents/${uuid}/cancel`, {
     method: "PUT",

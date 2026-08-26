@@ -9,7 +9,7 @@ import { createHash } from "crypto";
 import { verifySession, getSessionToken } from "@/lib/session";
 import { captureException } from "@sentry/nextjs";
 import { appendAuditEntry } from "@/lib/audit/tamper-proof";
-import { checkIdempotencyKey, completeIdempotency as completeRedisIdempotency } from "@/lib/redis";
+import { reserveIdempotency } from "@/lib/redis";
 import { rateLimitResponse, type RateLimitTier } from "@/lib/security/rate-limiter";
 import { logAuthFailure, logRateLimit } from "@/lib/security/security-logger";
 
@@ -140,30 +140,85 @@ export function validateQuery<T>(schema: z.ZodSchema<T>, searchParams: URLSearch
 }
 
 // ─────────────────────────────────────────
-// 4. IDEMPOTENCY
-// ─────────────────────────────────────────
+// 4. IDEMPOTENCY (SEC-01 — Redis-backed, atomic SET NX EX reservation)
+// Key format: idem:{scope}:{userId}:{key}; states PENDING -> completed(result JSON).
+// TTL: 24h for financial scopes, 72h when the scope denotes a webhook.
 
+const IDEM_TTL_FINANCIAL = 24 * 60 * 60;
+const IDEM_TTL_WEBHOOK = 72 * 60 * 60;
+
+function idemTtl(scope: string): number {
+  return scope.toLowerCase().includes("webhook") ? IDEM_TTL_WEBHOOK : IDEM_TTL_FINANCIAL;
+}
+
+/**
+ * Enforce idempotency for a mutation request.
+ * - Reads x-idempotency-key header; auto-generates a UUID for POST mutations
+ *   when absent (other methods still require an explicit key).
+ * - Atomically reserves the key; concurrent/duplicate requests get a 409
+ *   carrying the stored result of the original execution.
+ * - Returns an opaque token to pass to completeIdempotency() once the
+ *   business mutation has committed.
+ */
 export async function requireIdempotencyKey(
   request: NextRequest,
   context: { userId: string; action: string; amount: number }
 ): Promise<string> {
-  const key = request.headers.get("x-idempotency-key");
+  let key = request.headers.get("x-idempotency-key")?.trim();
   if (!key) {
-    throw new ApiError("Missing x-idempotency-key header for monetary mutation", 400);
+    if (request.method !== "POST") {
+      throw new ApiError("Missing x-idempotency-key header for monetary mutation", 400);
+    }
+    // Auto-generate for POST mutations so retries without a client key are still tracked.
+    key = crypto.randomUUID();
   }
-  const scope = `${context.userId}:${context.action}`;
-  const result = await checkIdempotencyKey(key, scope);
-  if (result.exists) {
-    throw new ApiError(result.previousResult || "Duplicate request detected", 409);
+
+  const scope = context.action || "global";
+  const res = await reserveIdempotency(scope, context.userId, key, {
+    ttlSeconds: idemTtl(scope),
+  });
+
+  if (res.replay) {
+    const stored =
+      res.storedResult && res.storedResult !== "PENDING"
+        ? safeParseStored(res.storedResult)
+        : null;
+    throw new ApiError(
+      JSON.stringify({
+        error: "Duplicate request detected",
+        replay: true,
+        ...(stored !== null ? { previousResult: stored } : {}),
+      }),
+      409
+    );
   }
-  return key;
+
+  // Opaque completion token carrying scope/user/key for completeIdempotency().
+  return [scope, context.userId, key].map(encodeURIComponent).join("::");
 }
 
+function safeParseStored(raw: string): unknown {
+  try {
+    return JSON.parse(raw);
+  } catch {
+    return raw;
+  }
+}
+
+/** Mark a reserved idempotency token as completed with its result payload. */
 export async function completeIdempotency(key: string, result: string): Promise<void> {
-  await completeRedisIdempotency(key, "global", result);
+  const parts = key.split("::").map(decodeURIComponent);
+  if (parts.length !== 3) {
+    // Legacy/unknown token format — nothing to mark completed.
+    return;
+  }
+  const [scope, userId, rawKey] = parts;
+  await reserveIdempotency(scope, userId, rawKey, {
+    value: result,
+    ttlSeconds: idemTtl(scope),
+  });
 }
 
-// ─────────────────────────────────────────
 // 5. AUDIT LOG
 // ─────────────────────────────────────────
 
