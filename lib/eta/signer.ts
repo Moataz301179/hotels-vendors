@@ -89,6 +89,68 @@ async function signWithPrivateKey(
   };
 }
 
+// ── PKCS#12 signing via node-forge ──
+
+// TODO(KMS-UPGRADE): Replace env/file-based PKCS#12 handling with a cloud KMS
+// (AWS KMS / HashiCorp Vault transit) so the private key never leaves the HSM.
+// signWithPkcs12() is the only call site that would need to change.
+
+interface Pkcs12SigningResult {
+  /** Base64-encoded detached signature (RSA-SHA256 over canonicalized XML) */
+  signature: string;
+  /** Base64-encoded X.509 certificate from the PKCS#12 bundle */
+  certificate: string;
+}
+
+/**
+ * Load a PKCS#12 bundle from an env-provided base64 blob + password,
+ * extract the private key and certificate, and produce the detached
+ * signature pair required by the ETA documentsubmissions API.
+ */
+export async function signWithPkcs12(
+  xmlBytes: Buffer
+): Promise<Pkcs12SigningResult> {
+  const p12Base64 = process.env.ETA_PKCS12_BASE64;
+  const p12Password = process.env.ETA_PKCS12_PASSWORD || "";
+
+  if (!p12Base64) {
+    throw new Error(
+      "[ETA SIGNER] ETA_PKCS12_BASE64 not configured — cannot produce a real signature"
+    );
+  }
+
+  const forge = await import("node-forge");
+  const p12Asn1 = forge.asn1.fromDer(p12Base64, false);
+  const p12 = forge.pkcs12.pkcs12FromAsn1(p12Asn1, false, p12Password);
+
+  // Extract the private key (PKCS#8 shrouded key bag, or first key bag)
+  const keyBags = p12.getBags({ bagType: forge.pki.oids.pkcs8ShroudedKeyBag });
+  const keyBag =
+    keyBags[forge.pki.oids.pkcs8ShroudedKeyBag]?.[0] ??
+    Object.values(keyBags).flat()[0];
+  if (!keyBag || !keyBag.key) {
+    throw new Error("[ETA SIGNER] No private key found in PKCS#12 bundle");
+  }
+
+  // Extract the X.509 certificate
+  const certBags = p12.getBags({ bagType: forge.pki.oids.certBag });
+  const cert = certBags[forge.pki.oids.certBag]?.[0]?.cert;
+  if (!cert) {
+    throw new Error("[ETA SIGNER] No certificate found in PKCS#12 bundle");
+  }
+
+  const privateKeyPem = forge.pki.privateKeyToPem(keyBag.key);
+  const signed = await signWithPrivateKey(xmlBytes, Buffer.from(privateKeyPem, "utf8"));
+
+  return {
+    signature: signed.signature,
+    certificate: Buffer.from(
+      forge.pki.certificateToPem(cert),
+      "utf8"
+    ).toString("base64"),
+  };
+}
+
 // ── Placeholder signing ──
 
 function signPlaceholder(xmlBytes: Buffer): SigningResult {

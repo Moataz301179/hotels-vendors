@@ -166,19 +166,27 @@ function addSecurityHeaders(response: NextResponse): NextResponse {
     "Permissions-Policy",
     "camera=(), microphone=(), geolocation=(), interest-cohort=()"
   );
-  // Strict CSP — allow self, inline styles/scripts (Next.js requirement), and Google Fonts
-  response.headers.set(
-    "Content-Security-Policy",
-    "default-src 'self'; " +
-    "script-src 'self' 'unsafe-inline' 'unsafe-eval'; " +
-    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; " +
-    "font-src 'self' https://fonts.gstatic.com; " +
-    "img-src 'self' data: blob: https://images.unsplash.com https://cdn.jsdelivr.net https://api.qrserver.com; " +
-    "connect-src 'self' https://api.oliv.finance https://sandbox.oliv.finance https://invoicing.eta.gov.eg https://api.fawry.com; " +
-    "frame-ancestors 'none'; " +
-    "base-uri 'self'; " +
-    "form-action 'self';"
-  );
+  // SEC-07 nonce-based CSP scaffold.
+  // Per-request nonce replaces script-src 'unsafe-inline'/'unsafe-eval'.
+  // TODO(SEC-07 migration): inline <script> tags must move to nonce'd or external scripts:
+  //   - app/layout.tsx (2 inline scripts, ~lines 161/193)
+  //   - app/(marketing)/layout.tsx (~line 106)
+  // NOTE: 'unsafe-inline'/'unsafe-eval' are REMOVED — pages with inline <script> will be
+  // blocked by CSP until each script is given nonce={headers().get('x-nonce')} or externalized.
+  const nonce = Buffer.from(crypto.randomUUID()).toString("base64");
+  const csp = [
+    "default-src 'self'",
+    `script-src 'self' 'nonce-${nonce}' 'strict-dynamic'`,
+    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+    "font-src 'self' https://fonts.gstatic.com",
+    "img-src 'self' data: blob: https://images.unsplash.com https://cdn.jsdelivr.net https://api.qrserver.com",
+    "connect-src 'self' https://api.oliv.finance https://sandbox.oliv.finance https://invoicing.eta.gov.eg https://api.fawry.com",
+    "frame-ancestors 'none'",
+    "base-uri 'self'",
+    "form-action 'self'",
+  ].join("; ");
+  response.headers.set("Content-Security-Policy", csp);
+  response.headers.set("x-nonce", nonce);
   return response;
 }
 

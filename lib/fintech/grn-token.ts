@@ -14,7 +14,8 @@
 import { createHmac, timingSafeEqual } from "crypto";
 import { prisma } from "@/lib/prisma";
 
-const GRN_SECRET = process.env.HOTELSVENDORS_HMAC_SECRET || process.env.SESSION_SECRET || "";
+// SEC-05: HMAC tokens MUST NOT fall back to SESSION_SECRET — one key per purpose.
+const GRN_SECRET = process.env.HOTELSVENDORS_HMAC_SECRET || "";
 
 export interface GrnDeliveryToken {
   orderId: string;

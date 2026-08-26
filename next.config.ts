@@ -51,8 +51,11 @@ const nextConfig: NextConfig = {
         source: "/api/v1/:path*",
         headers: [
           {
+            // SEC-06 fail-closed: empty string would allow ALL origins.
+            // In production NEXT_PUBLIC_APP_URL must be set; middleware.ts bootstrap
+            // throws if missing. Dev falls back to localhost only when NODE_ENV!=production.
             key: "Access-Control-Allow-Origin",
-            value: process.env.NEXT_PUBLIC_APP_URL || "",
+            value: getCorsOrigin(),
           },
           {
             key: "Access-Control-Allow-Methods",
@@ -95,6 +98,23 @@ const nextConfig: NextConfig = {
     ];
   },
 };
+
+
+/**
+ * SEC-06: CORS origin must never resolve to "" (which browsers treat as a wildcard).
+ * Fail-closed in production: middleware.ts throws at bootstrap if NEXT_PUBLIC_APP_URL is unset,
+ * so this helper only needs to handle dev fallback + defensive localhost restriction.
+ */
+function getCorsOrigin(): string {
+  const url = process.env.NEXT_PUBLIC_APP_URL;
+  if (url) return url;
+  if (process.env.NODE_ENV !== "production") return "http://localhost:3000";
+  // Production without APP_URL: emit no ACAO header value at all rather than ""
+  throw new Error(
+    "FATAL: NEXT_PUBLIC_APP_URL is required for CORS in production builds. " +
+    "Set it before running `next build`."
+  );
+}
 
 export default withSentryConfig(nextConfig, {
   silent: true,
