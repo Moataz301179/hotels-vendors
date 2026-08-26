@@ -103,13 +103,67 @@ export async function checkIdempotencyKey(
   );
 }
 
+/**
+ * Atomically reserve an idempotency key using SET NX EX.
+ * Key format: idem:{scope}:{userId}:{key}
+ */
+export async function reserveIdempotency(
+  scope: string,
+  userId: string,
+  key: string,
+  opts?: { ttlSeconds?: number; value?: string }
+): Promise<{ replay: boolean; storedResult: string | null }> {
+  const fullKey = `idem:${scope}:${userId}:${key}`;
+  const value = opts?.value ?? "PENDING";
+  const ttlSeconds = opts?.ttlSeconds ?? 86400;
+
+  return redisOrMemory(
+    async (r) => {
+      const res = await r.set(fullKey, value, "EX", ttlSeconds, "NX");
+      if (res === "OK") return { replay: false, storedResult: null };
+      const existing = await r.get(fullKey);
+      return { replay: true, storedResult: existing };
+    },
+    () => {
+      cleanExpired(memoryIdempotency);
+      const entry = memoryIdempotency.get(fullKey);
+      if (entry) return { replay: true, storedResult: entry.value };
+      memoryIdempotency.set(fullKey, {
+        value,
+        expiresAt: Date.now() + ttlSeconds * 1000,
+      });
+      return { replay: false, storedResult: null };
+    }
+  );
+}
+
+/** Read a stored idempotency result without reserving (null while PENDING). */
+export async function getIdempotencyResult(
+  scope: string,
+  userId: string,
+  key: string
+): Promise<string | null> {
+  const fullKey = `idem:${scope}:${userId}:${key}`;
+  return redisOrMemory(
+    async (r) => {
+      const v = await r.get(fullKey);
+      return v && v !== "PENDING" ? v : null;
+    },
+    () => {
+      const entry = memoryIdempotency.get(fullKey);
+      if (!entry || entry.expiresAt < Date.now() || entry.value === "PENDING") return null;
+      return entry.value;
+    }
+  );
+}
+
 export async function completeIdempotency(
   key: string,
   scope: string,
   result: string,
   ttlSeconds = 86400
 ): Promise<void> {
-  const fullKey = `idempotency:${scope}:${key}`;
+  const fullKey = `idem:${scope}:${key}`;
 
   await redisOrMemory(
     async (r) => {
