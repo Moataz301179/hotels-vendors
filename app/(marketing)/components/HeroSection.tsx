@@ -5,7 +5,6 @@ export function HeroSection() {
   return (
     <section className="relative min-h-[90vh] flex items-center justify-center px-4 md:px-8 pt-20 pb-16">
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/50 to-black" />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-orange-500/10 via-transparent to-transparent" />
       <div className="relative z-10 w-full max-w-7xl mx-auto">
         <div className="text-center mb-12 md:mb-16">
           <span className="inline-block px-4 py-1.5 text-xs font-bold text-orange-500 bg-orange-500/10 border border-orange-500/20 rounded-full mb-6 tracking-widest uppercase">
