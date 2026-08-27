@@ -1,12 +1,12 @@
 /**
  * LAYER 3: Telemetry & ID Tagging for CRM Automation
- * Oliv Onboarding Handoff Payload Builder
+ *  Onboarding Handoff Payload Builder
  *
- * When a supplier clicks "Factor via Oliv", this module builds
+ * When a supplier clicks "Factor via ", this module builds
  * the pre-fill payload with mandatory attribution metadata.
  *
- * Oliv's CRM MUST write partner_id + attribution_type during
- * KYC creation. Future manual entries by Oliv agents will
+ * 's CRM MUST write partner_id + attribution_type during
+ * KYC creation. Future manual entries by  agents will
  * auto-flag the commission pool.
  *
  * KYC TIMING: Done during HotelsVendors signup/account creation,
@@ -17,7 +17,7 @@
 const PARTNER_ID = "HOTELSVENDORS_GLOBAL_001";
 const ATTRIBUTION_TYPE = "permanent_origin_account";
 
-export interface OlivKYCPrefillPayload {
+export interface KYCPrefillPayload {
   // ═══ LAYER 3: MANDATORY ATTRIBUTION (non-deletable) ═══
   partner_id: string;
   attribution_type: string;
@@ -27,7 +27,7 @@ export interface OlivKYCPrefillPayload {
 
   // ═══ SUPPLIER KYC DATA (pre-fill from HotelsVendors) ═══
   // These fields are collected during HotelsVendors signup
-  // and forwarded to Oliv to reduce onboarding friction
+  // and forwarded to  to reduce onboarding friction
   company: {
     legal_name: string;
     trade_name?: string;
@@ -96,19 +96,19 @@ export interface OlivKYCPrefillPayload {
 }
 
 /**
- * Build the Oliv KYC pre-fill payload.
+ * Build the  KYC pre-fill payload.
  * Called ONCE during supplier account creation.
  *
- * Oliv's system MUST store:
+ * 's system MUST store:
  * - partner_id = "HOTELSVENDORS_GLOBAL_001"
  * - attribution_type = "permanent_origin_account"
  *
  * These fields are contractually required to be written
- * into Oliv's internal CRM/ERP database during initial
+ * into 's internal CRM/ERP database during initial
  * KYC creation. Any future manual entry of that Tax ID
- * by Oliv agents will auto-flag the commission pool.
+ * by  agents will auto-flag the commission pool.
  */
-export function buildOlivKYCPrefill(params: {
+export function buildKYCPrefill(params: {
   // From HotelsVendors registration
   company: {
     legalName: string;
@@ -161,12 +161,12 @@ export function buildOlivKYCPrefill(params: {
     totalTransactions: number;
     averageOrderValueEGP: number;
   };
-}): OlivKYCPrefillPayload {
+}): KYCPrefillPayload {
   const now = new Date().toISOString();
 
   return {
     // ═══ LAYER 3: MANDATORY ATTRIBUTION ═══
-    // These MUST be written into Oliv's CRM during KYC creation
+    // These MUST be written into 's CRM during KYC creation
     partner_id: PARTNER_ID,
     attribution_type: ATTRIBUTION_TYPE,
     attribution_source: "HOTELSVENDORS_PLUGIN_V1",
@@ -229,7 +229,7 @@ export function buildOlivKYCPrefill(params: {
       estimated_monthly_revenue_egp: params.financial.estimatedMonthlyRevenueEGP,
       years_in_business: params.financial.yearsInBusiness,
       number_of_employees: params.financial.numberOfEmployees,
-      eta_platform_user: true, // Required by Oliv
+      eta_platform_user: true, // Required by 
       existing_factoring_relationships: 0,
     },
 
@@ -245,10 +245,10 @@ export function buildOlivKYCPrefill(params: {
 }
 
 /**
- * Build the API request headers for Oliv onboarding endpoint.
+ * Build the API request headers for  onboarding endpoint.
  * Includes the attribution metadata in headers for redundancy.
  */
-export function buildOlivOnboardingHeaders(params: {
+export function buildOnboardingHeaders(params: {
   idempotencyKey: string;
   partnerId?: string;
 }): Record<string, string> {

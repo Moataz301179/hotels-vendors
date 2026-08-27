@@ -10,7 +10,7 @@ interface CreditFacility {
   hasFacility: boolean;
   facility?: {
     id: string;
-    olivFacilityId: string;
+    FacilityId: string;
     creditLimitEgp: number;
     utilizedEgp: number;
     availableEgp: number;
@@ -22,8 +22,8 @@ interface CreditFacility {
     status: string;
     approvedAt: string;
     expiresAt: string | null;
-    olivRiskScore: number | null;
-    olivRiskTier: string | null;
+    RiskScore: number | null;
+    RiskTier: string | null;
     paymentSchedule: Array<{
       dueDate: string;
       amountEgp: number;
@@ -38,7 +38,7 @@ interface CreditFacility {
       name: string;
       legalName: string;
       taxId: string;
-      olivStatus: string;
+      Status: string;
     };
   };
 }
@@ -53,7 +53,7 @@ interface PaymentSummary {
   pendingCount: number;
 }
 
-export default function OlivCreditFacilityDashboard() {
+export default function CreditFacilityDashboard() {
   const [facility, setFacility] = useState<CreditFacility | null>(null);
   const [schedule, setSchedule] = useState<{ payments: Array<Record<string, unknown>>; summary: PaymentSummary } | null>(null);
   const [loading, setLoading] = useState(true);
@@ -66,13 +66,13 @@ export default function OlivCreditFacilityDashboard() {
   const fetchFacilityData = async () => {
     try {
       setLoading(true);
-      const facilityRes = await fetch('/api/v1/fintech/oliv-facility');
+      const facilityRes = await fetch('/api/v1/fintech/-facility');
       if (!facilityRes.ok) throw new Error('Failed to fetch facility');
       const facilityData = await facilityRes.json();
       setFacility(facilityData.data);
 
       if (facilityData.data?.hasFacility) {
-        const scheduleRes = await fetch('/api/v1/fintech/oliv-facility/schedule');
+        const scheduleRes = await fetch('/api/v1/fintech/-facility/schedule');
         if (scheduleRes.ok) {
           const scheduleData = await scheduleRes.json();
           setSchedule(scheduleData.data);
@@ -138,12 +138,12 @@ export default function OlivCreditFacilityDashboard() {
     return (
       <Card className="bg-surface-1 border-border-subtle">
         <CardContent className="p-8 text-center">
-          <h3 className="text-xl font-semibold text-white mb-2">No Oliv Credit Facility</h3>
+          <h3 className="text-xl font-semibold text-white mb-2">No  Credit Facility</h3>
           <p className="text-gray-400 mb-6">
-            Activate Oliv financing to access working capital for your business.
+            Activate  financing to access working capital for your business.
           </p>
           <Button className="bg-[var(--success)] hover:bg-[var(--success)]/80 text-white">
-            Activate Oliv Financing
+            Activate  Financing
           </Button>
         </CardContent>
       </Card>
@@ -162,7 +162,7 @@ export default function OlivCreditFacilityDashboard() {
       <Card className="bg-surface-1 border-border-subtle">
         <CardHeader>
           <div className="flex items-center justify-between">
-            <CardTitle className="text-white text-lg">Oliv Credit Facility</CardTitle>
+            <CardTitle className="text-white text-lg"> Credit Facility</CardTitle>
             {getStatusBadge(data.status)}
           </div>
         </CardHeader>
@@ -274,7 +274,7 @@ export default function OlivCreditFacilityDashboard() {
       )}
 
       {/* Risk Assessment */}
-      {data.olivRiskScore && (
+      {data.RiskScore && (
         <Card className="bg-surface-1 border-border-subtle">
           <CardHeader>
             <CardTitle className="text-white text-lg">Risk Assessment</CardTitle>
@@ -283,11 +283,11 @@ export default function OlivCreditFacilityDashboard() {
             <div className="grid grid-cols-2 gap-4">
               <div className="bg-surface-2 rounded-xl p-4 text-center">
                 <p className="text-sm text-gray-400 mb-1">Risk Score</p>
-                <p className="text-3xl font-bold text-accent-base">{data.olivRiskScore}</p>
+                <p className="text-3xl font-bold text-accent-base">{data.RiskScore}</p>
               </div>
               <div className="bg-surface-2 rounded-xl p-4 text-center">
                 <p className="text-sm text-gray-400 mb-1">Risk Tier</p>
-                <p className="text-3xl font-bold text-purple-base">{data.olivRiskTier || 'N/A'}</p>
+                <p className="text-3xl font-bold text-purple-base">{data.RiskTier || 'N/A'}</p>
               </div>
             </div>
           </CardContent>

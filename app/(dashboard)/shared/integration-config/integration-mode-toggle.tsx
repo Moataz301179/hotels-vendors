@@ -71,7 +71,7 @@ export default function IntegrationModeToggle() {
     <div className="space-y-6">
       <Card className="bg-surface-1 border-border-subtle">
         <CardHeader>
-          <CardTitle className="text-white text-lg">Oliv Integration Mode</CardTitle>
+          <CardTitle className="text-white text-lg"> Integration Mode</CardTitle>
         </CardHeader>
         <CardContent className="space-y-6">
           {/* Phase 1 Toggle */}

@@ -25,7 +25,7 @@ const HORECA_CATEGORIES: Array<{
   { name: "Dairy", sku: "DRY", category: "F_AND_B", items: ["Greek Yogurt", "Mozzarella", "Butter Unsalted", "Cream 35%"] },
   { name: "Produce", sku: "PRD", category: "F_AND_B", items: ["Roma Tomatoes", "Baby Rocket", "Zucchini", "Red Onion"] },
   { name: "Beverages", sku: "BEV", category: "F_AND_B", items: ["Still Water 500ml", "Orange Juice Fresh", "Sparkling Water"] },
-  { name: "Dry Goods", sku: "DRG", category: "CONSUMABLES", items: ["Basmati Rice", "Penne Rigate", "Olive Oil Extra Virgin"] },
+  { name: "Dry Goods", sku: "DRG", category: "CONSUMABLES", items: ["Basmati Rice", "Penne Rigate", "e Oil Extra Virgin"] },
   { name: "Cleaning", sku: "CLN", category: "CONSUMABLES", items: ["Surface Disinfectant", "Glass Cleaner", "Floor Soap"] },
   { name: "Guest Amenities", sku: "GAM", category: "GUEST_SUPPLIES", items: ["Shampoo 30ml", "Bath Soap", "Shower Cap"] },
 ];

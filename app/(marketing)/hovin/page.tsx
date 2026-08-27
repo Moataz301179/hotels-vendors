@@ -21,7 +21,7 @@ const FEATURES = [
   { icon: PackageSearch, title: "Live Order Inbox", desc: "Accept & fulfill orders with one tap from the HOVIN mobile app." },
   { icon: Eye, title: "Dock Scanner", desc: "Camera scan-to-GRN with QR verification and instant credit notes." },
   { icon: ShieldCheck, title: "ETA on the Go", desc: "Submit ETA-compliant invoices and e-waybills straight from your phone." },
-  { icon: Bell, title: "48h Cash-Out", desc: "Early payout on approved orders via Oliv — promo code CHV000." },
+  { icon: Bell, title: "48h Cash-Out", desc: "Early payout on approved orders via  — promo code CHV000." },
   { icon: Compass, title: "Live Tracking", desc: "Real-time shipment tracking & GPS for carriers and dock teams." },
   { icon: Smartphone, title: "Built for the Field", desc: "Works on any phone — no desktop needed to run your operation." },
 ];
@@ -77,9 +77,9 @@ export default function HOVINPage() {
             <Image src="/logo-hovin.png" alt="HOVIN app logo" fill className="object-contain" priority />
           </div>
 
-          {/* Download — official badges + QR (Oliv referral code on the left of the QR) */}
+          {/* Download — official badges + QR ( referral code on the left of the QR) */}
           <div className="flex flex-col lg:flex-row items-center justify-center gap-6">
-            {/* Oliv referral code */}
+            {/*  referral code */}
             <div className="flex flex-col items-center gap-1">
               <span className="text-[10px] font-semibold uppercase tracking-widest text-[#8a6d3b]">Referral</span>
               <span className="px-3 py-1 rounded-md border border-[#314B43]/30 bg-[#314B43]/5 font-mono text-sm font-bold text-[#314B43]">CHV000</span>

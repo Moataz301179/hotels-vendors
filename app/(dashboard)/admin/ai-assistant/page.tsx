@@ -137,7 +137,7 @@ export default function AdminAIAssistantPage() {
       const fallbackMsg: Message = {
         id: (Date.now() + 1).toString(),
         role: "assistant",
-        content: "I'm currently processing your request. Based on the HotelsVendors platform data, here are some immediate suggestions:\n\n1. **Focus on supplier onboarding** — you have 89 suppliers but 145 hotels. Increasing supplier density will improve marketplace liquidity.\n\n2. **Optimize factoring flow** — The Oliv integration is live. Consider adding more funder partners (Fawry, Halan) after the PoC phase.\n\n3. **Enhance ETA compliance** — Auto-submission would reduce manual errors and improve supplier experience.\n\nWould you like me to dive deeper into any of these areas?",
+        content: "I'm currently processing your request. Based on the HotelsVendors platform data, here are some immediate suggestions:\n\n1. **Focus on supplier onboarding** — you have 89 suppliers but 145 hotels. Increasing supplier density will improve marketplace liquidity.\n\n2. **Optimize factoring flow** — The  integration is live. Consider adding more funder partners (Fawry, Halan) after the PoC phase.\n\n3. **Enhance ETA compliance** — Auto-submission would reduce manual errors and improve supplier experience.\n\nWould you like me to dive deeper into any of these areas?",
         timestamp: new Date().toISOString(),
         suggestions: ["Tell me more about supplier onboarding", "How to add more funders?", "ETA compliance details"],
       };

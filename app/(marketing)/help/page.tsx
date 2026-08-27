@@ -30,12 +30,12 @@ const HELP_CATEGORIES = [
   {
     icon: Store,
     title: "For Suppliers",
-    desc: "Product listing, order fulfillment, and Oliv financing",
+    desc: "Product listing, order fulfillment, and  financing",
     color: "var(--orange-base)",
     links: [
       { label: "Getting Started as a Supplier", href: "/suppliers/join" },
       { label: "Listing Your Products", href: "/help" },
-      { label: "Oliv Invoice Financing", href: "/financing/oliv" },
+      { label: " Invoice Financing", href: "/financing/" },
       { label: "Payment & Settlement", href: "/help" },
     ],
   },

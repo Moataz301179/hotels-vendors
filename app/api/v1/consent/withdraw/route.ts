@@ -15,8 +15,8 @@ export const dynamic = "force-dynamic";
  */
 
 const WithdrawConsentSchema = z.object({
-  consentType: z.enum(["OLIV_DATA_SHARING", "OLIV_CREDIT_ASSESSMENT"], {
-    error: () => ({ message: "Invalid consent type. Valid types: OLIV_DATA_SHARING, OLIV_CREDIT_ASSESSMENT" }),
+  consentType: z.enum(["_DATA_SHARING", "_CREDIT_ASSESSMENT"], {
+    error: () => ({ message: "Invalid consent type. Valid types: _DATA_SHARING, _CREDIT_ASSESSMENT" }),
   }),
   partnerId: z.string().min(1, "Partner ID is required"),
   reason: z.string().max(500).optional(),
@@ -58,15 +58,15 @@ export const POST = apiRoute(async (request: NextRequest) => {
     },
   });
 
-  // If withdrawing Oliv data sharing consent, update supplier status
-  if (consentType === "OLIV_DATA_SHARING" && partnerId === "oliv_finance") {
+  // If withdrawing  data sharing consent, update supplier status
+  if (consentType === "_DATA_SHARING" && partnerId === "_finance") {
     await prisma.supplier.updateMany({
       where: { tenantId: auth.tenantId },
-      data: { olivStatus: "CONSENT_WITHDRAWN" },
+      data: { Status: "CONSENT_WITHDRAWN" },
     });
 
-    // Freeze Oliv credit facility (don't cancel — existing obligations remain)
-    await prisma.olivCreditFacility.updateMany({
+    // Freeze  credit facility (don't cancel — existing obligations remain)
+    await prisma.CreditFacility.updateMany({
       where: {
         tenantId: auth.tenantId,
         status: "ACTIVE",

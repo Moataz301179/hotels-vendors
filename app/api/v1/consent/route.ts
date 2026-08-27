@@ -18,14 +18,14 @@ export const dynamic = "force-dynamic";
 const CONSENT_VERSION = "1.0";
 
 const CONSENT_TEXT: Record<string, string> = {
-  OLIV_DATA_SHARING:
-    "I consent to sharing my business registration data (company name, commercial register number, tax ID, address, bank details) and ETA e-invoicing history with Oliv Finance for the purpose of credit assessment and factoring services. I understand that Oliv Finance will process my data in accordance with their privacy policy and that I may withdraw consent at any time from my dashboard settings.",
-  OLIV_CREDIT_ASSESSMENT:
-    "I consent to Oliv Finance conducting a credit check and assessing my creditworthiness using my business registration data, ETA e-invoicing history, and credit bureau data.",
+  _DATA_SHARING:
+    "I consent to sharing my business registration data (company name, commercial register number, tax ID, address, bank details) and ETA e-invoicing history with  Finance for the purpose of credit assessment and factoring services. I understand that  Finance will process my data in accordance with their privacy policy and that I may withdraw consent at any time from my dashboard settings.",
+  _CREDIT_ASSESSMENT:
+    "I consent to  Finance conducting a credit check and assessing my creditworthiness using my business registration data, ETA e-invoicing history, and credit bureau data.",
 };
 
 const GrantConsentSchema = z.object({
-  consentType: z.enum(["OLIV_DATA_SHARING", "OLIV_CREDIT_ASSESSMENT"], {
+  consentType: z.enum(["_DATA_SHARING", "_CREDIT_ASSESSMENT"], {
     error: () => ({ message: `Invalid consent type. Valid types: ${Object.keys(CONSENT_TEXT).join(", ")}` }),
   }),
   partnerId: z.string().min(1, "Partner ID is required"),
@@ -86,11 +86,11 @@ export const POST = apiRoute(async (request: NextRequest) => {
     },
   });
 
-  // Update supplier's Oliv status
-  if (consentType === "OLIV_DATA_SHARING" && partnerId === "oliv_finance") {
+  // Update supplier's  status
+  if (consentType === "_DATA_SHARING" && partnerId === "_finance") {
     await prisma.supplier.updateMany({
       where: { tenantId: auth.tenantId },
-      data: { olivStatus: "CONSENT_GRANTED" },
+      data: { Status: "CONSENT_GRANTED" },
     });
   }
 

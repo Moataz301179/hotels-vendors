@@ -73,10 +73,10 @@ export default function AdminAccountingPage() {
         ],
         recentTransactions: [
           { id: "TXN-001", type: "PLATFORM_FEE", description: "Platform fee - Order #ORD-1234", amount: 850, status: "COMPLETED", date: "2026-07-15T10:00:00Z" },
-          { id: "TXN-002", type: "FACTORING", description: "Factoring commission - Oliv", amount: 2500, status: "COMPLETED", date: "2026-07-15T09:00:00Z" },
+          { id: "TXN-002", type: "FACTORING", description: "Factoring commission - ", amount: 2500, status: "COMPLETED", date: "2026-07-15T09:00:00Z" },
           { id: "TXN-003", type: "SUBSCRIPTION", description: "Supplier subscription - ABC Cleaning", amount: 500, status: "PENDING", date: "2026-07-14T18:00:00Z" },
           { id: "TXN-004", type: "PLATFORM_FEE", description: "Platform fee - Order #ORD-1235", amount: 1200, status: "COMPLETED", date: "2026-07-14T16:00:00Z" },
-          { id: "TXN-005", type: "FACTORING", description: "Factoring commission - Oliv", amount: 3200, status: "COMPLETED", date: "2026-07-14T14:00:00Z" },
+          { id: "TXN-005", type: "FACTORING", description: "Factoring commission - ", amount: 3200, status: "COMPLETED", date: "2026-07-14T14:00:00Z" },
         ],
         feeCollection: [
           { source: "Platform Fees (2%)", amount: 25000, percentage: 51 },

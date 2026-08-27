@@ -46,7 +46,7 @@ const DATE_PATTERNS = [
 
 const UNIT_WORDS = "kg|kilo|kgs|g|gm|gram|l|ltr|liter|litre|ml|pcs|pc|piece|pieces|box|carton|ctn|pack|pkt|case|btl|bottle|bag|sack|tray|dozen|dz";
 
-/** Lines that look like order lines: "Rice 25kg x 4" / "4 x Olive Oil 5L @ 2000" */
+/** Lines that look like order lines: "Rice 25kg x 4" / "4 x e Oil 5L @ 2000" */
 function parseOrderLine(line: string): ParsedItem | null {
   const cleaned = line.replace(/^[-*•·]\s*/, "").trim();
   if (cleaned.length < 3 || cleaned.length > 120) return null;

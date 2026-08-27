@@ -156,7 +156,7 @@ export default function CompliancePage() {
               <li>· We do NOT approve, underwrite, or guarantee credit facilities</li>
               <li>· We do NOT assume credit risk or default liability</li>
             </ul>
-            <p className="text-[11px] text-white/25 leading-relaxed">All factoring, credit lines, and financial facilities are provided exclusively by licensed third-party grantors (OLIV, ValU, CIB Factoring, Fawry). HotelsVendors facilitates document validation, coordination, and compliance auditing only.</p>
+            <p className="text-[11px] text-white/25 leading-relaxed">All factoring, credit lines, and financial facilities are provided exclusively by licensed third-party grantors (, ValU, CIB Factoring, Fawry). HotelsVendors facilitates document validation, coordination, and compliance auditing only.</p>
           </div>
         </div>
       </section>

@@ -6,7 +6,7 @@ import {
   CreditCard, CheckCircle2, Clock, AlertTriangle, Wallet,
   ArrowUpRight, ArrowDownRight, Search, Download, TrendingUp,
 } from "lucide-react";
-import { OlivReferralCTA } from "@/components/partners/oliv-referral-cta";
+import { ReferralCTA } from "@/components/partners/-referral-cta";
 import { useApi } from "@/lib/hooks/use-api";
 
 const fadeInUp = {
@@ -57,7 +57,7 @@ const METHOD_COLORS: Record<string, string> = {
   factoring: "bg-accent-base/10 text-accent-base",
   credit: "bg-amber-500/10 text-amber-400",
   bank_transfer: "bg-blue-500/10 text-blue-400",
-  oliv: "bg-purple-500/10 text-purple-400",
+  : "bg-purple-500/10 text-purple-400",
 };
 
 export default function PaymentsPage() {
@@ -127,9 +127,9 @@ export default function PaymentsPage() {
         ))}
       </motion.div>
 
-      {/* Oliv Referral Banner */}
+      {/*  Referral Banner */}
       <motion.div variants={fadeInUp}>
-        <OlivReferralCTA variant="banner" />
+        <ReferralCTA variant="banner" />
       </motion.div>
 
       {/* Search + Table */}

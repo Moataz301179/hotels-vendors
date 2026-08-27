@@ -98,8 +98,8 @@ export const GET = apiRoute(async (request: NextRequest) => {
     },
   });
 
-  // Fetch Oliv credit facility
-  const facility = await prisma.olivCreditFacility.findFirst({
+  // Fetch  credit facility
+  const facility = await prisma.CreditFacility.findFirst({
     where: {
       tenantId: auth.tenantId,
       status: "ACTIVE",

@@ -64,7 +64,7 @@ const KEYWORD_MAP: Record<string, string> = {
   flour:      "https://images.unsplash.com/photo-1627485937980-221c88ac04f9?w=600&q=80",
   bran:      "https://images.unsplash.com/photo-1627485937980-221c88ac04f9?w=600&q=80",
   oil:      "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=600&q=80",
-  olive:      "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=600&q=80",
+  e:      "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=600&q=80",
   spice:      "https://images.unsplash.com/photo-1532336414038-cf19250c5757?w=600&q=80",
   salt:      "https://images.unsplash.com/photo-1518110925495-5fe2fda0442c?w=600&q=80",
   almond:      "https://images.unsplash.com/photo-1508061253366-f7da158b6d46?w=600&q=80",
@@ -354,7 +354,7 @@ const CATEGORY_GRADIENTS: Record<string, string[]> = {
   lin:  ["#2a1a2a", "#4a2d4a", "#7a4a7a"],   // Linens — soft purple
   eng:  ["#1a1a2a", "#2a2a4a", "#4a4a7a"],   // Engineering — steel blue
   gra:  ["#2a1a1a", "#4a2d2d", "#7a4a4a"],   // Amenities — warm burgundy
-  ffe:  ["#2a2a1a", "#4a4a2d", "#7a7a4a"],   // FFE — olive
+  ffe:  ["#2a2a1a", "#4a4a2d", "#7a7a4a"],   // FFE — e
   ose:  ["#1a2a2a", "#2d4a4a", "#4a7a7a"],   // Office — slate
   spa:  ["#1a1a2a", "#2a2a4a", "#4a4a8a"],   // Pool — deep blue
   it:   ["#0a1a2a", "#1a2a4a", "#2a4a7a"],   // IT — midnight blue

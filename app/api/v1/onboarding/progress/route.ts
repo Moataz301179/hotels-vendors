@@ -5,7 +5,7 @@ import { z } from "zod";
 
 const STEPS_BY_ROLE: Record<string, string[]> = {
   HOTEL: ["profile_complete", "phone_verified", "kyc_level1", "property_added", "eta_setup", "first_order"],
-  SUPPLIER: ["profile_complete", "phone_verified", "kyc_level1", "product_listed", "oliv_activated"],
+  SUPPLIER: ["profile_complete", "phone_verified", "kyc_level1", "product_listed", "_activated"],
   SHIPPING: ["profile_complete", "phone_verified", "zones_selected", "documents_uploaded"],
   FACTORING: ["profile_complete", "phone_verified", "kyc_level2"],
   ADMIN: ["profile_complete"],
@@ -154,7 +154,7 @@ function getStepLabel(stepKey: string): string {
     eta_setup: "Connect ETA Credentials",
     first_order: "Place Your First Order",
     product_listed: "List Your First Product",
-    oliv_activated: "Activate Oliv Financing",
+    _activated: "Activate  Financing",
     zones_selected: "Select Delivery Zones",
     documents_uploaded: "Upload Fleet Documents",
   };
@@ -171,7 +171,7 @@ function getStepDescription(stepKey: string, role: string): string {
     eta_setup: "Connect your Egyptian Tax Authority token for compliant invoicing",
     first_order: "Browse the catalog and place your first procurement order",
     product_listed: "Add your first product to the marketplace catalog",
-    oliv_activated: "Activate Oliv financing to get paid in 48 hours",
+    _activated: "Activate  financing to get paid in 48 hours",
     zones_selected: "Choose the governorates you deliver to",
     documents_uploaded: "Upload vehicle registration and insurance documents",
   };

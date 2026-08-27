@@ -1,7 +1,7 @@
 /**
  * /api/v1/risk/credit-score
  * B2B credit risk — HotelsVendors Reliability Index (0-100) per hotel TRN.
- * Licensed to financial partners (Oliv, Suez Canal Bank, FRA funders).
+ * Licensed to financial partners (, Suez Canal Bank, FRA funders).
  *
  * GET { trn } → reliability index + factor breakdown.
  */

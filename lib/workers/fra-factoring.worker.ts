@@ -142,7 +142,7 @@ export async function processFactoringRequest(payload: FactoringPayload) {
         referralTokenGeneratedAt: now,
         referralTokenExpiresAt: new Date(now.getTime() + 365 * 24 * 60 * 60 * 1000),
         callbackTimestamp: now,
-        olivTransactionId: payout.reference,
+        TransactionId: payout.reference,
         payoutStatus: "DISBURSED",
         disbursedAmount: amount,
         factoringFee: fee,

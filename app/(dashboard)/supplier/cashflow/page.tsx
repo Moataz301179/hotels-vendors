@@ -187,7 +187,7 @@ export default function CashflowDashboard() {
       {data.creditFacility && (
         <Card className="bg-surface-1 border-border-subtle">
           <CardHeader>
-            <CardTitle className="text-white text-lg">Credit Facility (Oliv)</CardTitle>
+            <CardTitle className="text-white text-lg">Credit Facility ()</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid grid-cols-3 gap-4">

@@ -41,7 +41,7 @@ export default function TermsPage() {
             <ul className="list-disc pl-6 space-y-2">
               <li><strong>&quot;Hotel&quot;</strong> — A hotel group or property registered on the Platform as a buyer of goods and services.</li>
               <li><strong>&quot;Supplier&quot;</strong> — A vendor or seller registered on the Platform to list products and fulfill orders.</li>
-              <li><strong>&quot;Factoring Partner&quot;</strong> — A licensed financial institution (e.g., Oliv Financial, EFG Hermes) that provides reverse factoring services through the Platform.</li>
+              <li><strong>&quot;Factoring Partner&quot;</strong> — A licensed financial institution (e.g.,  Financial, EFG Hermes) that provides reverse factoring services through the Platform.</li>
               <li><strong>&quot;INVO&quot;</strong> — The vendor marketplace sub-layer of the Platform where suppliers list catalogs and hotels discover products.</li>
               <li><strong>&quot;ETA&quot;</strong> — The Egyptian Tax Authority, responsible for e-invoicing compliance.</li>
               <li><strong>&quot;FRA&quot;</strong> — The Financial Regulatory Authority of Egypt.</li>

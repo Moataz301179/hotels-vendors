@@ -80,7 +80,7 @@ export async function POST_checkout(request: NextRequest) {
     merchantOfRecord: "HotelsVendors",
     facts: {
       etaInvoiceId: `ETA-${invoice.orderRef}`,
-      factoring: { provider: "Oliv", promo: "CHV000", settlement: "48h", amountEGP: invoice.total },
+      factoring: { provider: "", promo: "CHV000", settlement: "48h", amountEGP: invoice.total },
     },
   }, 201);
 }

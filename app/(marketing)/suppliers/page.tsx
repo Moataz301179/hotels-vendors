@@ -82,7 +82,7 @@ export default function SuppliersPage() {
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] rounded-full blur-[120px] pointer-events-none" style={{ background: "radial-gradient(circle, rgba(var(--success-rgb),0.08) 0%, transparent 70%)" }} />
         <div className="relative z-10 mx-auto max-w-4xl px-6 text-center">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border mb-6" style={{ borderColor: "var(--success)33", backgroundColor: "var(--success)10" }}>
-            <span className="text-[13px] font-semibold" style={{ color: "var(--success)" }}>oliv</span>
+            <span className="text-[13px] font-semibold" style={{ color: "var(--success)" }}></span>
             <span className="text-[11px] font-medium uppercase tracking-[0.12em]" style={{ color: "var(--success)" }}>
               Liquidity Partnership Active
             </span>
@@ -101,7 +101,7 @@ export default function SuppliersPage() {
               Start Selling Now <ArrowRight size={14} />
             </Link>
             <Link href="/financing" className="inline-flex items-center gap-2 px-8 py-3.5 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]" style={{ border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)" }}>
-              Learn About Oliv Financing
+              Learn About  Financing
             </Link>
           </div>
         </div>
@@ -187,14 +187,14 @@ export default function SuppliersPage() {
           <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">Ready to Grow Your Hotel Supply Business?</h2>
           <p className="text-[14px] text-white/40 mb-8 max-w-md mx-auto">
             Join suppliers already transacting on HotelsVendors. List your products today,
-            unlock Oliv financing on your first verified invoice.
+            unlock  financing on your first verified invoice.
           </p>
           <div className="flex flex-wrap gap-3 justify-center">
             <Link href="/register?type=supplier" className="inline-flex items-center gap-2 px-8 py-3 text-[13px] font-semibold rounded-xl transition-all hover:shadow-[0_0_30px_rgba(var(--success-rgb),0.25)]" style={{ backgroundColor: "var(--success)", color: "#ffffff" }}>
               Start Selling Now <ArrowRight size={14} />
             </Link>
             <Link href="/financing" className="inline-flex items-center gap-2 px-8 py-3 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]" style={{ border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)" }}>
-              Learn About Oliv Financing
+              Learn About  Financing
             </Link>
           </div>
         </div>

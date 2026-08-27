@@ -1,19 +1,19 @@
 /**
- * Oliv Integration Orchestrator
+ *  Integration Orchestrator
  * Ties all 3 layers together for the factoring flow
  *
  * Flow:
  * 1. Supplier completes KYC during HotelsVendors signup (Layer 3)
  * 2. Supplier imports ETA invoice
- * 3. Supplier clicks "Factor via Oliv"
+ * 3. Supplier clicks "Factor via "
  * 4. System generates referral token (Layer 1)
- * 5. System sends invoice + token to Oliv
- * 6. Oliv pings callback with token (Layer 2)
+ * 5. System sends invoice + token to 
+ * 6.  pings callback with token (Layer 2)
  * 7. HotelsVendors verifies token + blocks unauthorized reconciliation
  */
 
 import { generateReferralToken } from "./layer1-referral-token";
-import { buildOlivKYCPrefill } from "./layer3-crm-attribution";
+import { buildKYCPrefill } from "./layer3-crm-attribution";
 
 export interface FactoringRequest {
   etaUuid: string;
@@ -30,7 +30,7 @@ export interface FactoringRequest {
 
 /**
  * Initiate factoring request.
- * Called when supplier clicks "Factor via Oliv" on the dashboard.
+ * Called when supplier clicks "Factor via " on the dashboard.
  */
 export function initiateFactoring(request: FactoringRequest) {
   // 1. Generate referral token (Layer 1)
@@ -41,7 +41,7 @@ export function initiateFactoring(request: FactoringRequest) {
     invoiceTotal: request.invoiceTotal,
   });
 
-  // 2. Build Oliv API payload
+  // 2. Build  API payload
   const payload = {
     // Layer 1: Referral token in header
     _hotelsvendors_referral_token: {
@@ -79,8 +79,8 @@ export function initiateFactoring(request: FactoringRequest) {
       factoring_type: "non_recourse",
     },
 
-    // Callback endpoint (Oliv must ping this)
-    callback_url: "https://www.hotelsvendors.com/api/v1/oliv/payout-callback",
+    // Callback endpoint ( must ping this)
+    callback_url: "https://www.hotelsvendors.com/api/v1//payout-callback",
   };
 
   return {
@@ -91,9 +91,9 @@ export function initiateFactoring(request: FactoringRequest) {
       "X-HotelsVendors-Referral-Token": referralToken.signature,
       "X-Partner-ID": "HOTELSVENDORS_GLOBAL_001",
       "X-Attribution-Type": "permanent_origin_account",
-      "X-Callback-URL": "https://www.hotelsvendors.com/api/v1/oliv/payout-callback",
+      "X-Callback-URL": "https://www.hotelsvendors.com/api/v1//payout-callback",
     },
   };
 }
 
-export { buildOlivKYCPrefill };
+export { buildKYCPrefill };

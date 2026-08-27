@@ -1,7 +1,7 @@
 /**
  * SME / "Factory-Direct" Tier — eligibility + route-to-market policy.
  *
- * Oliv factoring requires ~EGP 10M annual supplier revenue. Underrated SME
+ *  factoring requires ~EGP 10M annual supplier revenue. Underrated SME
  * makers below that threshold can't access 48h factoring, but they still win a
  * route into hotel procurement. Their catalog is sold CASH-BASIS via two paths:
  *
@@ -15,7 +15,7 @@
  * Pure functions, no I/O — unit-testable.
  */
 
-export const FACTORING_REVENUE_THRESHOLD = 10_000_000; // EGP, Oliv <10M ineligible
+export const FACTORING_REVENUE_THRESHOLD = 10_000_000; // EGP,  <10M ineligible
 
 export type CreditBand = "sme-cash" | "factoring-eligible";
 export type TradePath = "cash-direct" | "trade-desk-resale";

@@ -43,7 +43,7 @@ const MODULES = [
   {
     group: "Platform Management",
     items: [
-      { label: "Credentials & Secrets", desc: "API keys, webhook secrets, .env config & Oliv/ETA credentials", icon: ShieldCheck, to: "/admin/credentials", color: "#f59e0b" },
+      { label: "Credentials & Secrets", desc: "API keys, webhook secrets, .env config & /ETA credentials", icon: ShieldCheck, to: "/admin/credentials", color: "#f59e0b" },
       { label: "AI Assistant", desc: "Generative suggestions for improvements, growth & enhancements", icon: Brain, to: "/admin/ai-assistant", color: "var(--purple-base)" },
       { label: "User Management", desc: "Users, roles, permissions & tenant administration", icon: Users, to: "/admin/users", color: "var(--info)" },
       { label: "Logs & Audit", desc: "System logs, security events & compliance audit trail", icon: Activity, to: "/admin/logs", color: "var(--error)" },

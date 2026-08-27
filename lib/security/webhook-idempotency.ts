@@ -18,10 +18,10 @@ const WEBHOOK_TTL_SECONDS = 72 * 60 * 60; // 72 hours
 /**
  * Check if a webhook event has already been processed (replay detection).
  *
- * @param provider - e.g., "paymob", "oliv", "fawry", "instapay"
+ * @param provider - e.g., "paymob", "", "fawry", "instapay"
  * @param eventId - Unique event identifier from the provider
  *   - Paymob: `${transactionId}_${created_at}`
- *   - Oliv: `${factoringRequestId}_${timestamp}`
+ *   - : `${factoringRequestId}_${timestamp}`
  *   - Fawry: `${referenceId}_${created_at}`
  * @returns { isReplay: true, previousResult } if already processed; { isReplay: false } if new
  */
@@ -42,7 +42,7 @@ export async function checkWebhookReplay(
 /**
  * Mark a webhook event as processed after successful handling.
  *
- * @param provider - e.g., "paymob", "oliv"
+ * @param provider - e.g., "paymob", ""
  * @param eventId - Unique event identifier
  * @param result - Summary of what was done (e.g., "ORDER_CONFIRMED:abc123")
  */
@@ -66,9 +66,9 @@ export function paymobEventId(payload: Record<string, unknown>): string {
 }
 
 /**
- * Generate a deterministic event ID from Oliv callback payload.
+ * Generate a deterministic event ID from  callback payload.
  */
-export function olivEventId(payload: Record<string, unknown>): string {
+export function EventId(payload: Record<string, unknown>): string {
   const data = payload.data || payload;
   const requestId =
     (data as Record<string, unknown>).factoringRequestId ||

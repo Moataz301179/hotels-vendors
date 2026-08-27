@@ -57,7 +57,7 @@ const ROLE_CONFIG: Record<string, { steps: Omit<OnboardingStep, "completed">[]; 
       { stepKey: "phone_verified", label: "Verify Phone Number", description: "We've sent a verification code to your phone", required: true, icon: Phone },
       { stepKey: "kyc_level1", label: "Submit KYC Documents", description: "Upload your Commercial Registry and Tax ID for verification", required: true, icon: FileText },
       { stepKey: "product_listed", label: "List Your First Product", description: "Add your first product to the marketplace catalog", required: true, icon: Package, action: "Add Product", actionHref: "/supplier/catalog" },
-      { stepKey: "oliv_activated", label: "Activate Oliv Financing", description: "Activate Oliv financing to get paid in 48 hours", required: false, icon: CreditCard, action: "Activate Oliv", actionHref: "/supplier/finance" },
+      { stepKey: "_activated", label: "Activate  Financing", description: "Activate  financing to get paid in 48 hours", required: false, icon: CreditCard, action: "Activate ", actionHref: "/supplier/finance" },
     ],
   },
   SHIPPING: {

@@ -56,7 +56,7 @@ MARKET CONTEXT:
 - Primary buyers: Red Sea coastal hotels (Sharm El-Sheikh, Hurghada) — 100-500 rooms
 - Secondary: Cairo, Alexandria, North Coast chains
 - Seasonality: HIGH Oct-Apr (peak occupancy), LOW May-Sep (30-50% occupancy drop)
-- Payment terms: Net-30 to Net-60 standard; factoring via Oliv pays suppliers Day 1 (2-3% discount)
+- Payment terms: Net-30 to Net-60 standard; factoring via  pays suppliers Day 1 (2-3% discount)
 - Categories: F&B (high volume, low margin 15-25%), Consumables (med margin 25-35%),
   Guest Supplies (higher margin 35-50%), FF& E (high ticket, 30-40%), Services (variable)
 

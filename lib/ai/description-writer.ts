@@ -38,7 +38,7 @@ RULES:
 - Include key specs naturally (size, material, certifications, pack size).
 - Target audience: Hotel procurement managers, executive chefs, housekeeping directors.
 - Keywords: Mix of product terms + hospitality context (hotel, restaurant, resort, bulk, commercial).
-- Brand names (Hotels Vendors, Oliv, Invo) stay in ENGLISH — never transliterate.
+- Brand names (Hotels Vendors, , Invo) stay in ENGLISH — never transliterate.
 - No markdown, no bullet points in descriptions — plain text paragraphs.
 
 CATEGORY TONES:

@@ -10,8 +10,8 @@ export const dynamic = "force-dynamic";
  * Invoice Upload & Financing Request API
  * POST /api/v1/financing/invoice-upload
  *
- * Phase 1 (Offline): Hotel uploads paper invoice → validate → route to Oliv
- * Phase 2 (Online): Supplier plugin sends invoice data → validate → route to Oliv
+ * Phase 1 (Offline): Hotel uploads paper invoice → validate → route to 
+ * Phase 2 (Online): Supplier plugin sends invoice data → validate → route to 
  *
  * The ETA VAT invoice is the trust layer:
  * - Proves transaction happened
@@ -152,7 +152,7 @@ export const POST = apiRoute(async (request: NextRequest) => {
       supplierId: supplier.id,
       requesterId: auth.userId,
       tenantId: auth.tenantId,
-      paymentGuaranteed: false, // Will be set after Oliv approval
+      paymentGuaranteed: false, // Will be set after  approval
       poNumber: data.invoiceNumber,
     },
   });
@@ -247,7 +247,7 @@ export const POST = apiRoute(async (request: NextRequest) => {
       name: hotel.name,
     } : null,
     nextStep: etaValid
-      ? "READY_FOR_FACTORING — Invoice validated. Oliv will review and disburse."
+      ? "READY_FOR_FACTORING — Invoice validated.  will review and disburse."
       : data.etaUuid
         ? "ETA_VALIDATION_FAILED — Invoice could not be validated with ETA. Manual review required."
         : "PENDING_ETA — Submit invoice to ETA to enable factoring.",

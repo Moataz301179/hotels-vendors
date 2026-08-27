@@ -57,7 +57,7 @@ const PLATFORM_LICENSE: FraLicenseStatus = {
     "All financial services operated by licensed third-party partners",
     "Platform charges only: SaaS fees, document processing fees, marketplace commissions",
     "No factoring fees, no cash custody, no lending, no wallet balances",
-    "Factoring operations are referral-only to licensed partners (e.g., Oliv, EFG Hermes)",
+    "Factoring operations are referral-only to licensed partners (e.g., , EFG Hermes)",
   ],
 };
 
@@ -82,7 +82,7 @@ export async function checkFraCompliance(
         allowed: true,
         reason: "Factoring referral is permitted under Digital Marketing license. Platform acts as intermediary only.",
         licenseStatus: license,
-        recommendation: "Ensure factoring partner (e.g., Oliv) holds valid FRA Factoring license.",
+        recommendation: "Ensure factoring partner (e.g., ) holds valid FRA Factoring license.",
       };
 
     case "FACTORIZATION":

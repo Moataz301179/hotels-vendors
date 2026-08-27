@@ -1,14 +1,14 @@
 /**
  * LAYER 2: State Synchronization & Disbursement Blocking
- * Oliv Payout Callback Webhook Listener
+ *  Payout Callback Webhook Listener
  *
- * FRA Decision No. 51 of 2026: Oliv must freeze the invoice in the
- * centralized portal. This webhook validates that Oliv's callback
+ * FRA Decision No. 51 of 2026:  must freeze the invoice in the
+ * centralized portal. This webhook validates that 's callback
  * includes our referral token — proving the transaction originated
  * through HotelsVendors.
  *
  * BLOCKING LOGIC:
- * - Oliv CANNOT reconcile payout without our referral token
+ * -  CANNOT reconcile payout without our referral token
  * - Missing/expired/invalid token = "Unauthorized Reconciliation" log + alert
  * - Valid token = update factoring_transactions table + release disbursement
  */
@@ -18,15 +18,15 @@ import crypto from "crypto";
 import { prisma } from "@/lib/prisma";
 import { verifyReferralToken, type ReferralToken } from "./layer1-referral-token";
 
-const WEBHOOK_SECRET = process.env.OLIV_WEBHOOK_SECRET || "";
+const WEBHOOK_SECRET = process.env._WEBHOOK_SECRET || "";
 const PARTNER_ID = "HOTELSVENDORS_GLOBAL_001";
 
-export interface OlivPayoutCallback {
-  // Oliv's identifiers
-  olivTransactionId: string;
-  olivReferenceNumber: string;
+export interface PayoutCallback {
+  // 's identifiers
+  TransactionId: string;
+  ReferenceNumber: string;
 
-  // The referral token we sent — Oliv MUST echo this back
+  // The referral token we sent —  MUST echo this back
   referralToken: ReferralToken;
 
   // Invoice identifiers
@@ -41,25 +41,25 @@ export interface OlivPayoutCallback {
   disbursementDate: string;
   expectedSettlementDate: string;
 
-  // Optional: Oliv's internal notes
+  // Optional: 's internal notes
   notes?: string;
 }
 
 /**
  * Webhook signature verification.
- * Oliv signs the payload with their secret — we verify it here.
+ *  signs the payload with their secret — we verify it here.
  */
-function verifyOlivSignature(
+function verifySignature(
   payload: string,
   signature: string,
   timestamp: string
 ): boolean {
   if (!WEBHOOK_SECRET) {
-    console.error("[LAYER-2] OLIV_WEBHOOK_SECRET not configured");
+    console.error("[LAYER-2] _WEBHOOK_SECRET not configured");
     return false;
   }
 
-  // Oliv signs: timestamp + "." + body
+  //  signs: timestamp + "." + body
   const expectedSignature = crypto
     .createHmac("sha256", WEBHOOK_SECRET)
     .update(`${timestamp}.${payload}`)
@@ -72,9 +72,9 @@ function verifyOlivSignature(
 }
 
 /**
- * POST /api/v1/oliv/payout-callback
+ * POST /api/v1//payout-callback
  *
- * Oliv pings this endpoint when payout status changes.
+ *  pings this endpoint when payout status changes.
  * We validate the referral token before allowing reconciliation.
  */
 export async function POST(request: NextRequest) {
@@ -82,13 +82,13 @@ export async function POST(request: NextRequest) {
 
   try {
     // 1. Extract headers
-    const olivSignature = request.headers.get("x-oliv-signature") || "";
-    const olivTimestamp = request.headers.get("x-oliv-timestamp") || "";
+    const Signature = request.headers.get("x--signature") || "";
+    const Timestamp = request.headers.get("x--timestamp") || "";
     const idempotencyKey = request.headers.get("x-idempotency-key") || "";
 
-    if (!olivSignature || !olivTimestamp) {
+    if (!Signature || !Timestamp) {
       return NextResponse.json(
-        { error: "Missing Oliv signature headers" },
+        { error: "Missing  signature headers" },
         { status: 401 }
       );
     }
@@ -96,17 +96,17 @@ export async function POST(request: NextRequest) {
     // 2. Parse body
     const rawBody = await request.text();
 
-    // 3. Verify Oliv's HMAC signature
-    if (!verifyOlivSignature(rawBody, olivSignature, olivTimestamp)) {
+    // 3. Verify 's HMAC signature
+    if (!verifySignature(rawBody, Signature, Timestamp)) {
       // Log unauthorized attempt
       await prisma.auditLog.create({
         data: {
           tenantId: "SYSTEM",
           entityId: "unknown",
-          actorId: "OLIV_CALLBACK",
+          actorId: "_CALLBACK",
           actionType: "UPDATE",
           changes: {
-            reason: "Invalid Oliv webhook signature",
+            reason: "Invalid  webhook signature",
             ip: request.headers.get("x-forwarded-for") || "unknown",
             timestamp: new Date().toISOString(),
           },
@@ -120,23 +120,23 @@ export async function POST(request: NextRequest) {
     }
 
     // 4. Parse callback payload
-    const body: OlivPayoutCallback = JSON.parse(rawBody);
+    const body: PayoutCallback = JSON.parse(rawBody);
 
     // 5. LAYER 2 CORE: Verify the referral token
     const tokenVerification = verifyReferralToken(body.referralToken);
 
     if (!tokenVerification.valid) {
-      // CRITICAL: Oliv tried to reconcile without valid token
+      // CRITICAL:  tried to reconcile without valid token
       await prisma.auditLog.create({
         data: {
           tenantId: "SYSTEM",
           entityId: body.etaUuid,
-          actorId: "OLIV_CALLBACK",
+          actorId: "_CALLBACK",
           actionType: "UPDATE",
           changes: {
             reason: tokenVerification.error,
             etaUuid: body.etaUuid,
-            olivTransactionId: body.olivTransactionId,
+            TransactionId: body.TransactionId,
             referralTokenSignature: body.referralToken.signature.substring(0, 20) + "...",
             ip: request.headers.get("x-forwarded-for") || "unknown",
             timestamp: new Date().toISOString(),
@@ -148,7 +148,7 @@ export async function POST(request: NextRequest) {
       console.error(
         `[LAYER-2] UNAUTHORIZED RECONCILIATION ATTEMPT:`,
         `ETA=${body.etaUuid}`,
-        `OlivTxnId=${body.olivTransactionId}`,
+        `TxnId=${body.TransactionId}`,
         `Error=${tokenVerification.error}`
       );
 
@@ -170,7 +170,7 @@ export async function POST(request: NextRequest) {
         data: {
           tenantId: "SYSTEM",
           entityId: body.etaUuid,
-          actorId: "OLIV_CALLBACK",
+          actorId: "_CALLBACK",
           actionType: "UPDATE",
           changes: {
             tokenEtaUuid: tokenPayload.etaUuid,
@@ -189,7 +189,7 @@ export async function POST(request: NextRequest) {
     // 7. Idempotency check
     if (idempotencyKey) {
       const existing = await prisma.factoringTransaction.findUnique({
-        where: { olivTransactionId: body.olivTransactionId },
+        where: { TransactionId: body.TransactionId },
       });
 
       if (existing) {
@@ -215,9 +215,9 @@ export async function POST(request: NextRequest) {
         referralTokenGeneratedAt: new Date(body.referralToken.generatedAt),
         referralTokenExpiresAt: new Date(body.referralToken.expiresAt),
 
-        // Oliv transaction data
-        olivTransactionId: body.olivTransactionId,
-        olivReferenceNumber: body.olivReferenceNumber,
+        //  transaction data
+        TransactionId: body.TransactionId,
+        ReferenceNumber: body.ReferenceNumber,
         payoutStatus: body.payoutStatus,
         disbursedAmount: body.disbursedAmount,
         factoringFee: body.factoringFee,
@@ -242,11 +242,11 @@ export async function POST(request: NextRequest) {
       data: {
         tenantId: "SYSTEM",
         entityId: factoringTx.id,
-        actorId: "OLIV_CALLBACK",
+        actorId: "_CALLBACK",
         actionType: "UPDATE",
         changes: {
           etaUuid: body.etaUuid,
-          olivTransactionId: body.olivTransactionId,
+          TransactionId: body.TransactionId,
           payoutStatus: body.payoutStatus,
           disbursedAmount: body.disbursedAmount,
           platformFee: factoringTx.platformFeeAmount,
@@ -262,15 +262,15 @@ export async function POST(request: NextRequest) {
       data: {
         tenantId: "SYSTEM",
         entityType: "PLATFORM_FEE",
-        entityId: body.olivTransactionId,
+        entityId: body.TransactionId,
         entryType: "PLATFORM_FEE",
         account: "REVENUE",
         amount: factoringTx.platformFeeAmount,
         currency: "EGP",
-        reference: `OLIV-${body.olivTransactionId}`,
+        reference: `-${body.TransactionId}`,
         metadata: JSON.stringify({
           etaUuid: body.etaUuid,
-          olivTransactionId: body.olivTransactionId,
+          TransactionId: body.TransactionId,
           advanceRate: body.advanceRate,
           description: `Platform fee for ETA ${body.etaUuid}`,
         }),

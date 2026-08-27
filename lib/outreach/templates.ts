@@ -1,5 +1,5 @@
 /**
- * Oliv supplier outreach message bank (EN + Egyptian Arabic).
+ *  supplier outreach message bank (EN + Egyptian Arabic).
  *
  * FIRED ONLY through the real Meta WhatsApp send path (lib/notifications/whatsapp.ts)
  * once WHATSAPP_BEARER_TOKEN + WHATSAPP_PHONE_NUMBER_ID are present.
@@ -11,8 +11,8 @@
  */
 export const OUTREACH_TEMPLATE = {
   // Meta requires an approved template name matching the body below.
-  templateName: "hotelsvendors_oliv_credit_application_01",
-  ctaUrl: "https://www.hotelsvendors.com/api/v1/oliv/click?source=outreach&ref=CHV000",
+  templateName: "hotelsvendors__credit_application_01",
+  ctaUrl: "https://www.hotelsvendors.com/api/v1//click?source=outreach&ref=CHV000",
 
   en: {
     header: "*HotelsVendors × Financing*",

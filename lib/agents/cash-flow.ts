@@ -1,5 +1,5 @@
 /**
- * CashFlowAgent — Predictive Working Capital & Oliv Factoring
+ * CashFlowAgent — Predictive Working Capital &  Factoring
  * Evaluates hotel credit grades, calculates dynamic factoring rates (1.2–3%),
  * registers GRN invoices with FRA, dispatches 48h payouts.
  */

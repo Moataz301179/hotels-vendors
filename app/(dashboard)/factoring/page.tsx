@@ -8,7 +8,7 @@ import {
   Wallet, Receipt, CheckCircle2, Clock, Loader2,
   ArrowRight, X, Building2, Package, Check, AlertCircle,
 } from "lucide-react";
-import { OlivReferralCTA } from "@/components/partners/oliv-referral-cta";
+import { ReferralCTA } from "@/components/partners/-referral-cta";
 import { FactoringOnboardingBot } from "@/components/ai-assistant/factoring-onboarding-chatbot";
 import { useApi } from "@/lib/hooks/use-api";
 import { LoadingCard, LoadingTable } from "@/components/dashboards/shared/loading-card";
@@ -239,9 +239,9 @@ export default function FinanceDashboardPage() {
             ))}
       </motion.div>
 
-      {/* Oliv Referral Banner */}
+      {/*  Referral Banner */}
       <motion.div variants={fadeInUp}>
-        <OlivReferralCTA variant="banner" />
+        <ReferralCTA variant="banner" />
       </motion.div>
 
       {/* Main Grid */}

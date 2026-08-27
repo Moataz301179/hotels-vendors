@@ -24,7 +24,7 @@ export function HeroSection() {
             ETA compliance, built in.
           </h1>
           <p className="text-lg max-w-xl mx-auto lg:mx-0 mb-10 leading-relaxed" style={{ color: "var(--text-secondary)" }}>
-            Fixed-price catalogs. Embedded Oliv Finance liquidity. Real-time Egyptian Tax Authority e-invoicing on every order. The operating system for hotel procurement in Cairo and the coastal hubs.
+            Fixed-price catalogs. Embedded  Finance liquidity. Real-time Egyptian Tax Authority e-invoicing on every order. The operating system for hotel procurement in Cairo and the coastal hubs.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
             <Link href="/marketplace" className="btn-accent">Browse the marketplace</Link>

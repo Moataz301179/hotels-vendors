@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Landmark, Calculator, ShieldCheck, Wallet } from "lucide-react";
 
 /* Financing hub — Bold Typography: dark canvas, vermillion accent, radius 0.
-   Neutral "liquidity partners" language. No Oliv references. */
+   Neutral "liquidity partners" language. No  references. */
 
 const PILLARS = [
   {

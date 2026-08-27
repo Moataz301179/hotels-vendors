@@ -5,7 +5,7 @@
  * CR Compliance: Digital mediation service within CR limits.
  * HotelsVendors does NOT hold funds — it generates referral tokens.
  *
- * FRA Compliance: Oliv performs its own e-KYC per FRA Decision No. 51/2026.
+ * FRA Compliance:  performs its own e-KYC per FRA Decision No. 51/2026.
  * HotelsVendors facilitates referral and tracks attribution for commission.
  */
 
@@ -44,7 +44,7 @@ export interface ReferralToken {
 
 /**
  * Generate HMAC-SHA256 referral token.
- * Oliv CANNOT forge this without HotelsVendors' secret key.
+ *  CANNOT forge this without HotelsVendors' secret key.
  * Any future financing for same ETA UUID without this token = bypass attempt.
  */
 export function generateReferralToken(params: {

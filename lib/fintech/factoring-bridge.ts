@@ -17,11 +17,11 @@
  *
  * Architecture:
  *   factoring-bridge.ts  → shared types, adapter interface, partner registry + orchestration
- *   oliv-bridge.ts       → Oliv Finance adapter (real API + mock fallback)
+ *   -bridge.ts       →  Finance adapter (real API + mock fallback)
  *   [future] fawry-bridge.ts → FawryPay adapter
  */
 
-import { olivFinanceAdapter } from "./oliv-bridge";
+import { FinanceAdapter } from "./-bridge";
 
 // ─────────────────────────────────────────
 // 1. SHARED TYPES
@@ -116,7 +116,7 @@ export interface FactoringPartnerAdapter {
 // ─────────────────────────────────────────
 
 const PARTNERS = new Map<string, FactoringPartnerAdapter>([
-  [olivFinanceAdapter.id, olivFinanceAdapter],
+  [FinanceAdapter.id, FinanceAdapter],
   // ["fawry_pay", new FawryPayAdapter()],  // ← uncomment when fawry-bridge.ts is created
 ]);
 

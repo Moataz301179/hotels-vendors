@@ -115,7 +115,7 @@ export default function PrivacyPage() {
             <h2 className="text-xl font-semibold text-white mb-3">6. Data Sharing</h2>
             <p>We share your data with the following categories of recipients:</p>
             <ul className="list-disc pl-6 space-y-2">
-              <li><strong>Factoring Partners (Oliv, EFG Hermes):</strong> When you initiate a factoring request, relevant transaction and identity data is shared with the selected licensed factoring partner.</li>
+              <li><strong>Factoring Partners (, EFG Hermes):</strong> When you initiate a factoring request, relevant transaction and identity data is shared with the selected licensed factoring partner.</li>
               <li><strong>Payment Processors (Paymob, Fawry):</strong> For payment processing. Card data is tokenized and never stored on our servers.</li>
               <li><strong>Egyptian Tax Authority (ETA):</strong> Invoice data is submitted as required by Egyptian e-invoicing regulations.</li>
               <li><strong>Law Enforcement:</strong> When required by valid legal process or to protect the Platform from fraud.</li>

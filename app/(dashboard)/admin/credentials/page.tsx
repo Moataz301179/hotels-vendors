@@ -17,7 +17,7 @@ interface Credential {
 }
 
 const SERVICES = [
-  { id: "oliv", name: "Oliv Finance", color: "var(--success)" },
+  { id: "", name: " Finance", color: "var(--success)" },
   { id: "eta", name: "Egyptian Tax Authority", color: "var(--info)", demo: true },
   { id: "supabase", name: "Supabase", color: "#10b981" },
   { id: "sentry", name: "Sentry", color: "#8b5cf6" },
@@ -35,10 +35,10 @@ DATABASE_URL="postgresql://hv_prod:hv_prod_pass@localhost:5433/hotelsvendors_pro
 SESSION_SECRET="${Array.from({ length: 64 }, () => Math.floor(Math.random() * 16).toString(16)).join("")}"
 NEXTAUTH_URL="https://www.hotelsvendors.com"
 
-# ── Oliv Finance Integration ──
-OLIV_API_URL="https://api.olivfinance.com"
-OLIV_API_KEY="YOUR_OLIV_API_KEY_HERE"
-OLIV_WEBHOOK_SECRET="YOUR_OLIV_WEBHOOK_SECRET_HERE"
+# ──  Finance Integration ──
+_API_URL="https://api.finance.com"
+_API_KEY="YOUR__API_KEY_HERE"
+_WEBHOOK_SECRET="YOUR__WEBHOOK_SECRET_HERE"
 HOTELSVENDORS_HMAC_SECRET="${Array.from({ length: 64 }, () => Math.floor(Math.random() * 16).toString(16)).join("")}"
 
 # ── ETA E-Invoicing ──
@@ -69,7 +69,7 @@ export default function AdminCredentialsPage() {
   const [envPassword, setEnvPassword] = useState("");
   const [envUnlocked, setEnvUnlocked] = useState(false);
   const [saving, setSaving] = useState(false);
-  const [newCredential, setNewCredential] = useState({ name: "", key: "", service: "oliv", type: "api_key" as const });
+  const [newCredential, setNewCredential] = useState({ name: "", key: "", service: "", type: "api_key" as const });
 
   useEffect(() => {
     fetchCredentials();
@@ -83,10 +83,10 @@ export default function AdminCredentialsPage() {
     } catch {
       // Use mock data
       setCredentials([
-        { id: "1", name: "Oliv API Key", key: "oliv_live_xxxxxxxxxxxx", type: "api_key", service: "oliv", lastRotated: "2026-07-15T10:00:00Z", status: "active" },
-        { id: "2", name: "Oliv Webhook Secret", key: "whsec_xxxxxxxxxxxx", type: "webhook_secret", service: "oliv", lastRotated: "2026-07-15T10:00:00Z", status: "active" },
+        { id: "1", name: " API Key", key: "_live_xxxxxxxxxxxx", type: "api_key", service: "", lastRotated: "2026-07-15T10:00:00Z", status: "active" },
+        { id: "2", name: " Webhook Secret", key: "whsec_xxxxxxxxxxxx", type: "webhook_secret", service: "", lastRotated: "2026-07-15T10:00:00Z", status: "active" },
         { id: "3", name: "ETA API Key (DEMO — not real)", key: "eta_xxxxxxxxxxxx", type: "api_key", service: "eta", lastRotated: "2026-07-10T10:00:00Z", status: "active" },
-        { id: "4", name: "HMAC Secret", key: "hmac_xxxxxxxxxxxx", type: "api_key", service: "oliv", lastRotated: "2026-07-15T10:00:00Z", status: "active" },
+        { id: "4", name: "HMAC Secret", key: "hmac_xxxxxxxxxxxx", type: "api_key", service: "", lastRotated: "2026-07-15T10:00:00Z", status: "active" },
         { id: "5", name: "Groq API Key", key: "gsk_xxxxxxxxxxxx", type: "api_key", service: "groq", lastRotated: "2026-07-01T10:00:00Z", status: "active" },
         { id: "6", name: "Sentry DSN", key: "https://xxx@sentry.io/xxx", type: "api_key", service: "sentry", lastRotated: "2026-06-15T10:00:00Z", status: "active" },
       ]);
@@ -224,14 +224,14 @@ export default function AdminCredentialsPage() {
           <div className="rounded-xl border border-border-subtle bg-surface-1 p-6">
             <h3 className="text-sm font-semibold text-foreground-secondary mb-4 flex items-center gap-2">
               <Webhook className="w-4 h-4 text-purple-400" />
-              Oliv Finance Webhook Configuration
+               Finance Webhook Configuration
             </h3>
             <div className="space-y-4">
               <div>
                 <label className="text-[11px] text-foreground-muted uppercase tracking-wider mb-1.5 block">Callback URL</label>
                 <div className="flex items-center gap-2 p-3 rounded-lg bg-surface-1 border border-border-subtle">
-                  <code className="text-[12px] text-accent-base font-mono flex-1">https://www.hotelsvendors.com/api/v1/oliv/payout-callback</code>
-                  <button onClick={() => copyToClipboard("https://www.hotelsvendors.com/api/v1/oliv/payout-callback")} className="p-1 rounded hover:bg-surface-2 text-foreground-muted hover:text-foreground-secondary">
+                  <code className="text-[12px] text-accent-base font-mono flex-1">https://www.hotelsvendors.com/api/v1//payout-callback</code>
+                  <button onClick={() => copyToClipboard("https://www.hotelsvendors.com/api/v1//payout-callback")} className="p-1 rounded hover:bg-surface-2 text-foreground-muted hover:text-foreground-secondary">
                     <Copy className="w-3.5 h-3.5" />
                   </button>
                 </div>
@@ -251,9 +251,9 @@ export default function AdminCredentialsPage() {
                 </div>
               </div>
               <div>
-                <label className="text-[11px] text-foreground-muted uppercase tracking-wider mb-1.5 block">Required Headers (Oliv must send)</label>
+                <label className="text-[11px] text-foreground-muted uppercase tracking-wider mb-1.5 block">Required Headers ( must send)</label>
                 <div className="p-3 rounded-lg bg-surface-1 border border-border-subtle space-y-1">
-                  {["x-oliv-signature: HMAC-SHA256(timestamp.body)", "x-oliv-timestamp: ISO timestamp", "x-idempotency-key: Unique per transaction"].map((h) => (
+                  {["x--signature: HMAC-SHA256(timestamp.body)", "x--timestamp: ISO timestamp", "x-idempotency-key: Unique per transaction"].map((h) => (
                     <code key={h} className="block text-[11px] text-foreground-muted font-mono">{h}</code>
                   ))}
                 </div>
@@ -320,8 +320,8 @@ export default function AdminCredentialsPage() {
             <h3 className="text-sm font-semibold text-foreground-secondary mb-4">Essential Credentials Reference</h3>
             <div className="space-y-4">
               {[
-                { name: "Oliv Finance API", url: "https://api.olivfinance.com", auth: "Bearer Token", env: "OLIV_API_KEY", docs: "https://docs.olivfinance.com" },
-                { name: "Oliv Webhooks", url: "POST /api/v1/oliv/payout-callback", auth: "HMAC-SHA256", env: "OLIV_WEBHOOK_SECRET", docs: "Webhook must echo referral token" },
+                { name: " Finance API", url: "https://api.finance.com", auth: "Bearer Token", env: "_API_KEY", docs: "https://docs.finance.com" },
+                { name: " Webhooks", url: "POST /api/v1//payout-callback", auth: "HMAC-SHA256", env: "_WEBHOOK_SECRET", docs: "Webhook must echo referral token" },
                 { name: "ETA E-Invoicing (DEMO)", url: "https://api.preprod.invoicing.eta.gov.eg", auth: "API Key + Merchant ID", env: "ETA_API_KEY", docs: "https://eta.gov.eg/en/api-docs" },
                 { name: "Groq AI", url: "https://api.groq.com", auth: "API Key", env: "GROQ_API_KEY", docs: "https://console.groq.com/docs" },
               ].map((api) => (

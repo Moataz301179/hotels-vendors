@@ -17,7 +17,7 @@
  *
  *   WEBHOOK_IP_RANGES_PAYMOB="196.216.2.0/24,196.216.3.0/24,..."
  *   WEBHOOK_IP_RANGES_FAWRY="..."
- *   WEBHOOK_IP_RANGES_OLIV="..."
+ *   WEBHOOK_IP_RANGES_="..."
  *   WEBHOOK_IP_RANGES_ETA="..."
  *   WEBHOOK_IP_RANGES_INSTAPAY="..."
  *   WEBHOOK_IP_RANGES_GENERIC="..."   # must be set explicitly in production
@@ -39,8 +39,8 @@ export const WEBHOOK_IP_RANGES: Record<string, string[]> = {
     "41.196.128.0/24",   // Fawry primary
     "41.196.129.0/24",   // Fawry secondary
   ],
-  oliv: [
-    // Oliv hosts on GCP - narrow to their published egress ranges when available
+  : [
+    //  hosts on GCP - narrow to their published egress ranges when available
     "34.0.0.0/8",
   ],
   eta: [

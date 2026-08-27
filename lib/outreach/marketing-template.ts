@@ -1,28 +1,28 @@
 /**
  * HotelsVendors marketing email (English) — sells the HotelsVendors service with
- * an attached working-capital credit line via Oliv, referral CHV000.
+ * an attached working-capital credit line via , referral CHV000.
  *
  * HONESTY (NO-FAKE-DATA): only markets what the product genuinely does —
- * procurement SaaS, "buy now, pay in 48h" / 48-hour invoice funding via the Oliv
+ * procurement SaaS, "buy now, pay in 48h" / 48-hour invoice funding via the 
  * financing partner, referral CHV000 bakery-in. It does NOT invent revenue,
  * onboardings, or guarantees. The CTA routes through the real attribution link.
  */
 
-export const HV_CTA = "https://www.hotelsvendors.com/api/v1/oliv/click?source=marketing-edge&ref=CHV000";
+export const HV_CTA = "https://www.hotelsvendors.com/api/v1//click?source=marketing-edge&ref=CHV000";
 
 export function hvMarketingSubject(): string {
   return "Procurement that pays your invoices back in 48 hours";
 }
 
 export function hvMarketingHtml(company: string, num: number): string {
-  const cta = `https://www.hotelsvendors.com/api/v1/oliv/click?source=marketing-edge&sourceId=${num}&ref=CHV000`;
+  const cta = `https://www.hotelsvendors.com/api/v1//click?source=marketing-edge&sourceId=${num}&ref=CHV000`;
   const green = "#314B43";
   const gold = "#8a6d3b";
   const dark = "#111827";
   return `
   <div style="font-family: system-ui, sans-serif; max-width: 560px; margin: 0 auto; padding: 24px; color: ${dark};">
     <h2 style="color: ${green}; margin: 0 0 4px;">${company}</h2>
-    <p style="margin: 0 0 16px; font-size: 12px; color: ${gold}; font-weight: 600;">HotelsVendors × Financing Partner (Oliv)</p>
+    <p style="margin: 0 0 16px; font-size: 12px; color: ${gold}; font-weight: 600;">HotelsVendors × Financing Partner ()</p>
     <p>Hello ${company} team,</p>
     <p>You already know the strain of unpaid invoices — cash sits in your debtors&#8217; books while you carry supplier costs. <strong>HotelsVendors</strong> is procurement software with an embedded answer: buy the way you buy today, and let the platform&#8217;s financing partner convert your <strong>ETA-verified e-invoices into cash within 48 hours</strong>.</p>
     <ul style="font-size: 14px; line-height: 1.7;">
@@ -37,7 +37,7 @@ export function hvMarketingHtml(company: string, num: number): string {
 }
 
 export function hvMarketingText(company: string, num: number): string {
-  const cta = `https://www.hotelsvendors.com/api/v1/oliv/click?source=marketing-edge&sourceId=${num}&ref=CHV000`;
+  const cta = `https://www.hotelsvendors.com/api/v1//click?source=marketing-edge&sourceId=${num}&ref=CHV000`;
   return `Hello ${company} team,
 
 You already know the strain of unpaid invoices — cash sits in your debtors' books while you carry supplier costs.

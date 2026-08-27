@@ -107,8 +107,8 @@ const SUPPLIER_BENEFITS = [
 const HOTEL_BENEFITS = [
   { icon: Clock, title: "Extended Payment Terms", desc: "Net-60 platform terms vs. Net-15/30 to suppliers. Preserve cash for operations." },
   { icon: Shield, title: "Supplier Loyalty", desc: "Suppliers get paid instantly. They prioritize your orders. Better fill rates, better pricing." },
-  { icon: Users, title: "Single Consolidated Payment", desc: "One monthly wire to Oliv covers all financed invoices. Simplified AP workflow." },
-  { icon: Building2, title: "Zero Balance Sheet Impact", desc: "Financing is off-balance-sheet for hotel. Oliv takes the credit risk." },
+  { icon: Users, title: "Single Consolidated Payment", desc: "One monthly wire to  covers all financed invoices. Simplified AP workflow." },
+  { icon: Building2, title: "Zero Balance Sheet Impact", desc: "Financing is off-balance-sheet for hotel.  takes the credit risk." },
 ];
 
 function StepCard({ step, index }: { step: typeof FLOW_STEPS[0]; index: number }) {
@@ -162,7 +162,7 @@ export default function FlowPage() {
         <div className="relative z-10 mx-auto max-w-5xl px-6 text-center">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border mb-6" style={{ borderColor: "rgba(var(--success-rgb),0.33)", backgroundColor: "rgba(var(--success-rgb),0.10)" }}>
             <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider" style={{ color: "var(--success)" }}>◆ Liquidity Partner</span>
-            <span className="text-[11px] font-medium uppercase tracking-[0.12em]" style={{ color: "var(--success)" }}>HotelsVendors × Oliv Partnership</span>
+            <span className="text-[11px] font-medium uppercase tracking-[0.12em]" style={{ color: "var(--success)" }}>HotelsVendors ×  Partnership</span>
           </div>
           <h1 className="text-[clamp(28px,5vw,48px)] font-semibold leading-[1.1] tracking-tight mb-5">
             From Order to Cash in <span style={{ color: "var(--success)" }}>48 Hours</span>
@@ -257,7 +257,7 @@ export default function FlowPage() {
       <section className="py-20 border-y" style={{ borderColor: "rgba(var(--success-rgb),0.18)" }}>
         <div className="mx-auto max-w-4xl px-6">
           <div className="text-center mb-12">
-            <span className="text-[11px] font-medium uppercase tracking-[0.15em] mb-3 block" style={{ color: "var(--success)" }}>Oliv Credit Engine</span>
+            <span className="text-[11px] font-medium uppercase tracking-[0.15em] mb-3 block" style={{ color: "var(--success)" }}> Credit Engine</span>
             <h2 className="text-3xl md:text-4xl font-semibold text-white">Handles Any Invoice Volume. Instantly.</h2>
           </div>
           <div className="rounded-2xl border bg-[#12121a] p-8" style={{ borderColor: "rgba(var(--success-rgb),0.22)" }}>
@@ -276,10 +276,10 @@ export default function FlowPage() {
               </div>
             </div>
             <div className="space-y-4 text-[14px] text-white/60 leading-relaxed">
-              <p><strong className="text-white">How it works:</strong> When a supplier clicks &ldquo;Get Financed&rdquo; on any verified invoice, Oliv&rsquo;s credit engine instantly evaluates the hotel&rsquo;s creditworthiness (not the supplier&rsquo;s), the invoice validity (ETA UUID verified), and the supplier&rsquo;s transaction history on HotelsVendors.</p>
+              <p><strong className="text-white">How it works:</strong> When a supplier clicks &ldquo;Get Financed&rdquo; on any verified invoice, &rsquo;s credit engine instantly evaluates the hotel&rsquo;s creditworthiness (not the supplier&rsquo;s), the invoice validity (ETA UUID verified), and the supplier&rsquo;s transaction history on HotelsVendors.</p>
               <p><strong className="text-white">Any volume:</strong> Whether it&rsquo;s one EGP 50K invoice or fifty EGP 200K invoices in a month — the engine processes each independently. The revolving facility means every repayment resets the available credit.</p>
-              <p><strong className="text-white">Paperless:</strong> Digital contract signing via Oliv app. No branch visits. No physical documents. FRA-regulated and fully compliant.</p>
-              <p><strong className="text-white">Hotel side:</strong> Hotel receives a single monthly statement from Oliv covering all financed invoices. Pays one wire at net-60. AP team reconciles at PO level automatically.</p>
+              <p><strong className="text-white">Paperless:</strong> Digital contract signing via  app. No branch visits. No physical documents. FRA-regulated and fully compliant.</p>
+              <p><strong className="text-white">Hotel side:</strong> Hotel receives a single monthly statement from  covering all financed invoices. Pays one wire at net-60. AP team reconciles at PO level automatically.</p>
             </div>
           </div>
         </div>
@@ -293,16 +293,16 @@ export default function FlowPage() {
             Join 100+ suppliers and 20+ hotel groups already transacting on HotelsVendors. First financing referral is free.
           </p>
           <div className="flex flex-wrap gap-3 justify-center">
-            <a href="https://oliv.finance/#register" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-8 py-3 text-[13px] font-semibold rounded-xl transition-all hover:shadow-[0_0_30px_rgba(var(--success-rgb),0.3)]" style={{ backgroundColor: "var(--success)", color: "#ffffff" }}>
+            <a href="https://.finance/#register" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-8 py-3 text-[13px] font-semibold rounded-xl transition-all hover:shadow-[0_0_30px_rgba(var(--success-rgb),0.3)]" style={{ backgroundColor: "var(--success)", color: "#ffffff" }}>
               <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider text-foreground-secondary">◆ Liquidity Partner</span>
-              Apply for Oliv Financing <ExternalLink size={14} />
+              Apply for  Financing <ExternalLink size={14} />
             </a>
             <Link href="/register" className="inline-flex items-center gap-2 px-8 py-3 text-[13px] font-medium rounded-xl transition-all hover:bg-white/[0.04]" style={{ border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)" }}>
               Join HotelsVendors Marketplace
             </Link>
           </div>
           <p className="text-[11px] text-white/20 mt-6">
-            Powered by Oliv Finance — Egypt&apos;s first FRA-licensed digital factoring platform. Backed by Suez Canal Bank (EGP 30M facility).
+            Powered by  Finance — Egypt&apos;s first FRA-licensed digital factoring platform. Backed by Suez Canal Bank (EGP 30M facility).
           </p>
         </div>
       </section>

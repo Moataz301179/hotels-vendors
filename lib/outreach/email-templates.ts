@@ -1,5 +1,5 @@
 /**
- * Oliv email outreach (EN + Egyptian Arabic) — real supplier onboarding emails.
+ *  email outreach (EN + Egyptian Arabic) — real supplier onboarding emails.
  *
  * Sent ONLY through the live Hostinger SMTP path (reem@hotelsvendors.com) via
  * lib/notifications/email.ts. NO-FAKE-DATA: invites claim only what the product
@@ -7,25 +7,25 @@
  * 48h, CHV000 referral). They do NOT claim any supplier was approved/onboarded.
  *
  * The CTA is the REAL attribution + app-router:
- *   /api/v1/oliv/click?source=outreach&sourceId=<num>&ref=CHV000
+ *   /api/v1//click?source=outreach&sourceId=<num>&ref=CHV000
  * which records the CHV000 referral server-side, then redirects to the correct
- * Oliv destination (Android / iOS / web) with ref=CHV000 embedded.
+ *  destination (Android / iOS / web) with ref=CHV000 embedded.
  */
 
-export const OLIV_CTA_BASE = "https://www.hotelsvendors.com/api/v1/oliv/click?source=outreach&ref=CHV000";
-export const OLIV_REFERRAL_CODE = "CHV000";
+export const _CTA_BASE = "https://www.hotelsvendors.com/api/v1//click?source=outreach&ref=CHV000";
+export const _REFERRAL_CODE = "CHV000";
 
 function ctaFor(num: number): string {
-  return `https://www.hotelsvendors.com/api/v1/oliv/click?source=outreach&sourceId=${num}&ref=CHV000`;
+  return `https://www.hotelsvendors.com/api/v1//click?source=outreach&sourceId=${num}&ref=CHV000`;
 }
 
-export function olivEmailSubject(lang: "en" | "ar"): string {
+export function EmailSubject(lang: "en" | "ar"): string {
   return lang === "ar"
     ? "تمويل فواتيرك خلال 48 ساعة من HotelsVendors"
     : "Get your invoices funded in 48h with HotelsVendors";
 }
 
-export function olivWelcomeHtml(lang: "en" | "ar", company: string, num: number): string {
+export function WelcomeHtml(lang: "en" | "ar", company: string, num: number): string {
   const cta = ctaFor(num);
   const brandGreen = "#314B43";
   const gold = "#8a6d3b";
@@ -35,7 +35,7 @@ export function olivWelcomeHtml(lang: "en" | "ar", company: string, num: number)
     return `
     <div style="font-family: system-ui, sans-serif; max-width: 560px; margin: 0 auto; padding: 24px; color: ${dark}; direction: rtl; text-align: right;">
       <h2 style="color: ${brandGreen}; margin: 0 0 4px;">${company}</h2>
-      <p style="margin: 0 0 16px; font-size: 12px; color: ${gold}; font-weight: 600;">تعاون تمويل فواتير الموردين — HotelsVendors × Oliv</p>
+      <p style="margin: 0 0 16px; font-size: 12px; color: ${gold}; font-weight: 600;">تعاون تمويل فواتير الموردين — HotelsVendors × </p>
       <p>مرحباً فريق ${company}،</p>
       <p>إذا كُنتُمْ تُورّدون للفنادق، فتأخّر السداد هو التكلفة الحقيقية التي تتحمّلونها. يمكننا تقييم حدّ ائتماني لفواتيركم في نفس اليوم، وصرفه خلال <strong>48 ساعة</strong> وبطريقة غير رجعية ضدّ فواتير إلكترونية موثّقة من مصلحة الضرائب (ETA).</p>
       <ul style="font-size: 14px; line-height: 1.7; padding-right: 18px;">
@@ -52,7 +52,7 @@ export function olivWelcomeHtml(lang: "en" | "ar", company: string, num: number)
   return `
   <div style="font-family: system-ui, sans-serif; max-width: 560px; margin: 0 auto; padding: 24px; color: ${dark};">
     <h2 style="color: ${brandGreen}; margin: 0 0 4px;">${company}</h2>
-    <p style="margin: 0 0 16px; font-size: 12px; color: ${gold}; font-weight: 600;">Supplier Invoice Financing — HotelsVendors × Oliv</p>
+    <p style="margin: 0 0 16px; font-size: 12px; color: ${gold}; font-weight: 600;">Supplier Invoice Financing — HotelsVendors × </p>
     <p>Hello ${company} team,</p>
     <p>If your business carries unpaid invoices, late payment is the real cost you bear. We can assess a credit line against your invoices the same day and fund it in <strong>48 hours</strong> — non-recourse, backed by ETA-verified e-invoices.</p>
     <ul style="font-size: 14px; line-height: 1.7;">
@@ -65,7 +65,7 @@ export function olivWelcomeHtml(lang: "en" | "ar", company: string, num: number)
   </div>`;
 }
 
-export function olivWelcomeText(lang: "en" | "ar", company: string, num: number): string {
+export function WelcomeText(lang: "en" | "ar", company: string, num: number): string {
   const cta = ctaFor(num);
   if (lang === "ar") {
     return `مرحباً فريق ${company}،
