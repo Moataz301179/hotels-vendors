@@ -76,3 +76,28 @@ export function useLanguage() {
   }
   return ctx;
 }
+
+/**
+ * usePrefs — combines i18n context + translation helper + UI controls.
+ * Returns { t, lang, locale, setLang, setLocale, toggleLocale, dir, isRTL, theme, toggleTheme }
+ * for compatibility with Arena-transplanted components.
+ */
+import { useTranslation, type Namespace } from "./hooks/use-translation";
+type Theme = "dark" | "light";
+
+export function usePrefs(ns: Namespace = "common") {
+  const langContext = useLanguage();
+  const { t, lang } = useTranslation(ns);
+  const [theme, setThemeState] = useState<"dark" | "light">("dark");
+  const setLang = langContext.setLocale;
+  const toggleTheme = () => setThemeState(theme === "dark" ? "light" : "dark");
+  return {
+    ...langContext,
+    t,
+    lang,
+    setLang,
+    theme,
+    toggleTheme,
+    setTheme: setThemeState,
+  };
+}

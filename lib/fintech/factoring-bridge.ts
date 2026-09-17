@@ -21,7 +21,7 @@
  *   [future] fawry-bridge.ts → FawryPay adapter
  */
 
-import { FinanceAdapter } from "./-bridge";
+import { FinanceAdapter, noopAdapter } from "./-bridge";
 
 // ─────────────────────────────────────────
 // 1. SHARED TYPES
@@ -51,11 +51,11 @@ export interface PartnerOffer {
   partnerId: string;
   partnerName: string;
   eligible: boolean;
-  maxAdvanceRate: number;    // e.g. 0.90 = 90% of invoice
-  discountRate: number;      // Partner's fee (e.g. 0.02 = 2%)
+  maxAdvanceRate: number;
+  discountRate: number;
   responseId: string;
   rejectionReason?: string;
-  estimatedDisbursement?: number; // Gross amount to supplier (before partner fee)
+  estimatedDisbursement?: number;
 }
 
 export interface FactoringInstruction {
@@ -92,10 +92,14 @@ export interface WebhookResult {
 // ─────────────────────────────────────────
 
 export interface FactoringPartnerAdapter {
+  partnerName: string;
+  canHandle(invoice: unknown): Promise<boolean>;
+  requestOffer(invoice: unknown): Promise<{ eligible: boolean; maxAdvanceRate: number; discountRate: number; estimatedDisbursement?: number; rejectionReason?: string }>;
+  partnerId: string;
   id: string;
   name: string;
   type: "STANDARD" | "HIGH_RISK" | "PAYMENT_RAIL";
-  checkEligibility(invoice: InvoiceDataForPartner): Promise<PartnerOffer>;
+  checkEligibility(invoice: InvoiceDataForPartner): Promise<PartnerOffer & { partnerName: string }>;
   submitInstruction(invoice: InvoiceDataForPartner): Promise<{
     success: boolean;
     instructionId: string;
@@ -111,12 +115,11 @@ export interface FactoringPartnerAdapter {
 }
 
 // ─────────────────────────────────────────
-// 3. PARTNER REGISTRY
-// Add new adapters here as they are implemented in dedicated bridge files.
+// 3. PARTNER REGISTRY + ORCHESTRATION
 // ─────────────────────────────────────────
 
 const PARTNERS = new Map<string, FactoringPartnerAdapter>([
-  [FinanceAdapter.id, FinanceAdapter],
+  [noopAdapter.partnerId, noopAdapter],
   // ["fawry_pay", new FawryPayAdapter()],  // ← uncomment when fawry-bridge.ts is created
 ]);
 
@@ -128,13 +131,8 @@ export function getAllPartners(): FactoringPartnerAdapter[] {
   return Array.from(PARTNERS.values());
 }
 
-// ─────────────────────────────────────────
-// 5. ORCHESTRATION FUNCTIONS
-// ─────────────────────────────────────────
-
 /**
  * Get eligibility offers from all partners for a given invoice.
- * Returns all offers so the supplier can choose.
  */
 export async function getPartnerOffers(
   invoice: InvoiceDataForPartner
@@ -161,7 +159,6 @@ export async function getPartnerOffers(
 
 /**
  * Submit a factoring instruction to the chosen partner.
- * The partner handles all fund transfers directly.
  */
 export async function submitFactoringInstruction(
   partnerId: string,
@@ -193,13 +190,9 @@ export async function trackFactoringInstruction(
 }
 
 // ─────────────────────────────────────────
-// 6. BACKWARD-COMPATIBLE WRAPPERS
-// These adapt the old call-site signatures to the new partner-adapter architecture.
+// 4. BACKWARD-COMPATIBLE WRAPPERS
 // ─────────────────────────────────────────
 
-/**
- * Inquiry request parameters (hotel-level, from routes/queue).
- */
 export interface InquiryParams {
   hotelTaxId: string;
   hotelName: string;
@@ -212,17 +205,12 @@ export interface InquiryParams {
 }
 
 /**
- * Get eligibility offers from all partners using hotel-level params.
- * Returns both the best offer and all offers for selection UI.
  * @deprecated Use getPartnerOffers(invoice) with full InvoiceDataForPartner instead.
  */
 export async function inquireAll(params: InquiryParams): Promise<{
   bestOffer: PartnerOffer | null;
   allOffers: PartnerOffer[];
 }> {
-  // Build a minimal InvoiceDataForPartner for partner inquiry.
-  // The partner only needs hotel + amount for eligibility; full data is only
-  // needed at submit time.
   const syntheticInvoice: InvoiceDataForPartner = {
     invoiceId: `inquiry_${Date.now()}`,
     invoiceNumber: "INQUIRY",
@@ -247,9 +235,6 @@ export async function inquireAll(params: InquiryParams): Promise<{
   return { bestOffer, allOffers };
 }
 
-/**
- * Funding execution params (from queue worker).
- */
 export interface FundThroughPartnerParams {
   eligibilityResponseId: string;
   invoiceId: string;
@@ -264,7 +249,6 @@ export interface FundThroughPartnerParams {
 }
 
 /**
- * Fund through a partner — backward-compatible wrapper for the queue worker.
  * @deprecated Refactor queue worker to use submitFactoringInstruction directly.
  */
 export async function fundThroughPartner(
@@ -316,7 +300,7 @@ export async function fundThroughPartner(
   };
 }
 
-// ── Type aliases for backward compatibility with factoring-orchestrator.ts ──
+// ── Type aliases for backward compatibility ──
 
 export type InquiryResponse = PartnerOffer;
 export type FundingRequest = FundThroughPartnerParams;
@@ -325,7 +309,6 @@ export type SettlementStatus = "PENDING" | "DISBURSED" | "SETTLED" | "DEFAULTED"
 
 /**
  * Track settlement status for a factoring request.
- * Backward-compatible wrapper used by the orchestrator.
  */
 export async function trackSettlement(
   partnerId: string,

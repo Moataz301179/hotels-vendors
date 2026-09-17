@@ -17,7 +17,7 @@ import {
   Landmark,
 } from "lucide-react";
 import { useCart } from "@/components/cart/cart-context";
-import { generateCheckoutUrl } from "@/lib/payments/-checkout";
+import { generateCheckoutUrl } from "@/lib/payments/checkout";
 
 interface UserData {
   userId: string;
@@ -47,6 +47,7 @@ export default function CheckoutPage() {
   const [loading, setLoading] = useState(false);
   const [placed, setPlaced] = useState(false);
   const [orders, setOrders] = useState<Array<{ id: string; supplierId: string; supplier?: string; orderNumber?: string; total: number; status: string }>>([]);
+  const [orderId, setOrderId] = useState<string>("");
   const [userData, setUserData] = useState<UserData | null>(null);
   const [creditInfo, setCreditInfo] = useState<{ creditLimit: number; creditUsed: number } | null>(null);
 
@@ -391,19 +392,8 @@ export default function CheckoutPage() {
                   <button
                     onClick={async () => {
                       if (paymentMethod === "_checkout") {
-                        const result = await generateCheckoutUrl({
-                          hotelId: userData?.userId || "",
-                          hotelName: userData?.hotelName || "",
-                          orderId: "",
-                          amount: grandTotal,
-                          currency: "EGP",
-                          items: items.map((i) => ({
-                            name: i.name,
-                            quantity: i.quantity,
-                            price: i.price,
-                          })),
-                        });
-                        window.open(result.checkoutUrl, "_blank");
+                        const checkoutUrl = generateCheckoutUrl(orderId || "");
+                        window.open(checkoutUrl, "_blank");
                       } else {
                         handlePlaceOrder();
                       }

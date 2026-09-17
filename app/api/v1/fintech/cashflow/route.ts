@@ -99,17 +99,15 @@ export const GET = apiRoute(async (request: NextRequest) => {
   });
 
   // Fetch  credit facility
-  const facility = await prisma.CreditFacility.findFirst({
+  const facility = await prisma.creditFacility.findFirst({
     where: {
       tenantId: auth.tenantId,
       status: "ACTIVE",
     },
     select: {
-      creditLimitEgp: true,
-      utilizedEgp: true,
-      availableEgp: true,
+      limit: true,
+      utilized: true,
       interestRate: true,
-      advanceRate: true,
     },
   });
 
@@ -222,14 +220,14 @@ export const GET = apiRoute(async (request: NextRequest) => {
     },
     creditFacility: facility
       ? {
-          limit: facility.creditLimitEgp,
-          utilized: facility.utilizedEgp,
-          available: facility.availableEgp,
-          utilizationRate: Number(facility.creditLimitEgp || 0) > 0
-            ? (Number(facility.utilizedEgp || 0) / Number(facility.creditLimitEgp || 0)) * 100
+          limit: facility.limit,
+          utilized: facility.utilized,
+          available: Number(facility.limit ?? 0) - Number(facility.utilized ?? 0),
+          utilizationRate: Number(facility.limit || 0) > 0
+            ? (Number(facility.utilized || 0) / Number(facility.limit || 0)) * 100
             : 0,
           interestRate: facility.interestRate,
-          advanceRate: facility.advanceRate,
+          advanceRate: 0.9,
         }
       : null,
     factoring: factoringSummary,

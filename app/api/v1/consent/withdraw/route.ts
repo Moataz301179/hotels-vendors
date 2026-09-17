@@ -62,16 +62,16 @@ export const POST = apiRoute(async (request: NextRequest) => {
   if (consentType === "_DATA_SHARING" && partnerId === "_finance") {
     await prisma.supplier.updateMany({
       where: { tenantId: auth.tenantId },
-      data: { Status: "CONSENT_WITHDRAWN" },
+      data: { status: "SUSPENDED" as const },
     });
 
     // Freeze  credit facility (don't cancel — existing obligations remain)
-    await prisma.CreditFacility.updateMany({
+    await prisma.creditFacility.updateMany({
       where: {
         tenantId: auth.tenantId,
         status: "ACTIVE",
       },
-      data: { status: "SUSPENDED" },
+      data: { status: "PENDING" as const },
     });
   }
 
