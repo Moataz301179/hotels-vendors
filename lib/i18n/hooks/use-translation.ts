@@ -18,12 +18,12 @@ export type Namespace = keyof typeof namespaces;
 export function useTranslation(ns: Namespace = "common") {
   const { locale } = useLanguage();
 
-  const t = (key: string): string => {
+  const t = (key: string, _params?: Record<string, unknown>): string => {
     const lang = locale as "en" | "ar";
     const dict = namespaces[ns];
     const langDict = dict[lang] || dict.en;
     return (langDict as Record<string, string>)[key] || key;
   };
 
-  return { t, locale };
+  return { t, lang: locale, locale };
 }

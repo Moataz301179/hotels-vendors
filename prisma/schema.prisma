@@ -3753,3 +3753,102 @@ model EtaSubmission {
   @@index([tenantId])
   @@index([invoiceId])
 }
+
+
+// Evidence / Intelligence / Acquisition layer — minimal contracts for Arena workspace integration
+// All models include tenant isolation (tenantId), provenance (provenance: OBSERVED/INFERRED/VALIDATED/AUTHORIZED/USER_PROVIDED),
+// audit link (auditLog), timestamps, lifecycle/state.
+
+model EvidenceRecord {
+  id                String    @id @default(uuid())
+  tenantId          String
+  sourceId          String?   // references sourcing source (AgentRun.id or external source identifier)
+  sourceType        String?   // PUBLIC_SCRAPE, EXPERT_VALIDATION, USER_PROVIDED, SYSTEM_INFERENCE
+  provenance        String    @default("OBSERVED") // OBSERVED / INFERRED / VALIDATED / AUTHORIZED / USER_PROVIDED
+  contentType       String?   // INVOICE, SUPPLIER_PROFILE, MARKET_SIGNAL, PROCUREMENT_EVENT, FACTORING_REQUEST
+  contentHash       String?   // SHA-256 of evidence content for integrity verification
+  beforeState       Json?     // snapshot before mutation (for audit chain)
+  afterState        Json?     // snapshot after mutation
+  actorId           String?   // user/system actor creating record
+  reviewStatus      String    @default("review-required") // review-required / validated / rejected / authorized
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  // Audit linkage: uses AuditLog.entityUuid mechanism (no explicit FK to avoid opposite-relation complexity)
+  // evidenceAuthor    User?     @relation("EvidenceAuthor", fields: [actorId], references: [id]) — deferred for clean baseline
+  // Indexes for tenant-scoped queries
+  @@index([tenantId, provenance])
+  @@index([tenantId, reviewStatus])
+  @@map("evidence_records")
+}
+
+model IntelligenceUpdate {
+  id                String    @id @default(uuid())
+  tenantId          String
+  kind              String    // NEED_DETECTION / OPPORTUNITY_MATCH / RISK_CHANGE / MARKET_SIGNAL / NETWORK_PATTERN / EVIDENCE_ADDED
+  entityId          String?   // target entity (supplier, hotel, product, contract)
+  entityType        String?   // SUPPLIER / HOTEL / PRODUCT / CONTRACT / MARKET
+  beforeValue       Json?
+  afterValue        Json?
+  detectionEngine   String?   // detectNeeds / matchOpportunity / evaluateIntelligenceChanges / detectNetworkPattern
+  confidenceScore   Float?    @default(0.0)
+  provenance        String    @default("INFERRED") // INFERRED / OBSERVED / VALIDATED / AUTHORIZED
+  reviewStatus      String    @default("review-required")
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  @@index([tenantId, kind])
+  @@map("intelligence_updates")
+}
+
+model NeedFinding {
+  id                String    @id @default(uuid())
+  tenantId          String
+  category          String    // PROCUREMENT_GAP / SUPPLY_CHAIN_RISK / MARKET_OPPORTUNITY / COST_ANOMALY / INVENTORY_RISK
+  description       String
+  urgency           String    @default("medium") // low / medium / high / critical
+  sourceEvidenceId  String?   @map("evidence_record_id") // links to EvidenceRecord.id
+  impactEstimate    Json?
+  status            String    @default("DETECTED") // DETECTED / REVIEWED / CONFIRMED / RESOLVED / REJECTED
+  actorId           String?
+  reviewStatus      String    @default("review-required")
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  @@index([tenantId, category, status])
+  @@map("need_findings")
+}
+
+model OpportunityPackage {
+  id                String    @id @default(uuid())
+  tenantId          String
+  title             String
+  category          String?   // PROCUREMENT_OPTIMIZATION / SUPPLIER_EXCLUSIVITY / LOGISTICS_CONSOLIDATION / FACTORING_LIQUIDITY / MARKET_ENTRY
+  evidenceIds       String[]  // array of EvidenceRecord.id references
+  recommendation    String
+  expectedValue     Float?
+  riskLevel         String    @default("medium") // low / medium / high
+  status            String    @default("PROPOSED") // PROPOSED / REVIEWED / APPROVED / EXECUTING / CLOSED / REJECTED
+  approvalChain     String?   // authority matrix chain reference
+  actorId           String?
+  provenance        String    @default("INFERRED")
+  reviewStatus      String    @default("review-required")
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  @@index([tenantId, status])
+  @@map("opportunity_packages")
+}
+
+model NetworkInsight {
+  id                String    @id @default(uuid())
+  tenantId          String
+  sourceEntityType  String    // SUPPLIER / HOTEL / MARKET / LOGISTICS_HUB
+  sourceEntityId    String
+  relationshipType  String    // COMPETITION / COLLABORATION / SHARED_LOGISTICS / SHARED_CREDIT / MARKET_CLUSTER
+  targetEntityType  String
+  targetEntityId    String
+  strengthScore     Float?    @default(0.0) // 0.0 to 1.0
+  provenance        String    @default("INFERRED")
+  reviewStatus      String    @default("review-required")
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  @@index([tenantId, sourceEntityType, relationshipType])
+  @@map("network_insights")
+}

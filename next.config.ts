@@ -106,13 +106,13 @@ const nextConfig: NextConfig = {
  * so this helper only needs to handle dev fallback + defensive localhost restriction.
  */
 function getCorsOrigin(): string {
-  const url = process.env.NEXT_PUBLIC_APP_URL;
+  const url = process.env.NEXT_PUBLIC_APP_URL || process.env.NEXT_PUBLIC_API_URL;
   if (url) return url;
   if (process.env.NODE_ENV !== "production") return "http://localhost:3000";
   // Production without APP_URL: emit no ACAO header value at all rather than ""
   throw new Error(
-    "FATAL: NEXT_PUBLIC_APP_URL is required for CORS in production builds. " +
-    "Set it before running `next build`."
+    "FATAL: NEXT_PUBLIC_APP_URL or NEXT_PUBLIC_API_URL is required for CORS in production builds. " +
+    "Set one before running `next build`."
   );
 }
 

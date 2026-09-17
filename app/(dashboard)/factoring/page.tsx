@@ -8,7 +8,7 @@ import {
   Wallet, Receipt, CheckCircle2, Clock, Loader2,
   ArrowRight, X, Building2, Package, Check, AlertCircle,
 } from "lucide-react";
-import { ReferralCTA } from "@/components/partners/-referral-cta";
+import { OlivReferralCTA as ReferralCTA } from "@/components/partners/oliv-referral-cta";
 import { FactoringOnboardingBot } from "@/components/ai-assistant/factoring-onboarding-chatbot";
 import { useApi } from "@/lib/hooks/use-api";
 import { LoadingCard, LoadingTable } from "@/components/dashboards/shared/loading-card";

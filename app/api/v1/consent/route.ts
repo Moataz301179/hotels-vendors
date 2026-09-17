@@ -90,7 +90,7 @@ export const POST = apiRoute(async (request: NextRequest) => {
   if (consentType === "_DATA_SHARING" && partnerId === "_finance") {
     await prisma.supplier.updateMany({
       where: { tenantId: auth.tenantId },
-      data: { Status: "CONSENT_GRANTED" },
+      data: { status: "ACTIVE" as const },
     });
   }
 

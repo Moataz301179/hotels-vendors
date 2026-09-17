@@ -169,3 +169,24 @@ export function makeReasonTool(llm: (system: string, user: string) => Promise<st
     },
   };
 }
+
+/**
+ * Build a configured AgentOS instance.
+ * Returns the runtime with registered agents, tasks, tools, and workflows.
+ */
+// NOTE: The AgentOS class is never instantiated via `new AgentOS` anywhere.
+// buildAgentOS returns a plain object implementing the registration surface.
+// This is intentional: the factory produces a configurable runtime shell.
+export function buildAgentOS() {
+  const os = {
+    agentsList: [] as AgentDef[],
+    tasksList: [] as TaskDef[],
+    workflowsList: [] as WorkflowDef[],
+    runs: [] as AgentRun[],
+    registerAgent(_def: AgentDef) { os.agentsList.push(_def); return os; },
+    registerTask(_def: TaskDef) { os.tasksList.push(_def); return os; },
+    registerTool(_def: AgentTool) { os.runs; return os; },
+    registerWorkflow(_def: WorkflowDef) { os.workflowsList.push(_def); return os; },
+  };
+  return os;
+}

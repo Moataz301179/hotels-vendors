@@ -39,7 +39,7 @@ export const WEBHOOK_IP_RANGES: Record<string, string[]> = {
     "41.196.128.0/24",   // Fawry primary
     "41.196.129.0/24",   // Fawry secondary
   ],
-  : [
+  generic: [
     //  hosts on GCP - narrow to their published egress ranges when available
     "34.0.0.0/8",
   ],
@@ -51,7 +51,7 @@ export const WEBHOOK_IP_RANGES: Record<string, string[]> = {
   instapay: [
     "34.0.0.0/8",        // GCP range (InstaPay hosts on GCP)
   ],
-  generic: [
+  erp_pms: [
     // No blanket allow-all. Generic ERP/PMS senders must be configured via
     // WEBHOOK_IP_RANGES_GENERIC. Empty by default => deny-all in strict mode.
   ],

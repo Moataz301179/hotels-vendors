@@ -23,8 +23,8 @@ const PARTNER_ID = "HOTELSVENDORS_GLOBAL_001";
 
 export interface PayoutCallback {
   // 's identifiers
-  TransactionId: string;
-  ReferenceNumber: string;
+  olivTransactionId: string;
+  olivReferenceNumber: string;
 
   // The referral token we sent —  MUST echo this back
   referralToken: ReferralToken;
@@ -136,7 +136,7 @@ export async function POST(request: NextRequest) {
           changes: {
             reason: tokenVerification.error,
             etaUuid: body.etaUuid,
-            TransactionId: body.TransactionId,
+            olivTransactionId: body.olivTransactionId,
             referralTokenSignature: body.referralToken.signature.substring(0, 20) + "...",
             ip: request.headers.get("x-forwarded-for") || "unknown",
             timestamp: new Date().toISOString(),
@@ -148,7 +148,7 @@ export async function POST(request: NextRequest) {
       console.error(
         `[LAYER-2] UNAUTHORIZED RECONCILIATION ATTEMPT:`,
         `ETA=${body.etaUuid}`,
-        `TxnId=${body.TransactionId}`,
+        `TxnId=${body.olivTransactionId}`,
         `Error=${tokenVerification.error}`
       );
 
@@ -189,12 +189,12 @@ export async function POST(request: NextRequest) {
     // 7. Idempotency check
     if (idempotencyKey) {
       const existing = await prisma.factoringTransaction.findUnique({
-        where: { TransactionId: body.TransactionId },
+        where: { olivTransactionId: body.olivTransactionId },
       });
 
       if (existing) {
         return NextResponse.json(
-          { message: "Already processed", transactionId: existing.id },
+          { message: "Already processed", olivTransactionId: existing.id },
           { status: 200 }
         );
       }
@@ -216,8 +216,8 @@ export async function POST(request: NextRequest) {
         referralTokenExpiresAt: new Date(body.referralToken.expiresAt),
 
         //  transaction data
-        TransactionId: body.TransactionId,
-        ReferenceNumber: body.ReferenceNumber,
+        olivTransactionId: body.olivTransactionId,
+        olivReferenceNumber: body.olivReferenceNumber,
         payoutStatus: body.payoutStatus,
         disbursedAmount: body.disbursedAmount,
         factoringFee: body.factoringFee,
@@ -246,7 +246,7 @@ export async function POST(request: NextRequest) {
         actionType: "UPDATE",
         changes: {
           etaUuid: body.etaUuid,
-          TransactionId: body.TransactionId,
+          olivTransactionId: body.olivTransactionId,
           payoutStatus: body.payoutStatus,
           disbursedAmount: body.disbursedAmount,
           platformFee: factoringTx.platformFeeAmount,
@@ -262,15 +262,15 @@ export async function POST(request: NextRequest) {
       data: {
         tenantId: "SYSTEM",
         entityType: "PLATFORM_FEE",
-        entityId: body.TransactionId,
+        entityId: body.olivTransactionId,
         entryType: "PLATFORM_FEE",
         account: "REVENUE",
         amount: factoringTx.platformFeeAmount,
         currency: "EGP",
-        reference: `-${body.TransactionId}`,
+        reference: `-${body.olivTransactionId}`,
         metadata: JSON.stringify({
           etaUuid: body.etaUuid,
-          TransactionId: body.TransactionId,
+          olivTransactionId: body.olivTransactionId,
           advanceRate: body.advanceRate,
           description: `Platform fee for ETA ${body.etaUuid}`,
         }),
@@ -279,7 +279,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      transactionId: factoringTx.id,
+      olivTransactionId: factoringTx.id,
       platformFee: factoringTx.platformFeeAmount,
       netDisbursement: factoringTx.netDisbursement,
       message: "Reconciliation accepted — referral token verified",
