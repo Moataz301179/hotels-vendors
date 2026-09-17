@@ -73,16 +73,6 @@ jobs:
 
             cd /var/www/hotelsvendors-v2
 
-            # Source environment variables from .env if present
-            if [ -f .env ]; then
-              set -a
-              source .env
-              set +a
-              echo "  Sourced .env ($(grep -c . .env 2>/dev/null || echo 0) variables)"
-            else
-              echo "  WARNING: No .env file found at $(pwd)"
-            fi
-
             echo "[1/5] Pulling latest code..."
             git fetch origin main
             git reset --hard origin/main
@@ -95,6 +85,40 @@ jobs:
 
             echo "[2/6] Installing dependencies..."
             npm ci --legacy-peer-deps
+
+            # Set up environment variables from GitHub secrets
+            # (Must happen AFTER git reset to avoid being overwritten)
+            if [ -f .env ]; then
+              set -a
+              source .env
+              set +a
+              echo "  Sourced .env ($(grep -c . .env 2>/dev/null || echo 0) variables)"
+            else
+              echo "  Creating .env from GitHub secrets..."
+              touch .env
+            fi
+
+            # Ensure critical secrets are set
+            if [ -z "$SESSION_SECRET" ] || [ "$SESSION_SECRET" = "dummy-for-ci-build-only" ]; then
+              echo "  Setting SESSION_SECRET from GitHub secret..."
+              echo "SESSION_SECRET=${{ secrets.SESSION_SECRET }}" >> .env
+              export SESSION_SECRET="${{ secrets.SESSION_SECRET }}"
+            fi
+            if [ -z "$HOTELSVENDORS_HMAC_SECRET" ]; then
+              echo "  Setting HOTELSVENDORS_HMAC_SECRET from GitHub secret..."
+              echo "HOTELSVENDORS_HMAC_SECRET=${{ secrets.HOTELSVENDORS_HMAC_SECRET }}" >> .env
+              export HOTELSVENDORS_HMAC_SECRET="${{ secrets.HOTELSVENDORS_HMAC_SECRET }}"
+            fi
+            if [ -z "$DATABASE_URL" ]; then
+              echo "  Setting DATABASE_URL from GitHub secret..."
+              echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> .env
+              export DATABASE_URL="${{ secrets.DATABASE_URL }}"
+            fi
+            if [ -z "$ENCRYPTION_MASTER_KEY" ]; then
+              echo "  Setting ENCRYPTION_MASTER_KEY from GitHub secret..."
+              echo "ENCRYPTION_MASTER_KEY=${{ secrets.ENCRYPTION_MASTER_KEY }}" >> .env
+              export ENCRYPTION_MASTER_KEY="${{ secrets.ENCRYPTION_MASTER_KEY }}"
+            fi
 
             echo "[3/7] Generating Prisma client..."
             npx prisma generate
