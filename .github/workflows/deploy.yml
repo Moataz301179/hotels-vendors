@@ -140,13 +140,23 @@ jobs:
 
             # Always synchronize the freshly built assets into standalone.
             # Never rely on destination existence: stale hashed chunks cause browser skeletons.
+            # Copy to BOTH locations: Nginx serves /_next/static/ from standalone/static/,
+            # and the Next.js server serves from standalone/.next/static/.
+            rm -rf .next/standalone/static
             rm -rf .next/standalone/.next/static
+            mkdir -p .next/standalone
             mkdir -p .next/standalone/.next
-            cp -a .next/static/. .next/standalone/.next/static/
+            if [ -d .next/static ]; then
+              cp -a .next/static/. .next/standalone/static/
+              cp -a .next/static/. .next/standalone/.next/static/
+            fi
 
             rm -rf .next/standalone/public
+            rm -rf .next/standalone/.next/public
             if [ -d public ]; then
               cp -a public/. .next/standalone/public/
+              mkdir -p .next/standalone/.next
+              cp -a public/. .next/standalone/.next/public/
             fi
 
             echo "─── Restarting PM2 ───"
