@@ -167,7 +167,40 @@ jobs:
             fi
             pm2 save
 
-            echo "─── Health checks ───"
+            echo "─── Verifying asset visibility on VPS ───"
+            # Confirm the files are actually present where Nginx and the Next.js
+            # standalone server can serve them. This catches copy failures that
+            # the GitHub Actions runner cannot observe directly.
+            STATIC_COUNT=$(find .next/standalone/static -type f 2>/dev/null | wc -l || echo "0")
+            NEXT_STATIC_COUNT=$(find .next/standalone/.next/static -type f 2>/dev/null | wc -l || echo "0")
+            PUBLIC_COUNT=$(find .next/standalone/public -type f 2>/dev/null | wc -l || echo "0")
+            echo "  standalone/static/       : $STATIC_COUNT files"
+            echo "  standalone/.next/static/ : $NEXT_STATIC_COUNT files"
+            echo "  standalone/public/       : $PUBLIC_COUNT files"
+            if [ "$STATIC_COUNT" -eq 0 ] && [ "$NEXT_STATIC_COUNT" -eq 0 ]; then
+              echo "  ERROR: No static assets were copied to either standalone location"
+              ls -la .next/static/ 2>/dev/null || echo "  .next/static/ is missing entirely"
+              exit 1
+            fi
+            if [ "$PUBLIC_COUNT" -eq 0 ]; then
+              echo "  WARNING: No public/ assets were copied (brand images may be missing)"
+            fi
+
+            echo "─── Reloading Nginx ───"
+            # Ensure Nginx picks up any new static files without waiting for its
+            # own reload cycle.
+            if command -v nginx > /dev/null 2>&1; then
+              if nginx -t 2>/dev/null; then
+                nginx -s reload 2>/dev/null || true
+                echo "  Nginx reloaded"
+              else
+                echo "  WARNING: nginx -t failed, skipping reload"
+              fi
+            else
+              echo "  WARNING: nginx binary not found on PATH"
+            fi
+
+                        echo "─── Health checks ───"
             sleep 15
             APP_STATUS=$(pm2 describe hotels-vendors 2>/dev/null | grep -c "online" || echo "0")
             if [ "$APP_STATUS" -eq 0 ]; then
@@ -190,4 +223,4 @@ jobs:
             echo "  Health check passed (HTTP $HTTP_STATUS)"
           else
             echo "  WARNING: Health check returned HTTP $HTTP_STATUS"
-          fimktemp(67995) MallocStackLogging: could not tag MSL-related memory as no_footprint, so those pages will be included in process footprint - No such file or directory (2)
+          fi
