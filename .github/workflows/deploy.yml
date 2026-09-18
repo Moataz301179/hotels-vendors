@@ -76,6 +76,18 @@ jobs:
           scp -o StrictHostKeyChecking=accept-new /tmp/deploy-env/.env ${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_IP }}:/var/www/hotelsvendors-v2/.env
           echo "  .env transferred to VPS"
 
+      - name: Stamp and synchronize canonical release source
+        run: |
+          mkdir -p public
+          printf '{"commit":"%s","deployedAt":"%s"}\n' \
+            "${{ github.sha }}" "$(date -u +%Y-%m-%dT%H:%M:%SZ)" > public/release.json
+          rsync -az --delete \
+            --exclude '.env' --exclude '.env.*' --exclude '.git' \
+            --exclude 'node_modules' --exclude '.next' \
+            -e "ssh -o StrictHostKeyChecking=accept-new" \
+            ./ ${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_IP }}:/var/www/hotelsvendors-v2/
+          echo "  Canonical source synchronized: ${{ github.sha }}"
+
       - name: Deploy to VPS (PM2)
         run: |
           OUTPUT=$(ssh -o StrictHostKeyChecking=accept-new ${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_IP }} << 'DEPLOYSCRIPT'
@@ -89,15 +101,13 @@ jobs:
 
             set -euo pipefail
 
-            echo "[1/6] Pulling latest code..."
-            git fetch origin main
-            git reset --hard origin/main
+            echo "[1/6] Canonical source synchronized by GitHub Actions."
 
             # VPS is a deployment target, not a development workspace.
             # Remove stale/untracked application source so old routes cannot enter
             # the production build after git reset. Preserve ignored runtime files.
-            echo "  Cleaning stale untracked application source..."
-            git clean -fd -- app
+            echo "  Source cleanup completed during rsync."
+            true
 
             APP_DIR=/var/www/hotelsvendors-v2
             if [ ! -d "$APP_DIR" ]; then
@@ -217,6 +227,13 @@ jobs:
             fi
             echo "  App: online (PM2)"
 
+            LOCAL_RELEASE=$(curl -fsS --retry 3 http://127.0.0.1:3003/release.json)
+            if ! printf '%s' "$LOCAL_RELEASE" | grep -Fq '${{ github.sha }}'; then
+              echo "  ERROR: PM2 is not serving the synchronized release"
+              exit 1
+            fi
+            echo "  PM2 release identity confirmed"
+
             echo "HV_DEPLOY_COMPLETE"
 
             echo "═══════════════════════════════════════════"
@@ -241,3 +258,16 @@ jobs:
             echo "  ERROR: Health check returned HTTP $HTTP_STATUS"
             exit 1
           fi
+
+          LIVE_RELEASE=$(curl -fsS --retry 3 https://www.hotelsvendors.com/release.json)
+          if ! printf '%s' "$LIVE_RELEASE" | grep -Fq '${{ github.sha }}'; then
+            echo "  ERROR: Public domain is not serving deployed commit ${{ github.sha }}"
+            exit 1
+          fi
+
+          if ! curl -fsS --retry 3 https://www.hotelsvendors.com/ | grep -Fq 'Supplier payments in 48 hours'; then
+            echo "  ERROR: Public domain is not serving the expected canonical homepage"
+            exit 1
+          fi
+
+          echo "  Public release identity and canonical homepage confirmed."
