@@ -142,11 +142,11 @@ jobs:
             # Never rely on destination existence: stale hashed chunks cause browser skeletons.
             rm -rf .next/standalone/.next/static
             mkdir -p .next/standalone/.next
-            cp -a .next/static .next/standalone/.next/static
+            cp -a .next/static/. .next/standalone/.next/static/
 
             rm -rf .next/standalone/public
             if [ -d public ]; then
-              cp -a public .next/standalone/public
+              cp -a public/. .next/standalone/public/
             fi
 
             echo "─── Restarting PM2 ───"
