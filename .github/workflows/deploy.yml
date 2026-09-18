@@ -63,8 +63,7 @@ jobs:
 
       - name: Deploy to VPS (PM2)
         run: |
-          ssh -o StrictHostKeyChecking=accept-new ${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_IP }} << 'EOF'
-            set -e
+          ssh -o StrictHostKeyChecking=accept-new ${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_IP }} << 'DEPLOYSCRIPT'
             echo "═══════════════════════════════════════════"
             echo "  Hotels Vendors — Production Deploy"
             echo "  Commit: ${{ github.sha }}"
@@ -73,9 +72,16 @@ jobs:
 
             cd /var/www/hotelsvendors-v2
 
-            echo "[1/5] Pulling latest code..."
+            echo "[1/6] Pulling latest code..."
             git fetch origin main
             git reset --hard origin/main
+
+            # VPS is a deployment target, not a development workspace.
+            # Remove stale/untracked application source so old routes cannot enter
+            # the production build after git reset. Preserve ignored runtime files.
+            echo "  Cleaning stale untracked application source..."
+            git clean -fd -- app
+
             APP_DIR=/var/www/hotelsvendors-v2
             if [ ! -d "$APP_DIR" ]; then
               echo "  ERROR: app dir $APP_DIR missing"
@@ -84,68 +90,57 @@ jobs:
             cd "$APP_DIR"
 
             echo "[2/6] Installing dependencies..."
-            npm ci --legacy-peer-deps
-
-            # Set up environment variables from GitHub secrets
-            # (Must happen AFTER git reset to avoid being overwritten)
-            if [ -f .env ]; then
-              set -a
-              source .env
-              set +a
-              echo "  Sourced .env ($(grep -c . .env 2>/dev/null || echo 0) variables)"
-            else
-              echo "  Creating .env from GitHub secrets..."
-              touch .env
+            if ! npm ci --legacy-peer-deps; then
+              echo "  ERROR: npm ci failed"
+              exit 1
             fi
 
-            # Ensure critical secrets are set
-            if [ -z "$SESSION_SECRET" ] || [ "$SESSION_SECRET" = "dummy-for-ci-build-only" ]; then
-              echo "  Setting SESSION_SECRET from GitHub secret..."
-              echo "SESSION_SECRET=${{ secrets.SESSION_SECRET }}" >> .env
-              export SESSION_SECRET="${{ secrets.SESSION_SECRET }}"
-            fi
-            if [ -z "$HOTELSVENDORS_HMAC_SECRET" ]; then
-              echo "  Setting HOTELSVENDORS_HMAC_SECRET from GitHub secret..."
-              echo "HOTELSVENDORS_HMAC_SECRET=${{ secrets.HOTELSVENDORS_HMAC_SECRET }}" >> .env
-              export HOTELSVENDORS_HMAC_SECRET="${{ secrets.HOTELSVENDORS_HMAC_SECRET }}"
-            fi
-            if [ -z "$DATABASE_URL" ]; then
-              echo "  Setting DATABASE_URL from GitHub secret..."
-              echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> .env
-              export DATABASE_URL="${{ secrets.DATABASE_URL }}"
-            fi
-            if [ -z "$ENCRYPTION_MASTER_KEY" ]; then
-              echo "  Setting ENCRYPTION_MASTER_KEY from GitHub secret..."
-              echo "ENCRYPTION_MASTER_KEY=${{ secrets.ENCRYPTION_MASTER_KEY }}" >> .env
-              export ENCRYPTION_MASTER_KEY="${{ secrets.ENCRYPTION_MASTER_KEY }}"
-            fi
+            echo "[3/6] Setting up environment variables..."
+            # Write ALL required env vars from GitHub secrets
+            # This ensures build has what it needs regardless of .env state
+            cat > .env << ENVEOF
+            SESSION_SECRET=${{ secrets.SESSION_SECRET }}
+            HOTELSVENDORS_HMAC_SECRET=${{ secrets.HOTELSVENDORS_HMAC_SECRET }}
+            DATABASE_URL=${{ secrets.DATABASE_URL }}
+            ENCRYPTION_MASTER_KEY=${{ secrets.ENCRYPTION_MASTER_KEY }}
+            REDIS_URL=${{ secrets.REDIS_URL }}
+            NEXT_PUBLIC_APP_URL=${{ secrets.NEXT_PUBLIC_APP_URL }}
+            NODE_ENV=production
+            ENVEOF
+            echo "  Wrote .env with $(grep -c . .env 2>/dev/null || echo 0) variables"
+            set -a
+            source .env
+            set +a
 
-            echo "[3/7] Generating Prisma client..."
+            echo "[4/6] Generating Prisma client..."
             npx prisma generate
 
-            echo "[4/7] Applying Prisma migrations..."
+            echo "[5/6] Applying Prisma migrations..."
             npx prisma migrate deploy
 
-            echo "[5/7] Building application (standalone)..."
-            export NODE_ENV=${NODE_ENV:-production}
+            echo "[6/6] Building application (standalone)..."
+            # Rebuild from a clean Next.js output so stale chunks cannot survive a deploy.
+            rm -rf .next
             NEXT_TELEMETRY_DISABLED=1 npm run build
 
-            echo "[6/7] Restarting PM2 process..."
-            # Kill any orphaned Next server holding the port (avoids EADDRINUSE crash-loop)
+            echo "─── Post-build setup ───"
+            # Kill any orphaned Next server holding the port
             fuser -k 3003/tcp 2>/dev/null || true
             pkill -f 'next-server' 2>/dev/null || true
             sleep 2
-            # Ensure static assets are served by nginx (standalone track path)
-            if [ ! -d .next/standalone/.next/static ]; then
-              mkdir -p .next/standalone/.next
-              cp -r .next/static .next/standalone/.next/static
+
+            # Always synchronize the freshly built assets into standalone.
+            # Never rely on destination existence: stale hashed chunks cause browser skeletons.
+            rm -rf .next/standalone/.next/static
+            mkdir -p .next/standalone/.next
+            cp -a .next/static .next/standalone/.next/static
+
+            rm -rf .next/standalone/public
+            if [ -d public ]; then
+              cp -a public .next/standalone/public
             fi
-            if [ ! -d .next/standalone/public ] && [ -d public ]; then
-              cp -r public .next/standalone/public
-            fi
-            if [ ! -f .next/standalone/.env ] && [ -f .env ]; then
-              cp .env .next/standalone/.env
-            fi
+
+            echo "─── Restarting PM2 ───"
             if pm2 describe hotels-vendors > /dev/null 2>&1; then
               pm2 reload ecosystem.config.js --env production
             else
@@ -153,11 +148,11 @@ jobs:
             fi
             pm2 save
 
-            echo "[7/7] Health checks..."
+            echo "─── Health checks ───"
             sleep 15
             APP_STATUS=$(pm2 describe hotels-vendors 2>/dev/null | grep -c "online" || echo "0")
             if [ "$APP_STATUS" -eq 0 ]; then
-              echo "  ERROR: PM2 process not running — triggering rollback"
+              echo "  ERROR: PM2 process not running"
               pm2 logs hotels-vendors --lines 50
               exit 1
             fi
@@ -166,14 +161,29 @@ jobs:
             echo "═══════════════════════════════════════════"
             echo "  Deploy Complete"
             echo "═══════════════════════════════════════════"
-          EOF
+          DEPLOYSCRIPT
 
       - name: Verify deployment
         run: |
           sleep 10
-          HTTP_STATUS=$(curl -so /dev/null -w "%{http_code}" https://www.hotelsvendors.com/api/health || echo "000")
-          if [ "$HTTP_STATUS" = "200" ]; then
-            echo "  Health check passed (HTTP $HTTP_STATUS)"
-          else
-            echo "  WARNING: Health check returned HTTP $HTTP_STATUS — check server logs"
-          fi
+
+          API_STATUS=$(curl -so /dev/null -w "%{http_code}" https://www.hotelsvendors.com/api/health || echo "000")
+          test "$API_STATUS" = "200" || { echo "ERROR: /api/health returned $API_STATUS"; exit 1; }
+
+          HOME_HTML=$(curl -fsSL https://www.hotelsvendors.com/)
+          ASSET_PATH=$(printf '%s' "$HOME_HTML" | grep -oE '/_next/static/[^" ]+\.(js|css)' | head -1)
+          test -n "$ASSET_PATH" || { echo "ERROR: no Next.js static asset found in homepage HTML"; exit 1; }
+
+          ASSET_STATUS=$(curl -so /dev/null -w "%{http_code}" "https://www.hotelsvendors.com$ASSET_PATH" || echo "000")
+          test "$ASSET_STATUS" = "200" || {
+            echo "ERROR: homepage asset $ASSET_PATH returned $ASSET_STATUS"
+            exit 1
+          }
+
+          LOGO_STATUS=$(curl -so /dev/null -w "%{http_code}" https://www.hotelsvendors.com/brand/hv-mark.png || echo "000")
+          test "$LOGO_STATUS" = "200" || {
+            echo "ERROR: public asset /brand/hv-mark.png returned $LOGO_STATUS"
+            exit 1
+          }
+
+          echo "  Production smoke checks passed: API=$API_STATUS static=$ASSET_STATUS public=$LOGO_STATUS"
