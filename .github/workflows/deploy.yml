@@ -61,9 +61,24 @@ jobs:
           # The ssh command below uses StrictHostKeyChecking=accept-new as the reliable fallback.
           (ssh-keyscan -T 10 -H ${{ secrets.HOSTINGER_IP }} >> ~/.ssh/known_hosts 2>/dev/null) || true
 
+      - name: Prepare deployment environment
+        run: |
+          mkdir -p /tmp/deploy-env
+          cat > /tmp/deploy-env/.env << 'ENVEOF'
+          SESSION_SECRET=${{ secrets.SESSION_SECRET }}
+          HOTELSVENDORS_HMAC_SECRET=${{ secrets.HOTELSVENDORS_HMAC_SECRET }}
+          DATABASE_URL=${{ secrets.DATABASE_URL }}
+          ENCRYPTION_MASTER_KEY=${{ secrets.ENCRYPTION_MASTER_KEY }}
+          REDIS_URL=${{ secrets.REDIS_URL }}
+          NEXT_PUBLIC_APP_URL=${{ secrets.NEXT_PUBLIC_APP_URL }}
+          NODE_ENV=production
+          ENVEOF
+          scp -o StrictHostKeyChecking=accept-new /tmp/deploy-env/.env ${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_IP }}:/var/www/hotelsvendors-v2/.env
+          echo "  .env transferred to VPS"
+
       - name: Deploy to VPS (PM2)
         run: |
-          ssh -o StrictHostKeyChecking=accept-new ${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_IP }} << 'DEPLOYSCRIPT'
+          OUTPUT=$(ssh -o StrictHostKeyChecking=accept-new ${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_IP }} << 'DEPLOYSCRIPT'
             echo "═══════════════════════════════════════════"
             echo "  Hotels Vendors — Production Deploy"
             echo "  Commit: ${{ github.sha }}"
@@ -71,6 +86,8 @@ jobs:
             echo "═══════════════════════════════════════════"
 
             cd /var/www/hotelsvendors-v2
+
+            set -euo pipefail
 
             echo "[1/6] Pulling latest code..."
             git fetch origin main
@@ -95,19 +112,9 @@ jobs:
               exit 1
             fi
 
-            echo "[3/6] Setting up environment variables..."
-            # Write ALL required env vars from GitHub secrets
-            # This ensures build has what it needs regardless of .env state
-            cat > .env << ENVEOF
-            SESSION_SECRET=${{ secrets.SESSION_SECRET }}
-            HOTELSVENDORS_HMAC_SECRET=${{ secrets.HOTELSVENDORS_HMAC_SECRET }}
-            DATABASE_URL=${{ secrets.DATABASE_URL }}
-            ENCRYPTION_MASTER_KEY=${{ secrets.ENCRYPTION_MASTER_KEY }}
-            REDIS_URL=${{ secrets.REDIS_URL }}
-            NEXT_PUBLIC_APP_URL=${{ secrets.NEXT_PUBLIC_APP_URL }}
-            NODE_ENV=production
-            ENVEOF
-            echo "  Wrote .env with $(grep -c . .env 2>/dev/null || echo 0) variables"
+            echo "[3/6] Validating environment variables..."
+            test -s .env || { echo "  ERROR: .env is missing or empty"; exit 1; }
+            echo "  .env validated ($(wc -l < .env) lines)"
             set -a
             source .env
             set +a
@@ -200,7 +207,7 @@ jobs:
               echo "  WARNING: nginx binary not found on PATH"
             fi
 
-                        echo "─── Health checks ───"
+            echo "─── Health checks ───"
             sleep 15
             APP_STATUS=$(pm2 describe hotels-vendors 2>/dev/null | grep -c "online" || echo "0")
             if [ "$APP_STATUS" -eq 0 ]; then
@@ -210,10 +217,19 @@ jobs:
             fi
             echo "  App: online (PM2)"
 
+            echo "HV_DEPLOY_COMPLETE"
+
             echo "═══════════════════════════════════════════"
             echo "  Deploy Complete"
             echo "═══════════════════════════════════════════"
           DEPLOYSCRIPT
+          )
+          echo "$OUTPUT"
+          if ! echo "$OUTPUT" | grep -q "HV_DEPLOY_COMPLETE"; then
+            echo "ERROR: Deployment did not complete — HV_DEPLOY_COMPLETE not found in output"
+            exit 1
+          fi
+          echo "Deployment sentinel confirmed."
 
       - name: Verify deployment
         run: |
@@ -222,5 +238,6 @@ jobs:
           if [ "$HTTP_STATUS" = "200" ]; then
             echo "  Health check passed (HTTP $HTTP_STATUS)"
           else
-            echo "  WARNING: Health check returned HTTP $HTTP_STATUS"
+            echo "  ERROR: Health check returned HTTP $HTTP_STATUS"
+            exit 1
           fi
