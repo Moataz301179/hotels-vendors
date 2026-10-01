@@ -4,49 +4,50 @@ export function HeroSection() {
   return (
     <section
       className="relative min-h-[92vh] flex items-center justify-center px-4 md:px-8 pt-28 pb-20 overflow-hidden"
-      style={{ backgroundColor: "var(--bg-canvas)", color: "var(--text-primary)" }}
+      style={{ backgroundColor: "#080B10", color: "#F4F7FA" }}
     >
       <div
         className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] rounded-full blur-[120px] pointer-events-none"
-        style={{ background: "radial-gradient(circle, rgba(255,61,0,0.05) 0%, transparent 70%)" }}
+        style={{ background: "radial-gradient(circle, rgba(54,214,181,0.08) 0%, transparent 70%)" }}
       />
       <div className="relative z-10 w-full max-w-6xl mx-auto grid lg:grid-cols-2 gap-12 items-center">
-        <div className="text-center lg:text-left">
-          <span
-            className="inline-block px-4 py-1.5 text-xs font-bold tracking-widest uppercase mb-6"
-            style={{ color: "var(--accent-base)", backgroundColor: "var(--accent-muted)", border: "1px solid var(--border-accent)" }}
-          >
-            Egypt&apos;s B2B Hospitality Infrastructure
-          </span>
-          <h1 className="font-semibold text-[clamp(36px,6vw,68px)] leading-[1.04] tracking-[-0.03em] mb-6 text-white">
-            Supplier payments in 48 hours.
-            <br />
-            ETA compliance, built in.
-          </h1>
-          <p className="text-lg max-w-xl mx-auto lg:mx-0 mb-10 leading-relaxed" style={{ color: "var(--text-secondary)" }}>
-            Fixed-price catalogs. Embedded  Finance liquidity. Real-time Egyptian Tax Authority e-invoicing on every order. The operating system for hotel procurement in Cairo and the coastal hubs.
+        <div>
+          <p className="text-xs font-medium tracking-[0.22em] uppercase mb-6 text-[#36D6B5]">
+            Hospitality procurement intelligence
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-            <Link href="/marketplace" className="btn-accent">Browse the marketplace</Link>
-            <a href="#sandbox" className="btn-outline">See how it works</a>
+          <h1 className="font-semibold text-[clamp(38px,6vw,70px)] leading-[1.02] tracking-[-0.04em] mb-6">
+            Your Virtual Shadow for smarter procurement.
+          </h1>
+          <p className="text-lg max-w-xl mb-10 leading-relaxed text-[#8E9AAA]">
+            HotelsVendors watches the hospitality network for money leaks,
+            savings opportunities, supplier demand and external funding signals.
+            It turns evidence into opportunities, actions and recorded outcomes.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4">
+            <Link href="/sign-in" className="btn-accent">Enter HotelsVendors</Link>
+            <Link href="/platform" className="btn-outline">See the intelligence loop</Link>
           </div>
-          <div className="mt-10 flex items-center gap-6 justify-center lg:justify-start">
-            <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-green-500" />
-              <span className="text-sm" style={{ color: "var(--text-muted)" }}>FRA-licensed factoring</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-green-500" />
-              <span className="text-sm" style={{ color: "var(--text-muted)" }}>ETA-native e-invoicing</span>
-            </div>
+          <div className="mt-10 flex flex-wrap gap-3 text-xs text-[#8E9AAA]">
+            <span className="rounded-full border border-[#202936] px-3 py-2">Signal</span>
+            <span className="rounded-full border border-[#202936] px-3 py-2">Detect</span>
+            <span className="rounded-full border border-[#202936] px-3 py-2">Explain</span>
+            <span className="rounded-full border border-[#202936] px-3 py-2">Opportunity</span>
+            <span className="rounded-full border border-[#202936] px-3 py-2">Action</span>
+            <span className="rounded-full border border-[#202936] px-3 py-2">Outcome</span>
           </div>
         </div>
-        <div id="sandbox" className="hidden lg:flex justify-center scroll-mt-24">
-          <iframe
-            src="/arena-sandbox.html"
-            title="HOVIN App Sandbox"
-            style={{ width: 409, height: 874, maxWidth: "100%", border: "none", borderRadius: 54, boxShadow: "none", background: "var(--bg-canvas)", outline: "1px solid var(--border-subtle)" }}
-          />
+        <div className="hidden lg:flex justify-center">
+          <div className="relative w-[430px] aspect-square rounded-full border border-[#202936] bg-[#10151D] p-10">
+            <div className="absolute inset-10 rounded-full border border-[#36D6B5]/30" />
+            <div className="absolute inset-20 rounded-full border border-[#202936]" />
+            <div className="relative h-full flex flex-col items-center justify-center text-center">
+              <span className="text-xs uppercase tracking-[0.22em] text-[#8E9AAA]">Virtual Shadow</span>
+              <strong className="mt-3 text-2xl text-[#F4F7FA]">Watch → Find → Act</strong>
+              <span className="mt-3 max-w-[210px] text-sm leading-6 text-[#8E9AAA]">
+                One intelligence layer across hotels, suppliers, carriers and funders.
+              </span>
+            </div>
+          </div>
         </div>
       </div>
     </section>
