@@ -69,7 +69,7 @@ jobs:
       SESSION_SECRET: dummy-session-secret-for-ci-tests-only-32chars
       HOTELSVENDORS_HMAC_SECRET: dummy-hmac-secret-for-ci-tests-only-32chars-min
       ENCRYPTION_MASTER_KEY: "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
-          NEXT_PUBLIC_APP_URL: "https://www.hotelsvendors.com"
+      NEXT_PUBLIC_APP_URL: "https://www.hotelsvendors.com"
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -103,6 +103,7 @@ jobs:
           HOTELSVENDORS_HMAC_SECRET: "dummy-hmac-secret-for-ci-build-only-32chars-minimum"
           ENCRYPTION_MASTER_KEY: "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
           NEXT_PUBLIC_APP_URL: "https://www.hotelsvendors.com"
+          NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: "pk_test_dW5pdGVkLXRyZWVmcm9nLTIyMy5jbGVyay5hY2NvdW50cy5kZXYk"
 
   audit:
     name: Security Audit
