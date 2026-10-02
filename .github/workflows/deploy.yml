@@ -251,7 +251,7 @@ jobs:
             exit 1
           fi
 
-          if ! curl -fsS --retry 3 https://www.hotelsvendors.com/ | grep -Fq 'Your Virtual Shadow for smarter procurement.'; then
+          if ! curl -fsS --retry 3 https://www.hotelsvendors.com/ | grep -Fq 'Find the money leaks before they become expensive.'; then
             echo "  ERROR: Public domain is not serving the expected canonical homepage"
             exit 1
           fi
