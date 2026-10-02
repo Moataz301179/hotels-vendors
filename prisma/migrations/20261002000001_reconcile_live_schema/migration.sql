@@ -24,13 +24,8 @@ DROP TABLE IF EXISTS "EvidenceRecord";
 DROP TABLE IF EXISTS "IntelligenceEdge";
 
 -- DropEnum
-DROP TYPE IF EXISTS "DataClassification";
-
--- DropEnum
-DROP TYPE IF EXISTS "EvidenceClass";
-
--- DropEnum
-DROP TYPE IF EXISTS "EvidenceStatus";
+-- Keep legacy enum types temporarily: the verified rollback snapshot in hv_backup_20261002 still references them.
+-- They are not used by the current public-schema models and can be retired after an external backup is available.
 
 -- CreateTable
 CREATE TABLE IF NOT EXISTS "Rfq" (
