@@ -47,8 +47,8 @@ export function CategoryNav({ activeCategory, onSelectCategory, counts = {} }: C
           onClick={() => onSelectCategory("")}
           className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-all ${
             !activeCategory
-              ? "bg-accent-base text-white shadow-[0_0_16px_rgba(139,10,30,0.3)]"
-              : "text-white/50 hover:text-white/80 hover:bg-white/[0.04]"
+              ? "bg-accent-base text-white shadow-[0_0_16px_rgba(37,99,235,0.15)]"
+              : "text-[#475569] hover:text-[#0F172A] hover:bg-[#F1F5F9]"
           }`}
         >
           All
@@ -70,8 +70,8 @@ export function CategoryNav({ activeCategory, onSelectCategory, counts = {} }: C
                 onClick={() => onSelectCategory(cat.id)}
                 className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-all ${
                   isActive
-                    ? "bg-accent-base text-white shadow-[0_0_16px_rgba(139,10,30,0.3)]"
-                    : "text-white/50 hover:text-white/80 hover:bg-white/[0.04]"
+                    ? "bg-accent-base text-white shadow-[0_0_16px_rgba(37,99,235,0.15)]"
+                    : "text-[#475569] hover:text-[#0F172A] hover:bg-[#F1F5F9]"
                 }`}
               >
                 <Icon className="w-4 h-4" />
@@ -79,7 +79,7 @@ export function CategoryNav({ activeCategory, onSelectCategory, counts = {} }: C
                 <span className="sm:hidden">{cat.code}</span>
                 {count > 0 && (
                   <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${
-                    isActive ? "bg-white/20 text-white/80" : "bg-white/[0.06] text-white/30"
+                    isActive ? "bg-[#E2E8F0] text-[#0F172A]" : "bg-[#F1F5F9] text-[#64748B]"
                   }`}>
                     {count}
                   </span>
@@ -94,25 +94,25 @@ export function CategoryNav({ activeCategory, onSelectCategory, counts = {} }: C
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: 4 }}
                     transition={{ duration: 0.15 }}
-                    className="absolute top-full left-0 mt-1 w-64 rounded-xl border border-white/[0.08] bg-[#0a0a0a]/95 backdrop-blur-xl shadow-2xl overflow-hidden z-50"
+                    className="absolute top-full left-0 mt-1 w-64 rounded-xl border border-[#E2E8F0] bg-white/95 backdrop-blur-xl shadow-2xl overflow-hidden z-50"
                   >
-                    <div className="p-3 border-b border-white/[0.06]">
+                    <div className="p-3 border-b border-[#E2E8F0]">
                       <div className="flex items-center gap-2">
-                        <Icon className="w-4 h-4 text-[#a68b5a]" />
+                        <Icon className="w-4 h-4 text-[#0D9488]" />
                         <span className="text-sm font-semibold">{cat.label}</span>
-                        <span className="text-[10px] text-white/30">{cat.code}</span>
+                        <span className="text-[10px] text-[#64748B]">{cat.code}</span>
                       </div>
-                      <p className="text-xs text-white/40 mt-1 leading-relaxed">{cat.description}</p>
+                      <p className="text-xs text-[#64748B] mt-1 leading-relaxed">{cat.description}</p>
                     </div>
                     <div className="p-2">
                       {cat.examples.map((ex) => (
                         <button
                           key={ex}
                           onClick={() => onSelectCategory(cat.id)}
-                          className="flex items-center justify-between w-full px-3 py-1.5 rounded-lg text-xs text-white/50 hover:text-white hover:bg-white/[0.04] transition-colors"
+                          className="flex items-center justify-between w-full px-3 py-1.5 rounded-lg text-xs text-[#475569] hover:text-[#0F172A] hover:bg-[#F1F5F9] transition-colors"
                         >
                           <span>{ex}</span>
-                          <ChevronRight className="w-3 h-3 text-white/20" />
+                          <ChevronRight className="w-3 h-3 text-[#64748B]" />
                         </button>
                       ))}
                     </div>

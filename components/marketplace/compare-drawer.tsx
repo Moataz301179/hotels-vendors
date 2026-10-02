@@ -25,7 +25,7 @@ export function CompareDrawer() {
           >
             <button
               onClick={() => setIsOpen(true)}
-              className="flex items-center gap-3 px-5 py-3 rounded-xl bg-accent-base hover:bg-error text-white shadow-black/40 transition-colors"
+              className="flex items-center gap-3 px-5 py-3 rounded-xl bg-accent-base hover:bg-[#1D4ED8] text-white shadow-black/40 transition-colors"
             >
               <Scale className="w-5 h-5" />
               <span className="text-sm font-medium">Compare ({items.length})</span>
@@ -50,26 +50,26 @@ export function CompareDrawer() {
               animate={{ y: 0 }}
               exit={{ y: "100%" }}
               transition={{ type: "spring", damping: 25, stiffness: 300 }}
-              className="absolute bottom-0 left-0 right-0 max-h-[85vh] rounded-t-2xl border-t border-white/[0.08] bg-surface overflow-hidden"
+              className="absolute bottom-0 left-0 right-0 max-h-[85vh] rounded-t-2xl border-t border-[#E2E8F0] bg-surface overflow-hidden"
               onClick={(e) => e.stopPropagation()}
             >
               {/* Header */}
-              <div className="flex items-center justify-between px-6 py-4 border-b border-white/[0.06]">
+              <div className="flex items-center justify-between px-6 py-4 border-b border-[#E2E8F0]">
                 <div className="flex items-center gap-3">
-                  <Scale className="w-5 h-5 text-[#a68b5a]" />
+                  <Scale className="w-5 h-5 text-[#0D9488]" />
                   <h2 className="text-lg font-semibold">Product Comparison</h2>
-                  <span className="text-sm text-white/40">{items.length} items</span>
+                  <span className="text-sm text-[#64748B]">{items.length} items</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <button
                     onClick={clearAll}
-                    className="px-3 py-1.5 rounded-lg text-sm text-white/40 hover:text-white/70 hover:bg-white/[0.04] transition-colors"
+                    className="px-3 py-1.5 rounded-lg text-sm text-[#64748B] hover:text-[#334155] hover:bg-[#F1F5F9] transition-colors"
                   >
                     Clear All
                   </button>
                   <button
                     onClick={() => setIsOpen(false)}
-                    className="p-2 rounded-lg text-white/40 hover:text-white hover:bg-white/[0.04] transition-colors"
+                    className="p-2 rounded-lg text-[#64748B] hover:text-[#0F172A] hover:bg-[#F1F5F9] transition-colors"
                   >
                     <X className="w-5 h-5" />
                   </button>
@@ -81,23 +81,23 @@ export function CompareDrawer() {
                 <div className="min-w-[800px]">
                   {/* Product Headers */}
                   <div className="grid gap-4" style={{ gridTemplateColumns: `160px repeat(${items.length}, 1fr)` }}>
-                    <div className="text-[10px] uppercase tracking-wider text-white/30 font-semibold py-2">Attribute</div>
+                    <div className="text-[10px] uppercase tracking-wider text-[#64748B] font-semibold py-2">Attribute</div>
                     {items.map((item) => (
-                      <div key={item.id} className="p-3 rounded-xl border border-white/[0.06] bg-white/[0.02]">
+                      <div key={item.id} className="p-3 rounded-xl border border-[#E2E8F0] bg-[#F8FAFC]">
                         <div className="flex items-center justify-between mb-2">
-                          <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-accent-base/15 text-[#a68b5a] border border-accent-base/25">
+                          <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-accent-base/15 text-[#0D9488] border border-accent-base/25">
                             {getCategoryById(item.category)?.code || item.category}
                           </span>
                           <button
                             onClick={() => removeItem(item.id)}
-                            className="text-white/20 hover:text-red-400 transition-colors"
+                            className="text-[#64748B] hover:text-red-400 transition-colors"
                           >
                             <X className="w-3.5 h-3.5" />
                           </button>
                         </div>
                         <Link
                           href={`/marketplace/${item.id}`}
-                          className="text-sm font-medium text-white/90 hover:text-[#a68b5a] transition-colors line-clamp-2 min-h-[2.5rem]"
+                          className="text-sm font-medium text-[#0F172A] hover:text-[#0D9488] transition-colors line-clamp-2 min-h-[2.5rem]"
                         >
                           {item.name}
                         </Link>
@@ -118,17 +118,17 @@ export function CompareDrawer() {
                   ].map((row) => (
                     <div
                       key={row.label}
-                      className="grid gap-4 border-t border-white/[0.04]"
+                      className="grid gap-4 border-t border-[#E2E8F0]"
                       style={{ gridTemplateColumns: `160px repeat(${items.length}, 1fr)` }}
                     >
-                      <div className="flex items-center gap-2 py-3 text-xs text-white/40 font-medium">
+                      <div className="flex items-center gap-2 py-3 text-xs text-[#64748B] font-medium">
                         {row.icon && <row.icon className="w-3.5 h-3.5" />}
                         <span>{row.label}</span>
                       </div>
                       {items.map((item) => (
-                        <div key={item.id} className="flex items-center py-3 px-3 text-sm text-white/70">
+                        <div key={item.id} className="flex items-center py-3 px-3 text-sm text-[#334155]">
                           {row.label === "Price" ? (
-                            <span className="text-lg font-bold text-white">{row.render(item)}</span>
+                            <span className="text-lg font-bold text-[#0F172A]">{row.render(item)}</span>
                           ) : row.label === "Rating" ? (
                             <div className="flex items-center gap-1">
                               <Star className="w-3.5 h-3.5 text-amber-400 fill-amber-400" />

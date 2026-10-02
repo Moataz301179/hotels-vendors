@@ -31,10 +31,10 @@ function ProductImageDisplay({ name, category }: { name: string; category: strin
       }}
     >
       <div className="text-center">
-        <span className="text-[28px] font-bold text-white/20 tracking-tight">
+        <span className="text-[28px] font-bold text-[#64748B] tracking-tight">
           {resolved.initials}
         </span>
-        <p className="text-[9px] text-white/12 uppercase tracking-wider mt-1">
+        <p className="text-[9px] text-[#64748B] uppercase tracking-wider mt-1">
           {category.toUpperCase()}
         </p>
       </div>
@@ -138,7 +138,7 @@ export function ProductCard({
 
   return (
     <motion.div
-      className="group relative flex flex-col rounded-xl border border-white/[0.06] bg-white/[0.02] overflow-hidden hover:border-accent-base/40 transition-all duration-300"
+      className="group relative flex flex-col rounded-xl border border-[#E2E8F0] bg-[#F8FAFC] overflow-hidden hover:border-accent-base/40 transition-all duration-300"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       whileHover={{ y: -4 }}
@@ -156,7 +156,7 @@ export function ProductCard({
             {stockStatus.label}
           </span>
           {supplierTier === "PREMIER" && (
-            <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider bg-accent-base/20 text-[#a68b5a] border border-accent-base/30">
+            <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider bg-accent-base/20 text-[#0D9488] border border-accent-base/30">
               Premier
             </span>
           )}
@@ -173,15 +173,15 @@ export function ProductCard({
             onClick={() => setIsWishlisted(!isWishlisted)}
             className={`w-8 h-8 rounded-lg flex items-center justify-center backdrop-blur-md border transition-colors ${
               isWishlisted
-                ? "bg-accent-base border-accent-base text-white"
-                : "bg-black/40 border-white/10 text-white/60 hover:text-white hover:border-white/30"
+                ? "bg-accent-base border-accent-base text-[#0F172A]"
+                : "bg-[#F1F5F9] border-[#E2E8F0] text-[#475569] hover:text-[#0F172A] hover:border-[#CBD5E1]"
             }`}
           >
             <Heart className={`w-4 h-4 ${isWishlisted ? "fill-current" : ""}`} />
           </button>
           <button
             onClick={() => onViewDetails?.(id)}
-            className="w-8 h-8 rounded-lg flex items-center justify-center backdrop-blur-md bg-black/40 border border-white/10 text-white/60 hover:text-white hover:border-white/30 transition-colors"
+            className="w-8 h-8 rounded-lg flex items-center justify-center backdrop-blur-md bg-[#F1F5F9] border border-[#E2E8F0] text-[#475569] hover:text-[#0F172A] hover:border-[#CBD5E1] transition-colors"
           >
             <Eye className="w-4 h-4" />
           </button>
@@ -190,8 +190,8 @@ export function ProductCard({
               onClick={() => inCompare ? removeItem(compareData.id) : addItem(compareData)}
               className={`w-8 h-8 rounded-lg flex items-center justify-center backdrop-blur-md border transition-colors ${
                 inCompare
-                  ? "bg-accent-base border-accent-base text-white"
-                  : "bg-black/40 border-white/10 text-white/60 hover:text-white hover:border-white/30"
+                  ? "bg-accent-base border-accent-base text-[#0F172A]"
+                  : "bg-[#F1F5F9] border-[#E2E8F0] text-[#475569] hover:text-[#0F172A] hover:border-[#CBD5E1]"
               }`}
             >
               <Scale className="w-4 h-4" />
@@ -210,7 +210,7 @@ export function ProductCard({
       {/* Content */}
       <div className="flex flex-col gap-2.5 p-4">
         {/* Category */}
-        <div className="flex items-center gap-2 text-[10px] text-white/40 uppercase tracking-wider">
+        <div className="flex items-center gap-2 text-[10px] text-[#64748B] uppercase tracking-wider">
           <span>{getCategoryById(category)?.label || category}</span>
           {subcategory && (
             <>
@@ -221,22 +221,22 @@ export function ProductCard({
         </div>
 
         {/* Title */}
-        <h3 className="text-sm font-medium text-white/90 leading-snug line-clamp-2 min-h-[2.5rem]">
+        <h3 className="text-sm font-medium text-[#0F172A] leading-snug line-clamp-2 min-h-[2.5rem]">
           {name}
         </h3>
 
         {/* SKU */}
-        <p className="text-[10px] text-white/30 font-mono">{sku}</p>
+        <p className="text-[10px] text-[#64748B] font-mono">{sku}</p>
 
         {/* Supplier Info */}
         <div className="flex items-center gap-2">
           <div className="flex items-center gap-1">
             <Star className="w-3 h-3 text-amber-400 fill-amber-400" />
-            <span className="text-xs font-medium text-white/70">{supplierRating.toFixed(1)}</span>
-            <span className="text-[10px] text-white/30">({supplierReviewCount})</span>
+            <span className="text-xs font-medium text-[#334155]">{supplierRating.toFixed(1)}</span>
+            <span className="text-[10px] text-[#64748B]">({supplierReviewCount})</span>
           </div>
           <span className="w-1 h-1 rounded-full bg-white/20" />
-          <div className="flex items-center gap-1 text-[10px] text-white/40">
+          <div className="flex items-center gap-1 text-[10px] text-[#64748B]">
             <MapPin className="w-3 h-3" />
             <span>{supplierCity}</span>
           </div>
@@ -244,14 +244,14 @@ export function ProductCard({
 
         {/* Price */}
         <div className="flex items-baseline gap-2 mt-1">
-          <span className="text-lg font-bold text-white tracking-tight">
+          <span className="text-lg font-bold text-[#0F172A] tracking-tight">
             {formatPrice(unitPrice)}
           </span>
-          <span className="text-xs text-white/40">/ {unitOfMeasure}</span>
+          <span className="text-xs text-[#64748B]">/ {unitOfMeasure}</span>
         </div>
 
         {/* Meta Info */}
-        <div className="flex items-center gap-3 text-[10px] text-white/30">
+        <div className="flex items-center gap-3 text-[10px] text-[#64748B]">
           <span>Min: {minOrderQty} {unitOfMeasure}</span>
           <span>Lead: {leadTimeDays}d</span>
           {shelfLifeDays && <span>Shelf: {shelfLifeDays}d</span>}
@@ -259,19 +259,19 @@ export function ProductCard({
 
         {/* Quantity + Add to Cart */}
         <div className="flex items-center gap-2 mt-1">
-          <div className="flex items-center rounded-lg border border-white/[0.08] bg-white/[0.03] overflow-hidden">
+          <div className="flex items-center rounded-lg border border-[#E2E8F0] bg-[#F8FAFC] overflow-hidden">
             <button
               onClick={() => setQty(Math.max(minOrderQty, qty - 1))}
-              className="px-2.5 py-1.5 text-xs text-white/60 hover:text-white hover:bg-white/[0.05] transition-colors"
+              className="px-2.5 py-1.5 text-xs text-[#475569] hover:text-[#0F172A] hover:bg-[#F1F5F9] transition-colors"
             >
               −
             </button>
-            <span className="px-2 py-1.5 text-xs font-medium text-white min-w-[2.5rem] text-center">
+            <span className="px-2 py-1.5 text-xs font-medium text-[#0F172A] min-w-[2.5rem] text-center">
               {qty}
             </span>
             <button
               onClick={() => setQty(Math.min(stockQuantity, qty + 1))}
-              className="px-2.5 py-1.5 text-xs text-white/60 hover:text-white hover:bg-white/[0.05] transition-colors"
+              className="px-2.5 py-1.5 text-xs text-[#475569] hover:text-[#0F172A] hover:bg-[#F1F5F9] transition-colors"
             >
               +
             </button>
@@ -279,7 +279,7 @@ export function ProductCard({
           <button
             onClick={() => onAddToCart?.(id, qty)}
             disabled={stockQuantity === 0}
-            className="flex-1 flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-accent-base hover:bg-error disabled:bg-white/[0.05] disabled:text-white/20 text-white text-sm font-medium transition-all active:scale-[0.98]"
+            className="flex-1 flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-accent-base hover:bg-[#1D4ED8] disabled:bg-[#F1F5F9] disabled:text-[#94A3B8] text-white text-sm font-medium transition-all active:scale-[0.98]"
           >
             <ShoppingCart className="w-4 h-4" />
             <span>Add to Cart</span>
@@ -287,8 +287,8 @@ export function ProductCard({
         </div>
 
         {/* Supplier Name */}
-        <p className="text-[10px] text-white/30 truncate">
-          Sold by <span className="text-white/50">{supplierName}</span>
+        <p className="text-[10px] text-[#64748B] truncate">
+          Sold by <span className="text-[#475569]">{supplierName}</span>
         </p>
       </div>
     </motion.div>

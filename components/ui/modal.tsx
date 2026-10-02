@@ -58,18 +58,18 @@ export function Modal({ isOpen, onClose, title, description, children, size = "m
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 10 }}
             transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
-            className={`relative w-full ${sizeClasses[size]} rounded-xl border border-white/[0.08] bg-[#121212] shadow-2xl overflow-hidden`}
+            className={`relative w-full ${sizeClasses[size]} rounded-xl border border-[#E2E8F0] bg-white shadow-2xl overflow-hidden`}
           >
             {/* Header */}
             {(title || description) && (
-              <div className="flex items-start justify-between px-5 py-4 border-b border-white/[0.06]">
+              <div className="flex items-start justify-between px-5 py-4 border-b border-[#E2E8F0]">
                 <div>
-                  {title && <h3 className="text-sm font-semibold text-white">{title}</h3>}
-                  {description && <p className="text-xs text-white/30 mt-0.5">{description}</p>}
+                  {title && <h3 className="text-sm font-semibold text-[#0F172A]">{title}</h3>}
+                  {description && <p className="text-xs text-[#64748B] mt-0.5">{description}</p>}
                 </div>
                 <button
                   onClick={onClose}
-                  className="p-1.5 rounded-lg hover:bg-white/[0.06] text-white/30 hover:text-white/60 transition-colors"
+                  className="p-1.5 rounded-lg hover:bg-[#F1F5F9] text-[#64748B] hover:text-[#475569] transition-colors"
                 >
                   <X size={16} />
                 </button>

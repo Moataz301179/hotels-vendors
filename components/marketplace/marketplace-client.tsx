@@ -58,7 +58,7 @@ function ProductImage({ product }: { product: MarketplaceProduct }) {
     );
   }
 
-  const colors = resolved.type === "gradient" ? resolved.colors : ["#1a1a2e", "#2a2a4a", "#4a4a7a"];
+  const colors = resolved.type === "gradient" ? resolved.colors : ["#E2E8F0", "#CBD5E1", "#94A3B8"];
   const initials = resolved.type === "gradient"
     ? resolved.initials
     : product.name.split(" ").slice(0, 2).map((w: string) => w[0]).join("").toUpperCase();
@@ -69,8 +69,8 @@ function ProductImage({ product }: { product: MarketplaceProduct }) {
       style={{ background: `linear-gradient(135deg, ${colors[0]} 0%, ${colors[1]} 50%, ${colors[2]} 100%)` }}
     >
       <div className="text-center">
-        <span className="text-[28px] font-bold text-white/20 tracking-tight">{initials}</span>
-        <p className="text-[9px] text-white/15 uppercase tracking-wider mt-1">{product.category.toUpperCase()}</p>
+        <span className="text-[28px] font-bold text-[#64748B] tracking-tight">{initials}</span>
+        <p className="text-[9px] text-[#64748B] uppercase tracking-wider mt-1">{product.category.toUpperCase()}</p>
       </div>
     </div>
   );
@@ -218,24 +218,24 @@ export default function MarketplacePage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white">
+    <div className="min-h-screen bg-[#F8FAFC] text-[#0F172A]">
       <MarketingNav />
 
       {/* Toolbar */}
-      <div className="sticky top-0 z-40 border-b border-white/[0.06] bg-[#050505]/90 backdrop-blur-xl">
+      <div className="sticky top-0 z-40 border-b border-[#E2E8F0] bg-[#F8FAFC]/90 backdrop-blur-xl">
         <div className="max-w-[1600px] mx-auto px-4 sm:px-6 h-14 flex items-center gap-4">
           <div className="flex-1 max-w-2xl">
             <div className="relative flex items-center">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#64748B]" />
               <input
                 type="text"
                 placeholder={t("searchPlaceholder")}
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 rounded-xl border border-white/[0.06] bg-white/[0.02] text-sm text-white placeholder:text-white/25 outline-none focus:border-white/[0.12] transition-all"
+                className="w-full pl-10 pr-4 py-2 rounded-xl border border-[#E2E8F0] bg-[#F8FAFC] text-sm text-[#0F172A] placeholder:text-[#64748B] outline-none focus:border-[#E2E8F0] transition-all"
               />
               {search && (
-                <button onClick={() => setSearch("")} className="absolute right-3 top-1/2 -translate-y-1/2 text-white/30 hover:text-white/60">
+                <button onClick={() => setSearch("")} className="absolute right-3 top-1/2 -translate-y-1/2 text-[#64748B] hover:text-[#475569]">
                   <X className="w-4 h-4" />
                 </button>
               )}
@@ -248,7 +248,7 @@ export default function MarketplacePage() {
             <button
               onClick={() => setMemberMode(!memberMode)}
               className={`hidden sm:flex items-center gap-2 px-3 py-2 rounded-xl text-[12px] font-medium transition-all ${
-                memberMode ? "bg-accent-base text-white" : "text-white/40 hover:text-white/70 border border-white/[0.06]"
+                memberMode ? "bg-accent-base text-white" : "text-[#64748B] hover:text-[#334155] border border-[#E2E8F0]"
               }`}
             >
               <Crown className="w-3.5 h-3.5" />
@@ -256,7 +256,7 @@ export default function MarketplacePage() {
               {memberMode && <Check className="w-3 h-3" />}
             </button>
 
-            <button onClick={openCart} className="relative flex items-center justify-center px-3 py-2 rounded-xl border border-white/[0.06] text-white/50 hover:text-white hover:border-white/[0.12] transition-all">
+            <button onClick={openCart} className="relative flex items-center justify-center px-3 py-2 rounded-xl border border-[#E2E8F0] text-[#475569] hover:text-[#0F172A] hover:border-[#E2E8F0] transition-all">
               <ShoppingBag className="w-4 h-4" />
               {totalItems > 0 && (
                 <span className="absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] px-1 rounded-full bg-accent-base text-white text-[10px] font-bold flex items-center justify-center">
@@ -267,9 +267,9 @@ export default function MarketplacePage() {
           </div>
         </div>
 
-        <div className="border-t border-white/[0.04] bg-white/[0.02]">
+        <div className="border-t border-[#E2E8F0] bg-[#F8FAFC]">
           <div className="max-w-[1600px] mx-auto px-4 sm:px-6 py-2 flex items-center gap-2 overflow-x-auto scrollbar-hide">
-            <button onClick={() => setMobileSidebarOpen(!mobileSidebarOpen)} className="lg:hidden flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-white/[0.08] text-[12px] text-white/60 hover:text-white transition-colors shrink-0">
+            <button onClick={() => setMobileSidebarOpen(!mobileSidebarOpen)} className="lg:hidden flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-[#E2E8F0] text-[12px] text-[#475569] hover:text-[#0F172A] transition-colors shrink-0">
               <SlidersHorizontal className="w-3.5 h-3.5" />
               {t("categories")}
             </button>
@@ -280,21 +280,21 @@ export default function MarketplacePage() {
                   onClick={() => setExpandedFilter(expandedFilter === group.label ? null : group.label)}
                   className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-[12px] transition-colors ${
                     activeFilters.some((f) => group.options.includes(f))
-                      ? "text-white border-white/[0.16] bg-white/[0.06]"
-                      : "text-white/50 border-white/[0.06] hover:text-white/80 hover:border-white/[0.10]"
+                      ? "text-[#0F172A] border-[#CBD5E1] bg-[#F1F5F9]"
+                      : "text-[#475569] border-[#E2E8F0] hover:text-[#0F172A] hover:border-[#E2E8F0]"
                   }`}
                 >
                   {group.label}
                   <ChevronDown className={`w-3 h-3 transition-transform ${expandedFilter === group.label ? "rotate-180" : ""}`} />
                 </button>
                 {expandedFilter === group.label && (
-                  <div className="absolute top-full left-0 mt-1 z-40 min-w-[160px] p-2 rounded-xl border border-white/[0.08] bg-[#121212] shadow-xl">
+                  <div className="absolute top-full left-0 mt-1 z-40 min-w-[160px] p-2 rounded-xl border border-[#E2E8F0] bg-white shadow-xl">
                     {group.options.map((opt) => (
                       <button
                         key={opt}
                         onClick={() => toggleFilter(opt)}
                         className={`flex items-center gap-2 w-full px-3 py-2 rounded-lg text-[12px] transition-colors ${
-                          activeFilters.includes(opt) ? "text-white bg-white/[0.06]" : "text-white/50 hover:text-white/80 hover:bg-white/[0.03]"
+                          activeFilters.includes(opt) ? "text-[#0F172A] bg-[#F1F5F9]" : "text-[#475569] hover:text-[#0F172A] hover:bg-[#F1F5F9]"
                         }`}
                       >
                         <div className={`w-3.5 h-3.5 rounded border ${activeFilters.includes(opt) ? "bg-white border-white" : "border-white/20"}`}>
@@ -309,27 +309,27 @@ export default function MarketplacePage() {
             ))}
 
             {activeFilters.length > 0 && (
-              <button onClick={() => setActiveFilters([])} className="px-3 py-1.5 rounded-lg text-[12px] text-white/40 hover:text-white/70 transition-colors shrink-0">
+              <button onClick={() => setActiveFilters([])} className="px-3 py-1.5 rounded-lg text-[12px] text-[#64748B] hover:text-[#334155] transition-colors shrink-0">
                 {t("clearFilters")} ({activeFilters.length})
               </button>
             )}
 
             <div className="ml-auto flex items-center gap-2 shrink-0">
-              <div className="flex items-center gap-1.5 text-[12px] text-white/30">
+              <div className="flex items-center gap-1.5 text-[12px] text-[#64748B]">
                 <ArrowUpDown className="w-3.5 h-3.5" />
-                <select value={sortBy} onChange={(e) => setSortBy(e.target.value)} className="bg-transparent text-white/50 outline-none cursor-pointer">
-                  <option value="relevance" className="bg-[#121212]">{sortLabel("relevance")}</option>
-                  <option value="price_low" className="bg-[#121212]">{sortLabel("price_low")}</option>
-                  <option value="price_high" className="bg-[#121212]">{sortLabel("price_high")}</option>
-                  <option value="rating" className="bg-[#121212]">{sortLabel("rating")}</option>
-                  <option value="lead" className="bg-[#121212]">{sortLabel("lead")}</option>
+                <select value={sortBy} onChange={(e) => setSortBy(e.target.value)} className="bg-transparent text-[#475569] outline-none cursor-pointer">
+                  <option value="relevance" className="bg-white">{sortLabel("relevance")}</option>
+                  <option value="price_low" className="bg-white">{sortLabel("price_low")}</option>
+                  <option value="price_high" className="bg-white">{sortLabel("price_high")}</option>
+                  <option value="rating" className="bg-white">{sortLabel("rating")}</option>
+                  <option value="lead" className="bg-white">{sortLabel("lead")}</option>
                 </select>
               </div>
-              <div className="flex rounded-lg border border-white/[0.06] overflow-hidden">
-                <button onClick={() => setViewMode("grid")} className={`p-1.5 transition-colors ${viewMode === "grid" ? "bg-white/[0.08] text-white" : "text-white/30 hover:text-white/60"}`}>
+              <div className="flex rounded-lg border border-[#E2E8F0] overflow-hidden">
+                <button onClick={() => setViewMode("grid")} className={`p-1.5 transition-colors ${viewMode === "grid" ? "bg-[#E2E8F0] text-[#0F172A]" : "text-[#64748B] hover:text-[#475569]"}`}>
                   <Grid3X3 className="w-4 h-4" />
                 </button>
-                <button onClick={() => setViewMode("list")} className={`p-1.5 transition-colors ${viewMode === "list" ? "bg-white/[0.08] text-white" : "text-white/30 hover:text-white/60"}`}>
+                <button onClick={() => setViewMode("list")} className={`p-1.5 transition-colors ${viewMode === "list" ? "bg-[#E2E8F0] text-[#0F172A]" : "text-[#64748B] hover:text-[#475569]"}`}>
                   <LayoutList className="w-4 h-4" />
                 </button>
               </div>
@@ -342,11 +342,11 @@ export default function MarketplacePage() {
       <div className="max-w-[1600px] mx-auto px-4 sm:px-6 py-6">
         <div className="flex gap-6">
           {/* Sidebar */}
-          <aside className={`${mobileSidebarOpen ? "fixed inset-y-0 left-0 z-40 w-64 bg-[#050505] border-r border-white/[0.06] p-4" : "hidden lg:block w-56 shrink-0"}`}>
+          <aside className={`${mobileSidebarOpen ? "fixed inset-y-0 left-0 z-40 w-64 bg-[#F8FAFC] border-r border-[#E2E8F0] p-4" : "hidden lg:block w-56 shrink-0"}`}>
             {mobileSidebarOpen && (
               <div className="flex items-center justify-between mb-4 lg:hidden">
-                <span className="text-sm font-semibold text-white">{t("categories")}</span>
-                <button onClick={() => setMobileSidebarOpen(false)} className="p-1 text-white/40 hover:text-white">
+                <span className="text-sm font-semibold text-[#0F172A]">{t("categories")}</span>
+                <button onClick={() => setMobileSidebarOpen(false)} className="p-1 text-[#64748B] hover:text-[#0F172A]">
                   <X className="w-4 h-4" />
                 </button>
               </div>
@@ -356,12 +356,12 @@ export default function MarketplacePage() {
               <button
                 onClick={() => { setActiveCategory(""); setMobileSidebarOpen(false); }}
                 className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] transition-all ${
-                  !activeCategory ? "text-white bg-white/[0.06] border border-white/[0.08]" : "text-white/50 hover:text-white/80 hover:bg-white/[0.03]"
+                  !activeCategory ? "text-[#0F172A] bg-[#F1F5F9] border border-[#E2E8F0]" : "text-[#475569] hover:text-[#0F172A] hover:bg-[#F1F5F9]"
                 }`}
               >
                 <Package className="w-4 h-4" />
                 {t("allCategories")}
-                <span className="ml-auto text-[10px] text-white/25">{totalProducts}</span>
+                <span className="ml-auto text-[10px] text-[#64748B]">{totalProducts}</span>
               </button>
 
               {HOTEL_CATEGORIES.map((cat) => {
@@ -372,14 +372,14 @@ export default function MarketplacePage() {
                     key={cat.id}
                     onClick={() => { setActiveCategory(isActive ? "" : cat.id); setMobileSidebarOpen(false); }}
                     className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] transition-all ${
-                      isActive ? "text-white bg-white/[0.06] border border-white/[0.08]" : "text-white/50 hover:text-white/80 hover:bg-white/[0.03]"
+                      isActive ? "text-[#0F172A] bg-[#F1F5F9] border border-[#E2E8F0]" : "text-[#475569] hover:text-[#0F172A] hover:bg-[#F1F5F9]"
                     }`}
                   >
-                    <div className="w-8 h-8 rounded-lg overflow-hidden shrink-0 border border-white/[0.06]">
+                    <div className="w-8 h-8 rounded-lg overflow-hidden shrink-0 border border-[#E2E8F0]">
                       <img src={CAT_IMAGES[cat.id] || CAT_IMAGES.fb} alt={cat.label} className="w-full h-full object-cover" />
                     </div>
                     <span className="text-left">{cat.label}</span>
-                    <span className="ml-auto text-[10px] text-white/25">{count}</span>
+                    <span className="ml-auto text-[10px] text-[#64748B]">{count}</span>
                   </button>
                 );
               })}
@@ -389,7 +389,7 @@ export default function MarketplacePage() {
           {/* Product Grid */}
           <div className="flex-1 min-w-0">
             <div className="flex items-center justify-between mb-4">
-              <span className="text-[13px] text-white/40">
+              <span className="text-[13px] text-[#64748B]">
                 {loading ? (
                   <span className="flex items-center gap-2">
                     <Loader2 className="w-3 h-3 animate-spin" />
@@ -403,46 +403,46 @@ export default function MarketplacePage() {
                 )}
               </span>
               {memberMode && (
-                <span className="flex items-center gap-1.5 text-[11px] text-white/60">
+                <span className="flex items-center gap-1.5 text-[11px] text-[#475569]">
                   <Crown className="w-3 h-3" /> {t("memberPricesActive")}
                 </span>
               )}
             </div>
 
             {error ? (
-              <div className="flex flex-col items-center justify-center py-24 text-white/30">
+              <div className="flex flex-col items-center justify-center py-24 text-[#64748B]">
                 <div className="w-16 h-16 rounded-2xl bg-red-500/5 border border-red-500/10 flex items-center justify-center mb-5">
                   <Package className="w-7 h-7 text-red-400/30" />
                 </div>
-                <h3 className="text-lg font-semibold text-white/60 mb-1">Failed to load products</h3>
-                <p className="text-sm text-white/25 max-w-sm text-center mb-6">{error}</p>
+                <h3 className="text-lg font-semibold text-[#475569] mb-1">Failed to load products</h3>
+                <p className="text-sm text-[#64748B] max-w-sm text-center mb-6">{error}</p>
                 <button
                   onClick={fetchProducts}
-                  className="px-5 py-2.5 rounded-xl text-sm font-medium text-white bg-accent-base hover:bg-[#6B0000] transition-colors"
+                  className="px-5 py-2.5 rounded-xl text-sm font-medium text-[#0F172A] bg-accent-base hover:bg-[#1D4ED8] transition-colors"
                 >
                   Retry
                 </button>
               </div>
             ) : filtered.length === 0 && !loading ? (
-              <div className="flex flex-col items-center justify-center py-24 text-white/30">
-                <div className="w-16 h-16 rounded-2xl bg-white/[0.03] border border-white/[0.06] flex items-center justify-center mb-5">
-                  <Package className="w-7 h-7 text-white/15" />
+              <div className="flex flex-col items-center justify-center py-24 text-[#64748B]">
+                <div className="w-16 h-16 rounded-2xl bg-[#F8FAFC] border border-[#E2E8F0] flex items-center justify-center mb-5">
+                  <Package className="w-7 h-7 text-[#64748B]" />
                 </div>
-                <h3 className="text-lg font-semibold text-white/60 mb-1">{t("noResults")}</h3>
-                <p className="text-sm text-white/25 max-w-sm text-center mb-6">
+                <h3 className="text-lg font-semibold text-[#475569] mb-1">{t("noResults")}</h3>
+                <p className="text-sm text-[#64748B] max-w-sm text-center mb-6">
                   {t("noResultsDesc")}
                 </p>
                 <div className="flex items-center gap-3">
                   <button
                     onClick={() => { setActiveCategory(""); setSearch(""); setActiveFilters([]); }}
-                    className="px-5 py-2.5 rounded-xl text-sm font-medium text-white bg-accent-base hover:bg-[#6B0000] transition-colors"
+                    className="px-5 py-2.5 rounded-xl text-sm font-medium text-[#0F172A] bg-accent-base hover:bg-[#1D4ED8] transition-colors"
                   >
                     {t("viewAllProducts")}
                   </button>
                   {activeCategory && (
                     <button
                       onClick={() => setActiveCategory("")}
-                      className="px-5 py-2.5 rounded-xl text-sm font-medium text-white/50 hover:text-white border border-white/[0.06] hover:border-white/[0.12] transition-all"
+                      className="px-5 py-2.5 rounded-xl text-sm font-medium text-[#475569] hover:text-[#0F172A] border border-[#E2E8F0] hover:border-[#E2E8F0] transition-all"
                     >
                       {t("clearCategory")}
                     </button>
@@ -457,7 +457,7 @@ export default function MarketplacePage() {
                     initial={{ opacity: 0, y: 15 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.3, delay: i * 0.02 }}
-                    className="group relative flex flex-col rounded-2xl border border-white/[0.06] bg-[#0a0a0a] overflow-hidden hover:border-white/[0.10] transition-all duration-300"
+                    className="group relative flex flex-col rounded-2xl border border-[#E2E8F0] bg-white overflow-hidden hover:border-[#E2E8F0] transition-all duration-300"
                   >
                     {/* Image */}
                     <div className="relative aspect-[4/3] overflow-hidden">
@@ -476,12 +476,12 @@ export default function MarketplacePage() {
                           {stockLabel(product.stockQuantity)}
                         </span>
                         {product.supplierTier === "PREMIER" && (
-                          <span className="px-2 py-0.5 rounded-md text-[9px] font-bold uppercase tracking-wider bg-white/10 text-white border border-white/20">
+                          <span className="px-2 py-0.5 rounded-md text-[9px] font-bold uppercase tracking-wider bg-[#F1F5F9] text-[#0F172A] border border-[#E2E8F0]">
                             {t("premier")}
                           </span>
                         )}
                         {memberMode && (
-                          <span className="px-2 py-0.5 rounded-md text-[9px] font-bold uppercase tracking-wider border flex items-center gap-1 bg-white/10 text-white border-white/20">
+                          <span className="px-2 py-0.5 rounded-md text-[9px] font-bold uppercase tracking-wider border flex items-center gap-1 bg-[#F1F5F9] text-[#0F172A] border-[#E2E8F0]">
                             <Crown className="w-2.5 h-2.5" /> -8%
                           </span>
                         )}
@@ -491,41 +491,41 @@ export default function MarketplacePage() {
                     {/* Content */}
                     <div className="flex flex-col gap-2 p-4">
                       <div className="flex items-center gap-2">
-                        <span className="text-[10px] uppercase tracking-wider font-bold text-white/40">
+                        <span className="text-[10px] uppercase tracking-wider font-bold text-[#64748B]">
                           {getCategoryById(product.category)?.code || product.category}
                         </span>
                         <span className="w-1 h-1 rounded-full bg-white/10" />
-                        <span className="text-[10px] uppercase tracking-wider text-white/25">{product.unitOfMeasure}</span>
+                        <span className="text-[10px] uppercase tracking-wider text-[#64748B]">{product.unitOfMeasure}</span>
                       </div>
 
-                      <h3 className="text-[14px] font-medium text-white leading-snug line-clamp-2 group-hover:text-white/80 transition-colors">
+                      <h3 className="text-[14px] font-medium text-[#0F172A] leading-snug line-clamp-2 group-hover:text-[#0F172A] transition-colors">
                         {product.name}
                       </h3>
 
                       <div className="flex items-center gap-2">
                         <Star className="w-3 h-3 text-amber-400 fill-amber-400" />
-                        <span className="text-[12px] font-medium text-white/60">{product.supplierRating.toFixed(1)}</span>
-                        <span className="text-[10px] text-white/25">({product.supplierReviewCount})</span>
+                        <span className="text-[12px] font-medium text-[#475569]">{product.supplierRating.toFixed(1)}</span>
+                        <span className="text-[10px] text-[#64748B]">({product.supplierReviewCount})</span>
                       </div>
 
                       <div className="flex items-baseline gap-2 pt-1">
                         {memberMode ? (
                           <>
-                            <span className="text-xl font-bold text-white tracking-tight">
+                            <span className="text-xl font-bold text-[#0F172A] tracking-tight">
                               EGP {memberDiscount(product.unitPrice).toLocaleString()}
                             </span>
-                            <span className="text-[12px] text-white/25 line-through">
+                            <span className="text-[12px] text-[#64748B] line-through">
                               EGP {product.unitPrice.toLocaleString()}
                             </span>
                           </>
                         ) : (
-                          <span className="text-xl font-bold text-white tracking-tight">
+                          <span className="text-xl font-bold text-[#0F172A] tracking-tight">
                             {formatPrice(product.unitPrice, product.currency)}
                           </span>
                         )}
                       </div>
 
-                      <div className="flex items-center gap-2 text-[10px] text-white/25">
+                      <div className="flex items-center gap-2 text-[10px] text-[#64748B]">
                         <span>{t("moq")}: {product.minOrderQty}</span>
                         <span className="w-1 h-1 rounded-full bg-white/10" />
                         <span>{product.leadTimeDays} {t("dayDelivery")}</span>
@@ -534,14 +534,14 @@ export default function MarketplacePage() {
                       <div className="flex items-center gap-2 pt-1">
                         <Link
                           href={`/marketplace/${product.id}`}
-                          className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-white/[0.06] text-[12px] font-medium text-white/50 hover:text-white hover:border-white/[0.12] transition-all"
+                          className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-[#E2E8F0] text-[12px] font-medium text-[#475569] hover:text-[#0F172A] hover:border-[#E2E8F0] transition-all"
                         >
                           <span>{t("viewDetails")}</span>
                           <ArrowRight className="w-3 h-3" />
                         </Link>
                         <button
                           onClick={() => handleAdd(product)}
-                          className="flex items-center justify-center px-3 py-2.5 rounded-xl bg-accent-base hover:bg-[#6B0000] text-white transition-all"
+                          className="flex items-center justify-center px-3 py-2.5 rounded-xl bg-accent-base hover:bg-[#1D4ED8] text-white transition-all"
                         >
                           <ShoppingCart className="w-4 h-4" />
                         </button>
@@ -551,17 +551,17 @@ export default function MarketplacePage() {
                         <motion.p
                           initial={{ opacity: 0, y: 4 }}
                           animate={{ opacity: 1, y: 0 }}
-                          className="text-[11px] text-center text-white/60"
+                          className="text-[11px] text-center text-[#475569]"
                         >
                           {t("addedToCart")} <button onClick={openCart} className="underline font-medium">{t("viewCart")}</button> {tc("or")} <Link href="/login" className="underline font-medium">{tc("signIn")}</Link> {t("toCheckout")}
                         </motion.p>
                       )}
 
-                      <p className="text-[10px] text-white/15 truncate">
-                        {t("by")} <span className="text-white/30">{product.supplierName}</span>
+                      <p className="text-[10px] text-[#64748B] truncate">
+                        {t("by")} <span className="text-[#64748B]">{product.supplierName}</span>
                         <span className="mx-1">·</span>
-                        <MapPin className="w-2.5 h-2.5 inline text-white/15" />
-                        <span className="text-white/20"> {product.supplierCity}</span>
+                        <MapPin className="w-2.5 h-2.5 inline text-[#64748B]" />
+                        <span className="text-[#64748B]"> {product.supplierCity}</span>
                       </p>
                     </div>
                   </motion.div>

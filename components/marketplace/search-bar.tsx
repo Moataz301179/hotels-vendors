@@ -68,13 +68,13 @@ export function SearchBar({
     <div ref={containerRef} className="relative w-full max-w-3xl">
       <form onSubmit={handleSubmit} className="relative">
         <div
-          className={`flex items-center gap-3 rounded-xl border bg-white/[0.03] px-4 py-3 transition-all duration-200 ${
+          className={`flex items-center gap-3 rounded-xl border bg-[#F8FAFC] px-4 py-3 transition-all duration-200 ${
             isFocused
               ? "border-accent-base/50 shadow-[0_0_20px_rgba(139,10,30,0.15)]"
-              : "border-white/[0.08] hover:border-white/[0.12]"
+              : "border-[#E2E8F0] hover:border-[#E2E8F0]"
           }`}
         >
-          <Search className="w-5 h-5 text-white/30 flex-shrink-0" />
+          <Search className="w-5 h-5 text-[#64748B] flex-shrink-0" />
           <input
             ref={inputRef}
             type="text"
@@ -82,13 +82,13 @@ export function SearchBar({
             onChange={(e) => setQuery(e.target.value)}
             onFocus={() => setIsFocused(true)}
             placeholder={placeholder}
-            className="flex-1 bg-transparent text-sm text-white placeholder:text-white/30 outline-none"
+            className="flex-1 bg-transparent text-sm text-[#0F172A] placeholder:text-[#64748B] outline-none"
           />
           {query && (
             <button
               type="button"
               onClick={() => { setQuery(""); inputRef.current?.focus(); }}
-              className="text-white/30 hover:text-white/60 transition-colors"
+              className="text-[#64748B] hover:text-[#475569] transition-colors"
             >
               <X className="w-4 h-4" />
             </button>
@@ -97,7 +97,7 @@ export function SearchBar({
             type="button"
             onClick={() => setShowFilters(!showFilters)}
             className={`relative p-1.5 rounded-lg transition-colors ${
-              showFilters ? "bg-accent-base/20 text-[#a68b5a]" : "text-white/30 hover:text-white/60"
+              showFilters ? "bg-accent-base/20 text-[#0D9488]" : "text-[#64748B] hover:text-[#475569]"
             }`}
           >
             <SlidersHorizontal className="w-4 h-4" />
@@ -109,7 +109,7 @@ export function SearchBar({
           </button>
           <button
             type="submit"
-            className="px-4 py-1.5 rounded-lg bg-accent-base hover:bg-error text-white text-sm font-medium transition-colors"
+            className="px-4 py-1.5 rounded-lg bg-accent-base hover:bg-[#1D4ED8] text-white text-sm font-medium transition-colors"
           >
             Search
           </button>
@@ -123,11 +123,11 @@ export function SearchBar({
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
               transition={{ duration: 0.15 }}
-              className="absolute top-full left-0 right-0 mt-2 rounded-xl border border-white/[0.08] bg-surface/95 backdrop-blur-xl shadow-2xl overflow-hidden z-50"
+              className="absolute top-full left-0 right-0 mt-2 rounded-xl border border-[#E2E8F0] bg-surface/95 backdrop-blur-xl shadow-2xl overflow-hidden z-50"
             >
               {recentSearches.length > 0 && (
                 <div className="p-3">
-                  <div className="flex items-center gap-2 mb-2 text-[10px] uppercase tracking-wider text-white/30 font-semibold">
+                  <div className="flex items-center gap-2 mb-2 text-[10px] uppercase tracking-wider text-[#64748B] font-semibold">
                     <Clock className="w-3 h-3" />
                     <span>Recent</span>
                   </div>
@@ -136,7 +136,7 @@ export function SearchBar({
                       <button
                         key={s}
                         onClick={() => handleSuggestionClick(s)}
-                        className="px-2.5 py-1 rounded-lg bg-white/[0.04] border border-white/[0.06] text-xs text-white/60 hover:text-white hover:border-white/[0.12] transition-colors"
+                        className="px-2.5 py-1 rounded-lg bg-[#F1F5F9] border border-[#E2E8F0] text-xs text-[#475569] hover:text-[#0F172A] hover:border-[#E2E8F0] transition-colors"
                       >
                         {s}
                       </button>
@@ -146,7 +146,7 @@ export function SearchBar({
               )}
               {trending.length > 0 && (
                 <div className="px-3 pb-3">
-                  <div className="flex items-center gap-2 mb-2 text-[10px] uppercase tracking-wider text-white/30 font-semibold">
+                  <div className="flex items-center gap-2 mb-2 text-[10px] uppercase tracking-wider text-[#64748B] font-semibold">
                     <TrendingUp className="w-3 h-3" />
                     <span>Trending</span>
                   </div>
@@ -155,7 +155,7 @@ export function SearchBar({
                       <button
                         key={s}
                         onClick={() => handleSuggestionClick(s)}
-                        className="px-2.5 py-1 rounded-lg bg-accent-base/10 border border-accent-base/20 text-xs text-[#a68b5a]/80 hover:text-[#a68b5a] hover:border-accent-base/40 transition-colors"
+                        className="px-2.5 py-1 rounded-lg bg-accent-base/10 border border-accent-base/20 text-xs text-[#0D9488]/80 hover:text-[#0D9488] hover:border-accent-base/40 transition-colors"
                       >
                         {s}
                       </button>
@@ -177,7 +177,7 @@ export function SearchBar({
             exit={{ opacity: 0, height: 0 }}
             className="overflow-hidden"
           >
-            <div className="mt-2 p-4 rounded-xl border border-white/[0.06] bg-white/[0.02] grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+            <div className="mt-2 p-4 rounded-xl border border-[#E2E8F0] bg-[#F8FAFC] grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
               <FilterSelect
                 label="Category"
                 icon={<Tag className="w-3 h-3" />}
@@ -210,12 +210,12 @@ export function SearchBar({
 function FilterField({ label, type, value, onChange }: { label: string; type: string; value?: number; onChange: (v: number | undefined) => void }) {
   return (
     <div className="flex flex-col gap-1.5">
-      <label className="text-[10px] uppercase tracking-wider text-white/40 font-semibold">{label}</label>
+      <label className="text-[10px] uppercase tracking-wider text-[#64748B] font-semibold">{label}</label>
       <input
         type={type}
         value={value || ""}
         onChange={(e) => onChange(e.target.value ? Number(e.target.value) : undefined)}
-        className="px-3 py-2 rounded-lg bg-white/[0.04] border border-white/[0.08] text-sm text-white placeholder:text-white/20 outline-none focus:border-accent-base/50 transition-colors"
+        className="px-3 py-2 rounded-lg bg-[#F1F5F9] border border-[#E2E8F0] text-sm text-[#0F172A] placeholder:text-[#64748B] outline-none focus:border-accent-base/50 transition-colors"
       />
     </div>
   );
@@ -236,14 +236,14 @@ function FilterSelect({
 }) {
   return (
     <div className="flex flex-col gap-1.5">
-      <label className="flex items-center gap-1.5 text-[10px] uppercase tracking-wider text-white/40 font-semibold">
+      <label className="flex items-center gap-1.5 text-[10px] uppercase tracking-wider text-[#64748B] font-semibold">
         {icon}
         <span>{label}</span>
       </label>
       <select
         value={value || ""}
         onChange={(e) => onChange(e.target.value === "" ? undefined : e.target.value)}
-        className="px-3 py-2 rounded-lg bg-white/[0.04] border border-white/[0.08] text-sm text-white outline-none focus:border-accent-base/50 transition-colors appearance-none"
+        className="px-3 py-2 rounded-lg bg-[#F1F5F9] border border-[#E2E8F0] text-sm text-[#0F172A] outline-none focus:border-accent-base/50 transition-colors appearance-none"
         style={{
           backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='rgba(255,255,255,0.3)' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E")`,
           backgroundRepeat: "no-repeat",
