@@ -3,7 +3,8 @@
 import Link from "next/link";
 import { Suspense, useState, useEffect, useMemo } from "react";
 import { useSearchParams } from "next/navigation";
-import { ArrowRight, Search, Filter, ShoppingCart, FileCheck, Truck, Shield, Clock, Banknote, Upload, BarChart3, Star, Package, X, Loader2 } from "lucide-react";
+import { ArrowRight, Search, ShoppingCart, FileCheck, Shield, Clock, Banknote, Upload, BarChart3, X, Loader2, Building2 } from "lucide-react";
+import { getProductImage, getCategoryImage } from "@/lib/marketplace/product-images";
 
 interface Product {
   id: string;
@@ -18,10 +19,10 @@ interface Product {
 }
 
 const categories = [
-  { name: "F&B", desc: "Food, beverages, kitchen equipment", color: "var(--accent-base)", image: "/images/suppliers/cat-fb.svg" },
-  { name: "Consumables", desc: "Housekeeping, chemicals, linens, toiletries", color: "var(--accent-base)", image: "/images/suppliers/cat-cons.svg" },
-  { name: "Guest Supplies", desc: "Amenities, room accessories, FF&E", color: "#64b5f6", image: "/images/suppliers/cat-guest.svg" },
-  { name: "FF&E", desc: "Furniture, fixtures, capital equipment", color: "var(--orange-base)", image: "/images/suppliers/cat-fb.svg" },
+  { id: "fb", name: "F&B", desc: "Food, beverages and kitchen supply", color: "#0D9488" },
+  { id: "hk", name: "Housekeeping", desc: "Chemicals, cleaning and guest operations", color: "#2563EB" },
+  { id: "lin", name: "Linens", desc: "Bed, bath and textile supply", color: "#7C3AED" },
+  { id: "ffe", name: "FF&E", desc: "Furniture, fixtures and equipment", color: "#B45309" },
 ];
 
 const supplierFeatures = [
@@ -37,15 +38,9 @@ function formatPrice(price: number): string {
   return "EGP " + price.toLocaleString("en-EG");
 }
 
-const CATEGORY_IMG: Record<string, string> = {
-  fb: "/images/suppliers/cat-fb.svg",
-  cons: "/images/suppliers/cat-cons.svg",
-  guest: "/images/suppliers/cat-guest.svg",
-  ffe: "/images/suppliers/cat-ffe.svg",
-};
-
-function productFallbackImage(category: string): string {
-  return CATEGORY_IMG[category] || "/images/suppliers/cat-cons.svg";
+function productFallbackImage(name: string, category: string): string {
+  const resolved = getProductImage({ name, category });
+  return resolved.type === "url" ? resolved.src : getCategoryImage(category);
 }
 
 function MarketplaceContent() {
@@ -180,7 +175,7 @@ function MarketplaceContent() {
               {filteredProducts.slice(0, 24).map((p) => (
                 <div key={p.id} className="group rounded-xl overflow-hidden border border-border-subtle transition-all hover:border-foreground/25 cursor-pointer bg-surface-1">
                   <div className="relative h-32 overflow-hidden">
-                    <img src={(Array.isArray(p.images) ? p.images[0] : p.images) || productFallbackImage(p.category)} alt={p.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                    <img src={(Array.isArray(p.images) ? p.images[0] : p.images) || productFallbackImage(p.name, p.category)} alt={p.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
                     <div className="absolute top-2 left-2">
                       <span className="text-[9px] font-medium px-2 py-0.5 rounded-full" style={{ backgroundColor: "rgba(var(--accent-base-rgb),0.15)", color: "var(--accent-base)" }}>{p.category.replace(/_/g, " ")}</span>
                     </div>
@@ -194,7 +189,14 @@ function MarketplaceContent() {
               ))}
             </div>
           ) : (
-            <p className="text-[13px] text-foreground-muted py-8 text-center">Be the first to list. The catalog shows verified supplier inventory as it is published.</p>
+            <div className="grid gap-4 rounded-2xl border border-border-subtle bg-surface-1 p-5 md:grid-cols-[1fr_auto] md:items-center">
+  <div>
+    <div className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[.15em] text-foreground-muted"><Building2 size={14} /> Verified supply only</div>
+    <h3 className="mt-2 text-lg font-semibold text-foreground">No verified supplier inventory is published yet.</h3>
+    <p className="mt-2 max-w-2xl text-[13px] leading-6 text-foreground-secondary">The marketplace does not invent products or prices. Connect a supplier catalog and live inventory will appear here with its real imagery, price and availability.</p>
+  </div>
+  <Link href="/register?sector=supplier" className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#2563EB] px-5 py-3 text-[13px] font-semibold text-white">Publish real supply <ArrowRight size={14} /></Link>
+</div>
           )}
         </div>
       </section>
@@ -207,10 +209,10 @@ function MarketplaceContent() {
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
               {filteredCategories.map((cat) => (
                 <div key={cat.name} className="group relative rounded-xl overflow-hidden border cursor-pointer transition-all hover:border-foreground/25 bg-surface-1" style={{ borderColor: `${cat.color}55` }}>
-                  <img src={cat.image} alt={cat.name} className="w-full h-32 object-cover" />
-                  <div className="absolute bottom-0 left-0 right-0 p-3 bg-black/55">
-                    <h3 className="text-[13px] font-semibold mb-0.5" style={{ color: cat.color }}>{cat.name}</h3>
-                    <p className="text-[10px] text-foreground-muted leading-tight">{cat.desc}</p>
+                  <img src={getCategoryImage(cat.id)} alt={cat.name} className="w-full h-40 object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" />
+                  <div className="absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-black/75 to-transparent">
+                    <h3 className="text-[15px] font-semibold mb-0.5 text-white">{cat.name}</h3>
+                    <p className="text-[11px] text-white/75 leading-tight">{cat.desc}</p>
                   </div>
                 </div>
               ))}

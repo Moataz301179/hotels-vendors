@@ -129,16 +129,9 @@ export function SiteNav() {
       `}</style>
 
       <div className="mx-auto max-w-[1200px] px-6 md:px-12 h-[68px] flex items-center justify-between gap-6">
-        {/* Logo — icon + wordmark, tight, single line */}
-        <Link href="/" className="flex items-center gap-3 shrink-0" dir="ltr">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/brand/hv-mark.png" alt="HotelsVendors" width={30} height={30} className="object-contain" />
-          <span
-            className="font-semibold uppercase text-[13px] text-[#0F172A]"
-            style={{ letterSpacing: "0.22em" }}
-          >
-            HotelsVendors
-          </span>
+        {/* Brand lockup — real logo asset */}
+        <Link href="/" className="flex items-center shrink-0" aria-label="HotelsVendors home">
+          <img src="/logo-dark.svg" alt="HotelsVendors" width={145} height={34} className="h-[30px] w-auto md:h-[34px] object-contain" />
         </Link>
 
         {/* Desktop menu */}
