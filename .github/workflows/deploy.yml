@@ -72,10 +72,12 @@ jobs:
           DATABASE_URL=${{ secrets.DATABASE_URL }}
           ENCRYPTION_MASTER_KEY=${{ secrets.ENCRYPTION_MASTER_KEY }}
           REDIS_URL=${{ secrets.REDIS_URL }}
-          NEXT_PUBLIC_APP_URL=${{ secrets.NEXT_PUBLIC_APP_URL }}
+          NEXT_PUBLIC_APP_URL=https://www.hotelsvendors.com
+          NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_dW5pdGVkLXRyZWVmcm9nLTIyMy5jbGVyay5hY2NvdW50cy5kZXYk
           NODE_ENV=production
           ENVEOF
-          scp -o StrictHostKeyChecking=accept-new /tmp/deploy-env/.env ${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_IP }}:/var/www/hotelsvendors-v2/.env
+          ssh -o StrictHostKeyChecking=accept-new ${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_IP }} "mkdir -p /var/www/hv-release-production"
+          scp -o StrictHostKeyChecking=accept-new /tmp/deploy-env/.env ${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_IP }}:/var/www/hv-release-production/.env
           echo "  .env transferred to VPS"
 
       - name: Stamp and synchronize canonical release source
@@ -87,7 +89,7 @@ jobs:
             --exclude '.env' --exclude '.env.*' --exclude '.git' \
             --exclude 'node_modules' --exclude '.next' \
             -e "ssh -o StrictHostKeyChecking=accept-new" \
-            ./ ${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_IP }}:/var/www/hotelsvendors-v2/
+            ./ ${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_IP }}:/var/www/hv-release-production/
           echo "  Canonical source synchronized: ${{ github.sha }}"
 
       - name: Deploy to VPS (PM2)
@@ -99,7 +101,7 @@ jobs:
             echo "  Method: PM2 + Next.js Standalone"
             echo "═══════════════════════════════════════════"
 
-            cd /var/www/hotelsvendors-v2
+            cd /var/www/hv-release-production
 
             set -euo pipefail
 
@@ -111,7 +113,7 @@ jobs:
             echo "  Source cleanup completed during rsync."
             true
 
-            APP_DIR=/var/www/hotelsvendors-v2
+            APP_DIR=/var/www/hv-release-production
             if [ ! -d "$APP_DIR" ]; then
               echo "  ERROR: app dir $APP_DIR missing"
               exit 1
@@ -153,8 +155,7 @@ jobs:
 
             echo "─── Post-build setup ───"
             # Kill any orphaned Next server holding the port
-            fuser -k 3003/tcp 2>/dev/null || true
-            pkill -f 'next-server' 2>/dev/null || true
+            fuser -k 3008/tcp 2>/dev/null || true
             sleep 2
 
             # Always synchronize the freshly built assets into standalone.
@@ -179,11 +180,10 @@ jobs:
             fi
 
             echo "─── Restarting PM2 ───"
-            if pm2 describe hotels-vendors > /dev/null 2>&1; then
-              pm2 reload ecosystem.config.js --env production
-            else
-              pm2 start ecosystem.config.js --env production
-            fi
+            pm2 delete hotels-vendors-production >/dev/null 2>&1 || true
+            fuser -k 3008/tcp 2>/dev/null || true
+            sleep 2
+            PORT=3008 NODE_ENV=production NEXT_TELEMETRY_DISABLED=1 pm2 start .next/standalone/server.js --name hotels-vendors-production --cwd /var/www/hv-release-production
             pm2 save
 
             echo "─── Verifying asset visibility on VPS ───"
@@ -221,15 +221,15 @@ jobs:
 
             echo "─── Health checks ───"
             sleep 15
-            APP_STATUS=$(pm2 describe hotels-vendors 2>/dev/null | grep -c "online" || echo "0")
+            APP_STATUS=$(pm2 describe hotels-vendors-production 2>/dev/null | grep -c "online" || echo "0")
             if [ "$APP_STATUS" -eq 0 ]; then
               echo "  ERROR: PM2 process not running"
-              pm2 logs hotels-vendors --lines 50
+              pm2 logs hotels-vendors-production --lines 50
               exit 1
             fi
             echo "  App: online (PM2)"
 
-            LOCAL_RELEASE=$(curl -fsS --retry 3 http://127.0.0.1:3003/release.json)
+            LOCAL_RELEASE=$(curl -fsS --retry 3 http://127.0.0.1:3008/release.json)
             if ! printf '%s' "$LOCAL_RELEASE" | grep -Fq '${{ github.sha }}'; then
               echo "  ERROR: PM2 is not serving the synchronized release"
               exit 1
@@ -267,7 +267,7 @@ jobs:
             exit 1
           fi
 
-          if ! curl -fsS --retry 3 https://www.hotelsvendors.com/ | grep -Fq 'Supplier payments in 48 hours'; then
+          if ! curl -fsS --retry 3 https://www.hotelsvendors.com/ | grep -Fq 'Your Virtual Shadow for smarter procurement.'; then
             echo "  ERROR: Public domain is not serving the expected canonical homepage"
             exit 1
           fi
