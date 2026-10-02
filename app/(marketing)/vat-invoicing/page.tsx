@@ -247,7 +247,7 @@ export default function VatInvoicingPage() {
               </a>
               <a
                 href="#sandbox"
-                className="px-8 py-4 rounded-full text-base font-medium text-text-white/60 hover:bg-white/5 transition-all duration-300 flex items-center gap-2"
+                className="px-8 py-4 rounded-full text-base font-medium text-text-white/60 hover:bg-slate-100 transition-all duration-300 flex items-center gap-2"
                 style={{ border: "1px solid rgba(255,255,255,0.1)" }}
               >
                 <Search className="w-5 h-5" />
@@ -500,7 +500,7 @@ export default function VatInvoicingPage() {
                 }}
               >
                 <summary
-                  className="px-6 py-4 text-sm font-medium text-white cursor-pointer flex items-center justify-between list-none hover:bg-white/5 transition-colors"
+                  className="px-6 py-4 text-sm font-medium text-white cursor-pointer flex items-center justify-between list-none hover:bg-slate-100 transition-colors"
                   style={{ fontFamily: "var(--font-sans)" }}
                 >
                   {faq.q}

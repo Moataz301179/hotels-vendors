@@ -160,7 +160,7 @@ function TicketDetailDrawer({
             </div>
             <h2 className="text-lg font-semibold text-foreground truncate">{ticket.subject}</h2>
           </div>
-          <button onClick={onClose} className="ml-3 p-1.5 rounded-lg hover:bg-white/5 text-foreground-muted">
+          <button onClick={onClose} className="ml-3 p-1.5 rounded-lg hover:bg-slate-100 text-foreground-muted">
             <X size={18} />
           </button>
         </div>

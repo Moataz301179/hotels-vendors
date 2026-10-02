@@ -2,7 +2,7 @@ import { SignIn } from "@clerk/nextjs";
 
 export default function SignInPage() {
   return (
-    <main className="flex min-h-screen items-center justify-center bg-[#080B10] px-4 py-10">
+    <main className="flex min-h-screen items-center justify-center bg-[#F8FAFC] px-4 py-10">
       <SignIn
         routing="path"
         path="/sign-in"
@@ -19,12 +19,12 @@ export default function SignInPage() {
             borderRadius: "12px",
           },
           elements: {
-            card: "border border-[#202936] shadow-2xl",
-            headerTitle: "text-[#F4F7FA]",
-            headerSubtitle: "text-[#8E9AAA]",
+            card: "border border-[#E2E8F0] shadow-2xl",
+            headerTitle: "text-[#0F172A]",
+            headerSubtitle: "text-[#64748B]",
             formButtonPrimary: "bg-[#36D6B5] text-[#080B10] hover:bg-[#36D6B5]/90",
-            formFieldInput: "border-[#202936] bg-[#080B10]",
-            footerActionLink: "text-[#36D6B5]",
+            formFieldInput: "border-[#E2E8F0] bg-[#F8FAFC]",
+            footerActionLink: "text-[#0D9488]",
           },
         }}
       />

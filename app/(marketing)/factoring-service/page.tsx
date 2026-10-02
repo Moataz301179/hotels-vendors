@@ -47,16 +47,16 @@ const PILLARS = [
 
 export default function FactoringServicePage() {
   return (
-    <div className="min-h-[100dvh] bg-[#0A0A0A] text-[#FAFAFA]">
+    <div className="min-h-[100dvh] bg-[#F8FAFC] text-[#0F172A]">
       <style>{`
         .fs-label { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: .18em; text-transform: uppercase; color: #737373; }
-        .fs-link { position: relative; color: #FF3D00; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; font-size: 13px; }
-        .fs-link::after { content: ""; position: absolute; left: 0; bottom: -4px; height: 2px; width: 100%; background: #FF3D00; transition: transform .15s cubic-bezier(.25,0,0,1); transform-origin: left; }
+        .fs-link { position: relative; color: #2563EB; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; font-size: 13px; }
+        .fs-link::after { content: ""; position: absolute; left: 0; bottom: -4px; height: 2px; width: 100%; background: #2563EB; transition: transform .15s cubic-bezier(.25,0,0,1); transform-origin: left; }
         .fs-link:hover::after { transform: scaleX(1.1); }
         .fs-outline { display: inline-flex; align-items: center; gap: 8px; border: 1px solid #FAFAFA; color: #FAFAFA;
           font-weight: 600; letter-spacing: .1em; text-transform: uppercase; font-size: 13px; padding: 14px 28px;
           transition: all .15s cubic-bezier(.25,0,0,1); }
-        .fs-outline:hover { background: #FAFAFA; color: #0A0A0A; }
+        .fs-outline:hover { background: #F1F5F9; color: #0F172A; }
         @media (prefers-reduced-motion: reduce) { .fs-link::after { transition: none; } }
       `}</style>
 
@@ -66,7 +66,7 @@ export default function FactoringServicePage() {
         <h1 className="text-[40px] md:text-[64px] font-semibold leading-[1.02] tracking-[-0.05em] max-w-[16ch]">
           Verified invoices. Instant credit line. Paid in 48 hours.
         </h1>
-        <p className="mt-8 text-[16px] leading-[1.65] text-[#A3A3A3] max-w-[58ch]">
+        <p className="mt-8 text-[16px] leading-[1.65] text-[#475569] max-w-[58ch]">
           Complete funder onboarding and your credit line activates instantly. Every
           verified invoice converts to supplier cash within 48 hours, settled solely by
           the licensed funder under their terms. HotelsVendors provides the smart
@@ -80,17 +80,17 @@ export default function FactoringServicePage() {
       </section>
 
       {/* STEPS */}
-      <section className="border-t border-[#262626]">
+      <section className="border-t border-[#E2E8F0]">
         <div className="mx-auto max-w-[1200px] px-6 md:px-12 py-16 md:py-24">
           <h2 className="text-[28px] md:text-[40px] font-semibold tracking-[-0.04em] leading-[1.05]">
             From onboarding to cash, on one rail.
           </h2>
-          <div className="mt-12 space-y-px bg-[#262626] border border-[#262626]">
+          <div className="mt-12 space-y-px bg-[#F1F5F9] border border-[#E2E8F0]">
             {STEPS.map((s) => (
-              <div key={s.n} className="bg-[#0A0A0A] px-8 py-6 flex flex-col sm:flex-row gap-2 sm:gap-6 items-baseline hover:bg-[#111111] transition-colors duration-150">
-                <span className="font-mono text-[13px] text-[#FF3D00]">{s.n}</span>
+              <div key={s.n} className="bg-[#F8FAFC] px-8 py-6 flex flex-col sm:flex-row gap-2 sm:gap-6 items-baseline hover:bg-[#F1F5F9] transition-colors duration-150">
+                <span className="font-mono text-[13px] text-[#2563EB]">{s.n}</span>
                 <span className="text-[15px] font-semibold tracking-[-0.01em] whitespace-nowrap">{s.t}</span>
-                <span className="text-[13.5px] leading-[1.6] text-[#A3A3A3]">{s.d}</span>
+                <span className="text-[13.5px] leading-[1.6] text-[#475569]">{s.d}</span>
               </div>
             ))}
           </div>
@@ -98,14 +98,14 @@ export default function FactoringServicePage() {
       </section>
 
       {/* PILLARS */}
-      <section className="border-t border-[#262626] bg-[#0F0F0F]">
+      <section className="border-t border-[#E2E8F0] bg-white">
         <div className="mx-auto max-w-[1200px] px-6 md:px-12 py-16 md:py-24">
-          <div className="grid sm:grid-cols-2 gap-px bg-[#262626] border border-[#262626]">
+          <div className="grid sm:grid-cols-2 gap-px bg-[#F1F5F9] border border-[#E2E8F0]">
             {PILLARS.map((p) => (
-              <div key={p.title} className="bg-[#0F0F0F] p-8 md:p-10 hover:bg-[#111111] transition-colors duration-150">
-                <p.icon size={24} strokeWidth={1.5} className="text-[#FF3D00]" />
+              <div key={p.title} className="bg-white p-8 md:p-10 hover:bg-[#F1F5F9] transition-colors duration-150">
+                <p.icon size={24} strokeWidth={1.5} className="text-[#2563EB]" />
                 <h2 className="mt-5 text-[20px] font-semibold tracking-[-0.02em]">{p.title}</h2>
-                <p className="mt-3 text-[14px] leading-[1.65] text-[#A3A3A3]">{p.desc}</p>
+                <p className="mt-3 text-[14px] leading-[1.65] text-[#475569]">{p.desc}</p>
               </div>
             ))}
           </div>
@@ -113,13 +113,13 @@ export default function FactoringServicePage() {
       </section>
 
       {/* VIRTUAL LEDGER ACCOUNTS */}
-      <section className="border-t border-[#262626]">
+      <section className="border-t border-[#E2E8F0]">
         <div className="mx-auto max-w-[1200px] px-6 md:px-12 py-16 md:py-24 grid md:grid-cols-[7fr_5fr] gap-12 items-center">
           <div>
             <h2 className="text-[28px] md:text-[40px] font-semibold tracking-[-0.04em] leading-[1.05] max-w-[20ch]">
               Virtual ledger accounts for real cashflow control.
             </h2>
-            <p className="mt-6 text-[15px] leading-[1.65] text-[#A3A3A3] max-w-[58ch]">
+            <p className="mt-6 text-[15px] leading-[1.65] text-[#475569] max-w-[58ch]">
               Create named ledger accounts (Bank 1, Bank 2, Bank 3) in seconds. No IBAN,
               no SWIFT, no bank paperwork. These are cashflow-management ledgers that
               mirror where money actually sits, while the agentic engine keeps invoices,
@@ -130,23 +130,23 @@ export default function FactoringServicePage() {
               <Link href="/register" className="fs-link">Set up your ledgers</Link>
             </div>
           </div>
-          <div className="border border-[#262626] p-8 font-mono text-[12.5px] leading-[2.1] text-[#A3A3A3]">
-            <div className="text-[#FAFAFA]">Ledgers</div>
-            <div>Bank 1 <span className="text-[#737373]">operating</span></div>
-            <div>Bank 2 <span className="text-[#737373]">payroll</span></div>
-            <div>Bank 3 <span className="text-[#737373]">capex reserve</span></div>
-            <div className="pt-3 mt-3 border-t border-[#262626] text-[#737373]">Credit line: active · synced</div>
+          <div className="border border-[#E2E8F0] p-8 font-mono text-[12.5px] leading-[2.1] text-[#475569]">
+            <div className="text-[#0F172A]">Ledgers</div>
+            <div>Bank 1 <span className="text-[#64748B]">operating</span></div>
+            <div>Bank 2 <span className="text-[#64748B]">payroll</span></div>
+            <div>Bank 3 <span className="text-[#64748B]">capex reserve</span></div>
+            <div className="pt-3 mt-3 border-t border-[#E2E8F0] text-[#64748B]">Credit line: active · synced</div>
           </div>
         </div>
       </section>
 
       {/* CTA */}
-      <section className="border-t border-[#262626] bg-[#0F0F0F]">
+      <section className="border-t border-[#E2E8F0] bg-white">
         <div className="mx-auto max-w-[1200px] px-6 md:px-12 py-20 md:py-28 text-center">
           <h2 className="text-[36px] md:text-[56px] font-semibold tracking-[-0.05em] leading-[1.02]">
             Your invoices are already capital.
           </h2>
-          <p className="mt-6 text-[15px] text-[#A3A3A3] max-w-[50ch] mx-auto leading-relaxed">
+          <p className="mt-6 text-[15px] text-[#475569] max-w-[50ch] mx-auto leading-relaxed">
             Onboard with the funder once. Every verified invoice after that is 48 hours from cash.
           </p>
           <div className="mt-10 flex flex-wrap justify-center gap-8">

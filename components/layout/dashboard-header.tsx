@@ -48,20 +48,20 @@ export function DashboardHeader({ role, user, onMenuClick, onCmdOpen }: Dashboar
       <div className="flex items-center gap-3 sm:gap-4 min-w-0">
         <button
           onClick={onMenuClick}
-          className="p-2 rounded-lg text-foreground-muted hover:text-white hover:bg-surface-2 transition-colors flex-shrink-0"
+          className="p-2 rounded-lg text-foreground-muted hover:text-[#0F172A] hover:bg-surface-2 transition-colors flex-shrink-0"
           aria-label="Open menu"
         >
           <Menu size={20} />
         </button>
         <Link href="/" className="flex items-center gap-2.5 flex-shrink-0">
-          <BrandLogo variant="dark" size="md" showText={false} />
-          <span className="text-sm font-semibold text-white uppercase hidden lg:block" style={{ letterSpacing: "0.2em", fontFamily: "var(--font-display), 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif" }}>
+          <BrandLogo variant="light" size="md" showText={false} />
+          <span className="text-sm font-semibold text-[#0F172A] uppercase hidden lg:block" style={{ letterSpacing: "0.2em", fontFamily: "var(--font-display), 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif" }}>
             Hotels Vendors
           </span>
         </Link>
         <div className="hidden md:flex items-center gap-3">
           <span className="text-xs font-medium text-foreground-muted uppercase tracking-[0.15em]">Dashboard</span>
-          <span className="text-white/10">/</span>
+          <span className="text-[#CBD5E1]">/</span>
           <span className="text-xs font-medium text-foreground-tertiary">{config.label}</span>
         </div>
       </div>
@@ -73,7 +73,7 @@ export function DashboardHeader({ role, user, onMenuClick, onCmdOpen }: Dashboar
 
       {/* Right: Actions */}
       <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
-        <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/[0.04] border border-border-subtle">
+        <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-100 border border-border-subtle">
           <span className={`w-2 h-2 rounded-full ${config.badgeColor}`} />
           <span className="text-xs font-medium text-foreground-tertiary">{config.label}</span>
           {role === "supplier" && user?.createdAt && (() => {
@@ -91,16 +91,16 @@ export function DashboardHeader({ role, user, onMenuClick, onCmdOpen }: Dashboar
 
         {role === "admin" && (
           <>
-            <Link href="/admin/health" className="relative p-2.5 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-lg text-foreground-muted hover:text-foreground-secondary hover:bg-white/[0.05] transition-all hidden sm:flex" aria-label="Platform Health">
+            <Link href="/admin/health" className="relative p-2.5 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-lg text-foreground-muted hover:text-foreground-secondary hover:bg-slate-100 transition-all hidden sm:flex" aria-label="Platform Health">
               <HeartPulse size={18} />
             </Link>
-            <Link href="/admin/logs" className="relative p-2.5 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-lg text-foreground-muted hover:text-foreground-secondary hover:bg-white/[0.05] transition-all hidden sm:flex" aria-label="System Logs">
+            <Link href="/admin/logs" className="relative p-2.5 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-lg text-foreground-muted hover:text-foreground-secondary hover:bg-slate-100 transition-all hidden sm:flex" aria-label="System Logs">
               <ScrollText size={18} />
             </Link>
           </>
         )}
 
-        <Link href={role === "admin" ? "/admin/settings" : "/settings"} className="relative p-2.5 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-lg text-foreground-muted hover:text-foreground-secondary hover:bg-white/[0.05] transition-all hidden sm:flex" aria-label="Settings">
+        <Link href={role === "admin" ? "/admin/settings" : "/settings"} className="relative p-2.5 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-lg text-foreground-muted hover:text-foreground-secondary hover:bg-slate-100 transition-all hidden sm:flex" aria-label="Settings">
           <Settings size={18} />
         </Link>
 
@@ -111,7 +111,7 @@ export function DashboardHeader({ role, user, onMenuClick, onCmdOpen }: Dashboar
 
         <button
           onClick={toggleCart}
-          className="relative p-2.5 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-lg text-foreground-muted hover:text-foreground-secondary hover:bg-white/[0.05] transition-all"
+          className="relative p-2.5 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-lg text-foreground-muted hover:text-foreground-secondary hover:bg-slate-100 transition-all"
           aria-label={`Shopping cart${totalItems > 0 ? `, ${totalItems} items` : ""}`}
         >
           <ShoppingCart size={18} />

@@ -63,25 +63,25 @@ function DropdownMenu({ group, ar }: { group: NavGroup; ar: boolean }) {
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
         aria-haspopup="true"
-        className="hv-nav-link flex items-center gap-1 text-[13px] font-medium text-[#A3A3A3] hover:text-[#FAFAFA] transition-colors cursor-pointer bg-transparent border-0"
+        className="hv-nav-link flex items-center gap-1 text-[13px] font-medium text-[#475569] hover:text-[#0F172A] transition-colors cursor-pointer bg-transparent border-0"
       >
         {group.label}
         <ChevronDown size={13} className={`transition-transform duration-150 ${open ? "rotate-180" : ""}`} />
       </button>
       {open && (
         <div className="absolute left-0 top-full pt-3 hv-dropdown">
-          <div className="border border-[#262626] bg-[#0F0F0F] min-w-[300px] py-2">
+          <div className="border border-[#E2E8F0] bg-white min-w-[300px] py-2">
             {group.items.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
                 onClick={() => setOpen(false)}
-                className="block px-5 py-3 hover:bg-[#1A1A1A] transition-colors group/item"
+                className="block px-5 py-3 hover:bg-[#F1F5F9] transition-colors group/item"
               >
-                <div className="text-[13.5px] font-medium text-[#FAFAFA] group-hover/item:text-[#FF3D00] transition-colors">
+                <div className="text-[13.5px] font-medium text-[#0F172A] group-hover/item:text-[#2563EB] transition-colors">
                   {item.label}
                 </div>
-                {item.desc && <div className="text-[12px] text-[#737373] mt-0.5">{item.desc}</div>}
+                {item.desc && <div className="text-[12px] text-[#64748B] mt-0.5">{item.desc}</div>}
               </Link>
             ))}
           </div>
@@ -107,18 +107,18 @@ export function SiteNav() {
   return (
     <nav
       className={`fixed top-0 left-0 right-0 z-50 transition-colors duration-200 ${
-        scrolled ? "bg-[#0A0A0A]/95 backdrop-blur-sm border-b border-[#262626]" : "bg-[#0A0A0A] border-b border-transparent"
+        scrolled ? "bg-white/95 backdrop-blur-sm border-b border-[#E2E8F0]" : "bg-[#F8FAFC] border-b border-transparent"
       }`}
     >
       <style>{`
         .hv-nav-link { position: relative; }
         .hv-nav-link::after { content: ""; position: absolute; left: 0; bottom: -6px; height: 2px; width: 100%;
-          background: #FF3D00; transform: scaleX(0); transform-origin: left; transition: transform .15s cubic-bezier(.25,0,0,1); }
+          background: #2563EB; transform: scaleX(0); transform-origin: left; transition: transform .15s cubic-bezier(.25,0,0,1); }
         .hv-nav-link:hover::after, .hv-cta::after { transform: scaleX(1); }
-        .hv-cta { position: relative; color: #FF3D00; font-weight: 600; font-size: 13px;
+        .hv-cta { position: relative; color: #2563EB; font-weight: 600; font-size: 13px;
           letter-spacing: .08em; text-transform: uppercase; }
         .hv-cta::after { content: ""; position: absolute; left: 0; bottom: -4px; height: 2px; width: 100%;
-          background: #FF3D00; transform: scaleX(1); transform-origin: left; transition: transform .15s cubic-bezier(.25,0,0,1); }
+          background: #2563EB; transform: scaleX(1); transform-origin: left; transition: transform .15s cubic-bezier(.25,0,0,1); }
         .hv-cta:hover::after { transform: scaleX(1.1); }
         .hv-dropdown { animation: hvDrop .15s cubic-bezier(.25,0,0,1); }
         @keyframes hvDrop { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
@@ -134,7 +134,7 @@ export function SiteNav() {
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/brand/hv-mark.png" alt="HotelsVendors" width={30} height={30} className="object-contain" />
           <span
-            className="font-semibold uppercase text-[13px] text-[#FAFAFA]"
+            className="font-semibold uppercase text-[13px] text-[#0F172A]"
             style={{ letterSpacing: "0.22em" }}
           >
             HotelsVendors
@@ -146,14 +146,14 @@ export function SiteNav() {
           {groups.map((g) => (
             <DropdownMenu key={g.label} group={g} ar={ar} />
           ))}
-          <Link href="/partners" className="hv-nav-link text-[13px] font-medium text-[#A3A3A3] hover:text-[#FAFAFA] transition-colors">
+          <Link href="/partners" className="hv-nav-link text-[13px] font-medium text-[#475569] hover:text-[#0F172A] transition-colors">
             {ar ? "بوابة الشركاء" : "Partners"}
           </Link>
         </div>
 
         {/* Desktop actions */}
         <div className="hidden lg:flex items-center gap-6 shrink-0">
-          <Link href="/login" className="text-[13px] font-medium text-[#A3A3A3] hover:text-[#FAFAFA] transition-colors">
+          <Link href="/login" className="text-[13px] font-medium text-[#475569] hover:text-[#0F172A] transition-colors">
             {ar ? "تسجيل الدخول" : "Sign in"}
           </Link>
           <Link href="/register" className="hv-cta">
@@ -164,7 +164,7 @@ export function SiteNav() {
         {/* Mobile toggle */}
         <button
           onClick={() => setOpen(!open)}
-          className="lg:hidden text-[#FAFAFA] cursor-pointer bg-transparent border-0 p-2"
+          className="lg:hidden text-[#0F172A] cursor-pointer bg-transparent border-0 p-2"
           aria-label={open ? "Close menu" : "Open menu"}
         >
           {open ? <X size={20} /> : <Menu size={20} />}
@@ -173,7 +173,7 @@ export function SiteNav() {
 
       {/* Mobile menu */}
       {open && (
-        <div className="lg:hidden border-t border-[#262626] bg-[#0A0A0A] px-6 py-4 space-y-4 max-h-[80dvh] overflow-y-auto">
+        <div className="lg:hidden border-t border-[#E2E8F0] bg-[#F8FAFC] px-6 py-4 space-y-4 max-h-[80dvh] overflow-y-auto">
           {groups.map((g) => (
             <div key={g.label}>
               <div className="hv-label mb-2">{g.label}</div>
@@ -182,22 +182,22 @@ export function SiteNav() {
                   key={item.href}
                   href={item.href}
                   onClick={() => setOpen(false)}
-                  className="block py-2 text-[14px] text-[#A3A3A3] hover:text-[#FAFAFA] transition-colors"
+                  className="block py-2 text-[14px] text-[#475569] hover:text-[#0F172A] transition-colors"
                 >
                   {item.label}
                 </Link>
               ))}
             </div>
           ))}
-          <hr className="border-[#262626]" />
-          <Link href="/partners" onClick={() => setOpen(false)} className="block py-2 text-[14px] text-[#A3A3A3] hover:text-[#FAFAFA]">
+          <hr className="border-[#E2E8F0]" />
+          <Link href="/partners" onClick={() => setOpen(false)} className="block py-2 text-[14px] text-[#475569] hover:text-[#0F172A]">
             {ar ? "بوابة الشركاء" : "Partner Portal"}
           </Link>
-          <Link href="/pricing" onClick={() => setOpen(false)} className="block py-2 text-[14px] text-[#A3A3A3] hover:text-[#FAFAFA]">
+          <Link href="/pricing" onClick={() => setOpen(false)} className="block py-2 text-[14px] text-[#475569] hover:text-[#0F172A]">
             {ar ? "الأسعار" : "Pricing"}
           </Link>
           <div className="flex gap-4 pt-2 pb-4">
-            <Link href="/login" onClick={() => setOpen(false)} className="text-[13px] font-medium text-[#A3A3A3] hover:text-[#FAFAFA]">
+            <Link href="/login" onClick={() => setOpen(false)} className="text-[13px] font-medium text-[#475569] hover:text-[#0F172A]">
               {ar ? "تسجيل الدخول" : "Sign in"}
             </Link>
             <Link href="/register" onClick={() => setOpen(false)} className="hv-cta">

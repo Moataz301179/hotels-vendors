@@ -1,7 +1,6 @@
 import Link from "next/link";
 
-/* Footer — Bold Typography: black body, vermillion (#FF3D00) bold column titles, Jakarta Sans body,
-   5-column grid collapsing to 2 on mobile. No Oliv references. */
+/* Premium institutional footer: slate/white surfaces, navy text, restrained blue accents. */
 
 const COLUMNS: { title: string; links: { label: string; href: string }[] }[] = [
   {
@@ -44,7 +43,7 @@ const COLUMNS: { title: string; links: { label: string; href: string }[] }[] = [
 
 export function SiteFooter({ ar = false }: { ar?: boolean }) {
   return (
-    <footer className="border-t border-[#262626] bg-[#0A0A0A] text-[#FAFAFA]">
+    <footer className="border-t border-[#E2E8F0] bg-[#F8FAFC] text-[#0F172A]">
       <div className="mx-auto max-w-[1200px] px-6 md:px-12 py-16 md:py-20">
         <div className="grid grid-cols-2 md:grid-cols-[2fr_1fr_1fr_1fr_1fr] gap-10">
           {/* Brand block — single lockup, identical to the nav */}
@@ -54,12 +53,12 @@ export function SiteFooter({ ar = false }: { ar?: boolean }) {
               <img src="/brand/hv-mark.png" alt="HotelsVendors" width={30} height={30} className="object-contain" />
               <span className="font-semibold uppercase text-[13px] tracking-[0.22em]">HotelsVendors</span>
             </Link>
-            <p className="mt-5 text-[13px] leading-[1.7] text-[#737373] max-w-[34ch]">
+            <p className="mt-5 text-[13px] leading-[1.7] text-[#64748B] max-w-[34ch]">
               {ar
                 ? "منصة المشتريات والتمويل لقطاع الضيافة المصري. أسعار ثابتة، تمويل مدمج، وفوترة إلكترونية متوافقة."
                 : "Hospitality procurement intelligence for Egypt. Watch signals, find money leaks and opportunities, and turn evidence into action."}
             </p>
-            <p className="mt-6 font-mono text-[11px] tracking-[0.15em] uppercase text-[#737373]">
+            <p className="mt-6 font-mono text-[11px] tracking-[0.15em] uppercase text-[#64748B]">
               Cairo, Egypt
             </p>
           </div>
@@ -67,13 +66,13 @@ export function SiteFooter({ ar = false }: { ar?: boolean }) {
           {/* Link columns */}
           {COLUMNS.map((col) => (
             <div key={col.title}>
-              <h4 className="font-bold text-[12px] tracking-[0.16em] uppercase text-[#FF3D00] mb-5">{col.title}</h4>
+              <h4 className="font-bold text-[12px] tracking-[0.16em] uppercase text-[#2563EB] mb-5">{col.title}</h4>
               <ul className="space-y-3">
                 {col.links.map((l) => (
                   <li key={l.label + l.href}>
                     <Link
                       href={l.href}
-                      className="text-[13px] text-[#A3A3A3] hover:text-[#FF3D00] transition-colors"
+                      className="text-[13px] text-[#475569] hover:text-[#2563EB] transition-colors"
                     >
                       {l.label}
                     </Link>
@@ -84,20 +83,20 @@ export function SiteFooter({ ar = false }: { ar?: boolean }) {
           ))}
         </div>
 
-        <div className="mt-16 pt-8 border-t border-[#262626] flex flex-col md:flex-row justify-between gap-4">
-          <p className="font-mono text-[11px] tracking-[0.12em] uppercase text-[#737373]">
+        <div className="mt-16 pt-8 border-t border-[#E2E8F0] flex flex-col md:flex-row justify-between gap-4">
+          <p className="font-mono text-[11px] tracking-[0.12em] uppercase text-[#64748B]">
             {ar
               ? "© 2026 ريتورانتس للتسويق الإلكتروني · جميع الحقوق محفوظة"
               : "© 2026 Returants for E-Marketing · All rights reserved"}
           </p>
           <div className="flex gap-8">
-            <Link href="/terms" className="font-mono text-[11px] tracking-[0.12em] uppercase text-[#737373] hover:text-[#FAFAFA] transition-colors">
+            <Link href="/terms" className="font-mono text-[11px] tracking-[0.12em] uppercase text-[#64748B] hover:text-[#0F172A] transition-colors">
               {ar ? "الشروط" : "Terms"}
             </Link>
-            <Link href="/privacy" className="font-mono text-[11px] tracking-[0.12em] uppercase text-[#737373] hover:text-[#FAFAFA] transition-colors">
+            <Link href="/privacy" className="font-mono text-[11px] tracking-[0.12em] uppercase text-[#64748B] hover:text-[#0F172A] transition-colors">
               {ar ? "الخصوصية" : "Privacy"}
             </Link>
-            <Link href="/compliance" className="font-mono text-[11px] tracking-[0.12em] uppercase text-[#737373] hover:text-[#FAFAFA] transition-colors">
+            <Link href="/compliance" className="font-mono text-[11px] tracking-[0.12em] uppercase text-[#64748B] hover:text-[#0F172A] transition-colors">
               {ar ? "الامتثال" : "Compliance"}
             </Link>
           </div>

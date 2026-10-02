@@ -32,16 +32,16 @@ const CAPABILITIES = [
 
 export default function PlatformPage() {
   return (
-    <div className="min-h-[100dvh] bg-[#0A0A0A] text-[#FAFAFA]">
+    <div className="min-h-[100dvh] bg-[#F8FAFC] text-[#0F172A]">
       <style>{`
         .pf-label { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: .18em; text-transform: uppercase; color: #737373; }
-        .pf-link { position: relative; color: #FF3D00; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; font-size: 13px; }
-        .pf-link::after { content: ""; position: absolute; left: 0; bottom: -4px; height: 2px; width: 100%; background: #FF3D00; transition: transform .15s cubic-bezier(.25,0,0,1); transform-origin: left; }
+        .pf-link { position: relative; color: #2563EB; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; font-size: 13px; }
+        .pf-link::after { content: ""; position: absolute; left: 0; bottom: -4px; height: 2px; width: 100%; background: #2563EB; transition: transform .15s cubic-bezier(.25,0,0,1); transform-origin: left; }
         .pf-link:hover::after { transform: scaleX(1.1); }
         .pf-outline { display: inline-flex; align-items: center; border: 1px solid #FAFAFA; color: #FAFAFA;
           font-weight: 600; letter-spacing: .1em; text-transform: uppercase; font-size: 13px; padding: 14px 28px;
           transition: all .15s cubic-bezier(.25,0,0,1); }
-        .pf-outline:hover { background: #FAFAFA; color: #0A0A0A; }
+        .pf-outline:hover { background: #F1F5F9; color: #0F172A; }
         @media (prefers-reduced-motion: reduce) { .pf-link::after { transition: none; } }
       `}</style>
 
@@ -51,7 +51,7 @@ export default function PlatformPage() {
         <h1 className="text-[40px] md:text-[64px] font-semibold leading-[1.02] tracking-[-0.05em] max-w-[18ch]">
           Procurement that runs itself, governed to the piaster.
         </h1>
-        <p className="mt-8 text-[16px] leading-[1.65] text-[#A3A3A3] max-w-[56ch]">
+        <p className="mt-8 text-[16px] leading-[1.65] text-[#475569] max-w-[56ch]">
           HotelsVendors is one transaction rail: AI-sourced demand, fixed-price supply,
           consolidated delivery, embedded finance, and tax-compliant invoicing. Built for
           Egyptian hospitality. Integrated with the systems you already run.
@@ -63,18 +63,18 @@ export default function PlatformPage() {
       </section>
 
       {/* CAPABILITIES — statement rows, no icon-per-card repetition */}
-      <section className="border-t border-[#262626]">
+      <section className="border-t border-[#E2E8F0]">
         <div className="mx-auto max-w-[1200px] px-6 md:px-12 py-16 md:py-24">
           <h2 className="text-[32px] md:text-[44px] font-semibold tracking-[-0.04em] leading-[1.05] max-w-[20ch]">
             Four systems. One platform.
           </h2>
-          <div className="mt-14 space-y-px bg-[#262626] border border-[#262626]">
+          <div className="mt-14 space-y-px bg-[#F1F5F9] border border-[#E2E8F0]">
             {CAPABILITIES.map((c, i) => (
-              <div key={c.title} className="bg-[#0A0A0A] px-8 py-8 grid md:grid-cols-[auto_1fr] gap-5 md:gap-10 items-start hover:bg-[#111111] transition-colors duration-150">
-                <span className="font-mono text-[13px] text-[#FF3D00] pt-1">0{i + 1}</span>
+              <div key={c.title} className="bg-[#F8FAFC] px-8 py-8 grid md:grid-cols-[auto_1fr] gap-5 md:gap-10 items-start hover:bg-[#F1F5F9] transition-colors duration-150">
+                <span className="font-mono text-[13px] text-[#2563EB] pt-1">0{i + 1}</span>
                 <div>
                   <h3 className="text-[20px] font-semibold tracking-[-0.02em]">{c.title}</h3>
-                  <p className="mt-3 text-[14px] leading-[1.7] text-[#A3A3A3] max-w-[70ch]">{c.desc}</p>
+                  <p className="mt-3 text-[14px] leading-[1.7] text-[#475569] max-w-[70ch]">{c.desc}</p>
                 </div>
               </div>
             ))}
@@ -83,13 +83,13 @@ export default function PlatformPage() {
       </section>
 
       {/* INTEGRATION STRIP */}
-      <section className="border-t border-[#262626] bg-[#0F0F0F]">
+      <section className="border-t border-[#E2E8F0] bg-white">
         <div className="mx-auto max-w-[1200px] px-6 md:px-12 py-16 md:py-24 grid md:grid-cols-[7fr_5fr] gap-12 items-center">
           <div>
             <h2 className="text-[28px] md:text-[40px] font-semibold tracking-[-0.04em] leading-[1.05] max-w-[20ch]">
               Enterprise-ready from day one.
             </h2>
-            <p className="mt-6 text-[15px] leading-[1.65] text-[#A3A3A3] max-w-[56ch]">
+            <p className="mt-6 text-[15px] leading-[1.65] text-[#475569] max-w-[56ch]">
               REST APIs, webhooks, and idempotent settlement connect HotelsVendors to SAP,
               Oracle, Opera PMS, and local ERP stacks. Multi-tenant isolation and row-level
               scoping are enforced at the database layer, not the honor system.
@@ -98,23 +98,23 @@ export default function PlatformPage() {
               <Link href="/erp-integrations" className="pf-link">Integration docs</Link>
             </div>
           </div>
-          <div className="border border-[#262626] p-8 font-mono text-[12.5px] leading-[2] text-[#A3A3A3]">
-            <div><span className="text-[#FF3D00]">POST</span> /api/v1/orders</div>
-            <div><span className="text-[#FF3D00]">GET</span> /api/v1/procurement/insights</div>
-            <div><span className="text-[#FF3D00]">POST</span> /api/v1/grn/qr</div>
-            <div><span className="text-[#FF3D00]">POST</span> /api/webhooks/inventory/[provider]</div>
-            <div className="pt-3 mt-3 border-t border-[#262626] text-[#737373]">220 routes. 110 models. Zero mock data.</div>
+          <div className="border border-[#E2E8F0] p-8 font-mono text-[12.5px] leading-[2] text-[#475569]">
+            <div><span className="text-[#2563EB]">POST</span> /api/v1/orders</div>
+            <div><span className="text-[#2563EB]">GET</span> /api/v1/procurement/insights</div>
+            <div><span className="text-[#2563EB]">POST</span> /api/v1/grn/qr</div>
+            <div><span className="text-[#2563EB]">POST</span> /api/webhooks/inventory/[provider]</div>
+            <div className="pt-3 mt-3 border-t border-[#E2E8F0] text-[#64748B]">220 routes. 110 models. Zero mock data.</div>
           </div>
         </div>
       </section>
 
       {/* CTA — register is open; no sandbox, no gated enterprise tier */}
-      <section className="border-t border-[#262626]">
+      <section className="border-t border-[#E2E8F0]">
         <div className="mx-auto max-w-[1200px] px-6 md:px-12 py-20 md:py-28 text-center">
           <h2 className="text-[36px] md:text-[56px] font-semibold tracking-[-0.05em] leading-[1.02]">
             Start procurement on the right rails.
           </h2>
-          <p className="mt-6 text-[15px] text-[#A3A3A3] max-w-[50ch] mx-auto leading-relaxed">
+          <p className="mt-6 text-[15px] text-[#475569] max-w-[50ch] mx-auto leading-relaxed">
             Registration takes minutes. The catalog grows as verified suppliers come online.
           </p>
           <div className="mt-10 flex flex-wrap justify-center gap-8">

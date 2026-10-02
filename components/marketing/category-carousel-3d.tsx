@@ -112,7 +112,7 @@ export function CategoryCarousel3D() {
 
   return (
     <section
-      className="border-t border-[#262626] bg-[#0A0A0A] overflow-hidden"
+      className="border-t border-[#E2E8F0] bg-[#F8FAFC] overflow-hidden"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
       aria-label="Marketplace categories"
@@ -136,11 +136,11 @@ export function CategoryCarousel3D() {
         .hv-tile-sub { font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: .16em;
           text-transform: uppercase; color: #A3A3A3; }
         .hv-tile-label { font-size: 16px; font-weight: 600; letter-spacing: -.01em; color: #FAFAFA; }
-        .hv-tile-price { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #FF3D00; margin-top: 2px; }
+        .hv-tile-price { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #2563EB; margin-top: 2px; }
         .hv3d-ctrls { display: flex; gap: 10px; margin-top: 34px; justify-content: center; }
         .hv3d-arrow { width: 44px; height: 44px; border: 1px solid #FAFAFA; background: transparent;
           color: #FAFAFA; font-size: 18px; cursor: pointer; transition: all .15s cubic-bezier(.25,0,0,1); }
-        .hv3d-arrow:hover { background: #FAFAFA; color: #0A0A0A; }
+        .hv3d-arrow:hover { background: #F1F5F9; color: #0F172A; }
         .hv3d-cta { text-align: center; margin-top: 40px; }
         @media (prefers-reduced-motion: reduce) { .hv-ring-inner { transition: none !important; } }
         @media (max-width: 768px) { .hv3d { padding: 56px 16px 64px; } .hv-ring-inner { width: 260px; } .hv-tile { margin-left: -130px; } }
@@ -148,10 +148,10 @@ export function CategoryCarousel3D() {
 
       <div className="hv3d">
         <div className="hv3d-head">
-          <h2 className="text-[32px] md:text-[44px] font-semibold tracking-[-0.04em] leading-[1.05] text-[#FAFAFA]">
+          <h2 className="text-[32px] md:text-[44px] font-semibold tracking-[-0.04em] leading-[1.05] text-[#0F172A]">
             The marketplace,<br />in rotation.
           </h2>
-          <span className="font-mono text-[11px] tracking-[0.18em] uppercase text-[#737373]">
+          <span className="font-mono text-[11px] tracking-[0.18em] uppercase text-[#64748B]">
             Ten categories · Fixed prices
           </span>
         </div>
@@ -170,10 +170,10 @@ export function CategoryCarousel3D() {
         <div className="hv3d-cta">
           <Link
             href="/marketplace"
-            className="relative inline-flex items-center text-[#FF3D00] font-semibold uppercase tracking-[0.1em] text-[13px] group"
+            className="relative inline-flex items-center text-[#2563EB] font-semibold uppercase tracking-[0.1em] text-[13px] group"
           >
             Open the marketplace
-            <span className="absolute left-0 -bottom-1 h-[2px] w-full bg-[#FF3D00] origin-left transition-transform duration-150 group-hover:scale-x-110" />
+            <span className="absolute left-0 -bottom-1 h-[2px] w-full bg-[#2563EB] origin-left transition-transform duration-150 group-hover:scale-x-110" />
           </Link>
         </div>
       </div>

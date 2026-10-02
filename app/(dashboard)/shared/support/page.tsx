@@ -111,7 +111,7 @@ function TicketDetailModal({ ticket, onClose }: { ticket: SupportTicket; onClose
               <Clock size={12} /> Created {new Date(ticket.createdAt).toLocaleDateString()}
             </p>
           </div>
-          <button onClick={onClose} className="ml-3 p-1.5 rounded-lg hover:bg-white/5 text-foreground-muted">
+          <button onClick={onClose} className="ml-3 p-1.5 rounded-lg hover:bg-slate-100 text-foreground-muted">
             <X size={18} />
           </button>
         </div>
@@ -200,7 +200,7 @@ function CreateTicketForm({ onClose, onCreated }: { onClose: () => void; onCreat
       <div className="bg-surface-1 border border-border-subtle rounded-xl w-full max-w-lg max-h-[85vh] overflow-y-auto">
         <div className="flex items-center justify-between p-5 border-b border-border-subtle">
           <h2 className="text-lg font-semibold text-foreground">Submit a Support Ticket</h2>
-          <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-white/5 text-foreground-muted">
+          <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-slate-100 text-foreground-muted">
             <X size={18} />
           </button>
         </div>

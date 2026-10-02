@@ -2,6 +2,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import type { Metadata, Viewport } from "next";
 import { Inter_Tight, Playfair_Display, JetBrains_Mono, Cairo, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
+import "./theme-tokens.css";
 import { ThemeProvider } from "@/components/theme/theme-provider";
 import { NotificationProvider } from "@/components/notifications/notification-context";
 import { LanguageProvider } from "@/lib/i18n/language-context";
@@ -124,19 +125,19 @@ export const metadata: Metadata = {
   other: {
     "msapplication-TileColor": "var(--accent-base)",
     "msapplication-TileImage": "/logo-icon-white.png",
-    "theme-color": "#0c0c12",
+    "theme-color": "#F8FAFC",
   },
 };
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: dark)", color: "#0c0c12" },
+    { media: "(prefers-color-scheme: dark)", color: "#F8FAFC" },
     { media: "(prefers-color-scheme: light)", color: "#ffffff" },
   ],
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,
-  colorScheme: "dark light",
+  colorScheme: "light",
 };
 
 export default function RootLayout({
@@ -172,7 +173,7 @@ export default function RootLayout({
                   } else {
                     document.documentElement.removeAttribute('data-theme');
                     var meta = document.getElementById('theme-color-meta');
-                    if (meta) meta.setAttribute('content', '#0c0c12');
+                    if (meta) meta.setAttribute('content', '#F8FAFC');
                   }
                 } catch (e) {}
                 if (typeof navigator !== 'undefined' && 'serviceWorker' in navigator) {
