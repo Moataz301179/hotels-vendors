@@ -238,7 +238,7 @@ export default clerkMiddleware(async (auth, request: NextRequest) => {
     const requestHeaders = new Headers(nonceHeaders);
     requestHeaders.set("x-user-id", userId);
     requestHeaders.set("x-tenant-id", orgId || (sessionClaims?.tenantId as string) || "");
-    requestHeaders.set("x-platform-role", orgRole || (sessionClaims?.role as string) || "");
+    requestHeaders.set("x-platform-role", (sessionClaims?.platformRole as string) || (sessionClaims?.role as string) || orgRole || "");
 
     // CSRF protection for state-changing API routes
     const isStateChanging = ["POST", "PUT", "DELETE", "PATCH"].includes(request.method);
@@ -269,7 +269,7 @@ export default clerkMiddleware(async (auth, request: NextRequest) => {
       return addSecurityHeaders(NextResponse.redirect(loginUrl), nonce);
     }
 
-    const platformRole = orgRole || (sessionClaims?.role as string) || "";
+    const platformRole = (sessionClaims?.platformRole as string) || (sessionClaims?.role as string) || orgRole || "";
 
     // ADMIN can access everything
     if (platformRole === "ADMIN") {
@@ -298,7 +298,7 @@ export default clerkMiddleware(async (auth, request: NextRequest) => {
   if (userId) {
     requestHeaders.set("x-user-id", userId);
     requestHeaders.set("x-tenant-id", orgId || (sessionClaims?.tenantId as string) || "");
-    requestHeaders.set("x-platform-role", orgRole || (sessionClaims?.role as string) || "");
+    requestHeaders.set("x-platform-role", (sessionClaims?.platformRole as string) || (sessionClaims?.role as string) || orgRole || "");
   }
 
   const response = addSecurityHeaders(

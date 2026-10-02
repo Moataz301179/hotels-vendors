@@ -6,9 +6,9 @@ export default async function DashboardEntryPage() {
   if (!userId) redirect("/sign-in?redirect=%2Fdashboard");
 
   const claimRole =
-    orgRole ||
     (sessionClaims?.platformRole as string | undefined) ||
     (sessionClaims?.role as string | undefined) ||
+    orgRole ||
     "hotel";
 
   const role = claimRole.toLowerCase();

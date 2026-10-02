@@ -39,9 +39,9 @@ export default async function DashboardLayout({
   }
 
   const claimRole =
-    orgRole ||
     (sessionClaims?.platformRole as string | undefined) ||
     (sessionClaims?.role as string | undefined) ||
+    orgRole ||
     "HOTEL";
 
   const role = claimRole.toLowerCase() as DashboardRole;
