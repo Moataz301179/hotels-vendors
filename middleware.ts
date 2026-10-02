@@ -161,13 +161,14 @@ function addSecurityHeaders(response: NextResponse, nonce: string): NextResponse
   );
   const csp = [
     "default-src 'self'",
-    `script-src 'self' 'nonce-${nonce}' 'strict-dynamic'`,
+    "script-src 'self' 'unsafe-inline' https://*.clerk.accounts.dev https://*.clerk.com",
     "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
     "font-src 'self' https://fonts.gstatic.com",
     "img-src 'self' data: blob: https://images.unsplash.com https://cdn.jsdelivr.net https://api.qrserver.com",
-    "connect-src 'self' https://api.oliv.finance https://sandbox.oliv.finance https://invoicing.eta.gov.eg https://api.fawry.com",
+    "connect-src 'self' https://api.oliv.finance https://sandbox.oliv.finance https://invoicing.eta.gov.eg https://api.fawry.com https://*.clerk.accounts.dev https://*.clerk.com",
     "frame-ancestors 'none'",
     "base-uri 'self'",
+    "worker-src 'self' blob:",
     "form-action 'self'",
   ].join("; ");
   response.headers.set("Content-Security-Policy", csp);
@@ -181,20 +182,25 @@ export default clerkMiddleware(async (auth, request: NextRequest) => {
   const { pathname } = request.nextUrl;
   const host = request.headers.get("host") || "";
   const nonce = Buffer.from(crypto.randomUUID()).toString("base64");
+  // Next.js reads the nonce from the request headers and applies it to its generated
+  // script tags. Setting it only on the response CSP is insufficient: strict-dynamic
+  // would then block every Next.js bundle and leave only server-rendered fallbacks.
+  const nonceHeaders = new Headers(request.headers);
+  nonceHeaders.set("x-nonce", nonce);
 
   // ── INVO Subdomain Routing ──
   if (host.startsWith("invo.")) {
     const url = request.nextUrl.clone();
     if (pathname === "/") {
       url.pathname = "/invo";
-      return addSecurityHeaders(NextResponse.rewrite(url), nonce);
+      return addSecurityHeaders(NextResponse.rewrite(url, { request: { headers: nonceHeaders } }), nonce);
     }
     if (pathname.startsWith("/api/") && !pathname.startsWith("/api/v1/invo")) {
-      return addSecurityHeaders(NextResponse.next(), nonce);
+      return addSecurityHeaders(NextResponse.next({ request: { headers: nonceHeaders } }), nonce);
     }
     if (!pathname.startsWith("/invo") && !pathname.startsWith("/api/")) {
       url.pathname = `/invo${pathname}`;
-      return addSecurityHeaders(NextResponse.rewrite(url), nonce);
+      return addSecurityHeaders(NextResponse.rewrite(url, { request: { headers: nonceHeaders } }), nonce);
     }
   }
 
@@ -205,7 +211,7 @@ export default clerkMiddleware(async (auth, request: NextRequest) => {
 
   // Allow public paths without auth
   if (isPublicPath(pathname)) {
-    return addSecurityHeaders(NextResponse.next(), nonce);
+    return addSecurityHeaders(NextResponse.next({ request: { headers: nonceHeaders } }), nonce);
   }
 
   // Read the Clerk session explicitly. Do not rely on auth.protect()'s
@@ -229,7 +235,7 @@ export default clerkMiddleware(async (auth, request: NextRequest) => {
       );
     }
 
-    const requestHeaders = new Headers(request.headers);
+    const requestHeaders = new Headers(nonceHeaders);
     requestHeaders.set("x-user-id", userId);
     requestHeaders.set("x-tenant-id", orgId || (sessionClaims?.tenantId as string) || "");
     requestHeaders.set("x-platform-role", orgRole || (sessionClaims?.role as string) || "");
@@ -267,7 +273,7 @@ export default clerkMiddleware(async (auth, request: NextRequest) => {
 
     // ADMIN can access everything
     if (platformRole === "ADMIN") {
-      const requestHeaders = new Headers(request.headers);
+      const requestHeaders = new Headers(nonceHeaders);
       requestHeaders.set("x-user-id", userId);
       requestHeaders.set("x-tenant-id", orgId || (sessionClaims?.tenantId as string) || "");
       requestHeaders.set("x-platform-role", platformRole);
@@ -288,7 +294,7 @@ export default clerkMiddleware(async (auth, request: NextRequest) => {
   }
 
   // Build response with auth headers
-  const requestHeaders = new Headers(request.headers);
+  const requestHeaders = new Headers(nonceHeaders);
   if (userId) {
     requestHeaders.set("x-user-id", userId);
     requestHeaders.set("x-tenant-id", orgId || (sessionClaims?.tenantId as string) || "");
