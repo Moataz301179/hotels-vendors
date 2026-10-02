@@ -39,7 +39,7 @@ jobs:
           ENCRYPTION_MASTER_KEY: "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
           NEXT_PUBLIC_APP_URL: "https://www.hotelsvendors.com"
           # Clerk is initialized during Next.js build/prerender; CI must receive the same public build-time key used by production.
-          NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}
+          NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: "pk_test_dW5pdGVkLXRyZWVmcm9nLTIyMy5jbGVyay5hY2NvdW50cy5kZXYk"
 
   deploy-hostinger:
     name: Deploy to Hostinger VPS (PM2)
