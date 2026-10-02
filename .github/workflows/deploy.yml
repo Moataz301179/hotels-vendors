@@ -166,67 +166,34 @@ jobs:
               exit 1
             fi
 
-            # Verify the build produced static assets before we touch anything.
+            # Verify the build produced real Next.js assets before we touch the live process.
             if [ ! -d .next/static ] || [ -z "$(ls -A .next/static 2>/dev/null)" ]; then
               echo "  ERROR: Build produced no static assets"
               exit 1
             fi
 
-            echo "─── Post-build setup ───"
-            # Kill any orphaned Next server holding the port
-            fuser -k 3008/tcp 2>/dev/null || true
-            sleep 2
-
-            # Always synchronize the freshly built assets into standalone.
-            # Never rely on destination existence: stale hashed chunks cause browser skeletons.
-            # Copy to BOTH locations: Nginx serves /_next/static/ from standalone/static/,
-            # and the Next.js server serves from standalone/.next/static/.
-            rm -rf .next/standalone/static
-            rm -rf .next/standalone/.next/static
-            mkdir -p .next/standalone
-            mkdir -p .next/standalone/.next
-            if [ -d .next/static ]; then
-              cp -a .next/static/. .next/standalone/static/
-              cp -a .next/static/. .next/standalone/.next/static/
-            fi
-
-            rm -rf .next/standalone/public
-            rm -rf .next/standalone/.next/public
-            if [ -d public ]; then
-              cp -a public/. .next/standalone/public/
-              mkdir -p .next/standalone/.next
-              cp -a public/. .next/standalone/.next/public/
-            fi
-
             echo "─── Restarting PM2 ───"
+            # The live server is a standard Next.js start process on port 3008.
+            # Remove both the current release process name and the historical process
+            # name so PM2 cannot resurrect a competing listener on the same port.
             pm2 delete hotels-vendors-production >/dev/null 2>&1 || true
+            pm2 delete hotels-vendors-13028-3008 >/dev/null 2>&1 || true
             fuser -k 3008/tcp 2>/dev/null || true
             sleep 2
-            PORT=3008 NODE_ENV=production NEXT_TELEMETRY_DISABLED=1 pm2 start .next/standalone/server.js --name hotels-vendors-production --cwd /var/www/hv-release-production
+            PORT=3008 NODE_ENV=production NEXT_TELEMETRY_DISABLED=1 pm2 start npm --name hotels-vendors-production --cwd "$APP_DIR" -- start
             pm2 save
 
-            echo "─── Verifying asset visibility on VPS ───"
-            # Confirm the files are actually present where Nginx and the Next.js
-            # standalone server can serve them. This catches copy failures that
-            # the GitHub Actions runner cannot observe directly.
-            STATIC_COUNT=$(find .next/standalone/static -type f 2>/dev/null | wc -l || echo "0")
-            NEXT_STATIC_COUNT=$(find .next/standalone/.next/static -type f 2>/dev/null | wc -l || echo "0")
-            PUBLIC_COUNT=$(find .next/standalone/public -type f 2>/dev/null | wc -l || echo "0")
-            echo "  standalone/static/       : $STATIC_COUNT files"
-            echo "  standalone/.next/static/ : $NEXT_STATIC_COUNT files"
-            echo "  standalone/public/       : $PUBLIC_COUNT files"
-            if [ "$STATIC_COUNT" -eq 0 ] && [ "$NEXT_STATIC_COUNT" -eq 0 ]; then
-              echo "  ERROR: No static assets were copied to either standalone location"
-              ls -la .next/static/ 2>/dev/null || echo "  .next/static/ is missing entirely"
+            echo "─── Verifying public build assets ───"
+            STATIC_COUNT=$(find .next/static -type f 2>/dev/null | wc -l || echo "0")
+            PUBLIC_COUNT=$(find public -type f 2>/dev/null | wc -l || echo "0")
+            echo "  .next/static/ : $STATIC_COUNT files"
+            echo "  public/       : $PUBLIC_COUNT files"
+            if [ "$STATIC_COUNT" -eq 0 ]; then
+              echo "  ERROR: No Next.js static assets exist"
               exit 1
-            fi
-            if [ "$PUBLIC_COUNT" -eq 0 ]; then
-              echo "  WARNING: No public/ assets were copied (brand images may be missing)"
             fi
 
             echo "─── Reloading Nginx ───"
-            # Ensure Nginx picks up any new static files without waiting for its
-            # own reload cycle.
             if command -v nginx > /dev/null 2>&1; then
               if nginx -t 2>/dev/null; then
                 nginx -s reload 2>/dev/null || true
@@ -234,8 +201,6 @@ jobs:
               else
                 echo "  WARNING: nginx -t failed, skipping reload"
               fi
-            else
-              echo "  WARNING: nginx binary not found on PATH"
             fi
 
             echo "─── Health checks ───"
