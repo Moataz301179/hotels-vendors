@@ -4,11 +4,12 @@
  * G2: RBAC IS SERVER-SIDE ONLY
  * These helpers run exclusively on the server (Server Components, Server Actions, API Routes).
  * The client NEVER decides what it can access.
+ *
+ * Migrated from custom JWT session to Clerk auth().
  */
 
-import { cookies } from "next/headers";
+import { auth, currentUser } from "@clerk/nextjs/server";
 import { cache } from "react";
-import { verifySession } from "@/lib/session";
 import { prisma } from "@/lib/prisma";
 
 export interface ServerUser {
@@ -25,20 +26,25 @@ export interface ServerUser {
 }
 
 /**
- * Get the current authenticated user from the session cookie.
+ * Get the current authenticated user from Clerk session.
  * Cached per request to avoid multiple DB queries.
  * Returns null if not authenticated.
  */
 export const getCurrentUser = cache(async (): Promise<ServerUser | null> => {
-  const cookieStore = await cookies();
-  const token = cookieStore.get("hv_session")?.value;
-  if (!token) return null;
+  const { userId } = await auth();
+  if (!userId) return null;
 
-  const session = await verifySession(token);
-  if (!session) return null;
+  const clerkUser = await currentUser();
+  if (!clerkUser) return null;
 
-  const user = await prisma.user.findUnique({
-    where: { id: session.userId },
+  const email = clerkUser.emailAddresses[0]?.emailAddress;
+  const user = await prisma.user.findFirst({
+    where: {
+      OR: [
+        { id: userId },
+        ...(email ? [{ email }] : []),
+      ],
+    },
     select: {
       id: true,
       email: true,

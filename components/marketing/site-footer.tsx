@@ -57,7 +57,7 @@ export function SiteFooter({ ar = false }: { ar?: boolean }) {
             <p className="mt-5 text-[13px] leading-[1.7] text-[#737373] max-w-[34ch]">
               {ar
                 ? "منصة المشتريات والتمويل لقطاع الضيافة المصري. أسعار ثابتة، تمويل مدمج، وفوترة إلكترونية متوافقة."
-                : "The procurement and fintech operating system for Egyptian hospitality. Fixed prices, embedded factoring, compliant e-invoicing."}
+                : "Hospitality procurement intelligence for Egypt. Watch signals, find money leaks and opportunities, and turn evidence into action."}
             </p>
             <p className="mt-6 font-mono text-[11px] tracking-[0.15em] uppercase text-[#737373]">
               Cairo, Egypt

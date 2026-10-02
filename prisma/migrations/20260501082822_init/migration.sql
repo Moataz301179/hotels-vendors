@@ -16,8 +16,8 @@ CREATE TABLE "Hotel" (
     "status" TEXT NOT NULL DEFAULT 'ACTIVE',
     "creditLimit" REAL,
     "creditUsed" REAL DEFAULT 0,
-    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" DATETIME NOT NULL
+    "createdAt" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP NOT NULL
 );
 
 -- CreateTable
@@ -30,8 +30,8 @@ CREATE TABLE "Property" (
     "roomCount" INTEGER,
     "type" TEXT NOT NULL DEFAULT 'HOTEL',
     "hotelId" TEXT NOT NULL,
-    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" DATETIME NOT NULL,
+    "createdAt" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP NOT NULL,
     CONSTRAINT "Property_hotelId_fkey" FOREIGN KEY ("hotelId") REFERENCES "Hotel" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
@@ -46,9 +46,9 @@ CREATE TABLE "User" (
     "passwordHash" TEXT,
     "hotelId" TEXT NOT NULL,
     "canOverride" BOOLEAN NOT NULL DEFAULT false,
-    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" DATETIME NOT NULL,
-    "lastActive" DATETIME,
+    "createdAt" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP NOT NULL,
+    "lastActive" TIMESTAMP,
     CONSTRAINT "User_hotelId_fkey" FOREIGN KEY ("hotelId") REFERENCES "Hotel" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
@@ -74,8 +74,8 @@ CREATE TABLE "Supplier" (
     "certifications" TEXT,
     "bankAccount" TEXT,
     "bankName" TEXT,
-    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" DATETIME NOT NULL
+    "createdAt" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP NOT NULL
 );
 
 -- CreateTable
@@ -86,7 +86,7 @@ CREATE TABLE "DeliveryZone" (
     "maxDays" INTEGER NOT NULL,
     "fee" REAL NOT NULL,
     "supplierId" TEXT NOT NULL,
-    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "createdAt" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT "DeliveryZone_supplierId_fkey" FOREIGN KEY ("supplierId") REFERENCES "Supplier" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
@@ -111,8 +111,8 @@ CREATE TABLE "Product" (
     "specs" TEXT,
     "status" TEXT NOT NULL DEFAULT 'ACTIVE',
     "supplierId" TEXT NOT NULL,
-    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" DATETIME NOT NULL,
+    "createdAt" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP NOT NULL,
     CONSTRAINT "Product_supplierId_fkey" FOREIGN KEY ("supplierId") REFERENCES "Supplier" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
@@ -125,15 +125,15 @@ CREATE TABLE "Order" (
     "vatAmount" REAL NOT NULL,
     "total" REAL NOT NULL,
     "currency" TEXT NOT NULL DEFAULT 'EGP',
-    "deliveryDate" DATETIME,
+    "deliveryDate" TIMESTAMP,
     "deliveryInstructions" TEXT,
     "hotelId" TEXT NOT NULL,
     "propertyId" TEXT,
     "supplierId" TEXT NOT NULL,
     "requesterId" TEXT NOT NULL,
     "etaSubmissionId" TEXT,
-    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" DATETIME NOT NULL,
+    "createdAt" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP NOT NULL,
     CONSTRAINT "Order_hotelId_fkey" FOREIGN KEY ("hotelId") REFERENCES "Hotel" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
     CONSTRAINT "Order_propertyId_fkey" FOREIGN KEY ("propertyId") REFERENCES "Property" ("id") ON DELETE SET NULL ON UPDATE CASCADE,
     CONSTRAINT "Order_supplierId_fkey" FOREIGN KEY ("supplierId") REFERENCES "Supplier" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
@@ -159,7 +159,7 @@ CREATE TABLE "OrderApproval" (
     "approverId" TEXT NOT NULL,
     "action" TEXT NOT NULL,
     "reason" TEXT,
-    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "createdAt" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT "OrderApproval_orderId_fkey" FOREIGN KEY ("orderId") REFERENCES "Order" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT "OrderApproval_approverId_fkey" FOREIGN KEY ("approverId") REFERENCES "User" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
@@ -177,9 +177,9 @@ CREATE TABLE "Invoice" (
     "vatAmount" REAL NOT NULL,
     "total" REAL NOT NULL,
     "currency" TEXT NOT NULL DEFAULT 'EGP',
-    "issueDate" DATETIME NOT NULL,
-    "dueDate" DATETIME,
-    "paidDate" DATETIME,
+    "issueDate" TIMESTAMP NOT NULL,
+    "dueDate" TIMESTAMP,
+    "paidDate" TIMESTAMP,
     "status" TEXT NOT NULL DEFAULT 'DRAFT',
     "paymentStatus" TEXT NOT NULL DEFAULT 'UNPAID',
     "orderId" TEXT NOT NULL,
@@ -188,8 +188,8 @@ CREATE TABLE "Invoice" (
     "factoringStatus" TEXT NOT NULL DEFAULT 'NOT_FACTORABLE',
     "factoringCompanyId" TEXT,
     "factoringAmount" REAL,
-    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" DATETIME NOT NULL,
+    "createdAt" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP NOT NULL,
     CONSTRAINT "Invoice_orderId_fkey" FOREIGN KEY ("orderId") REFERENCES "Order" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
     CONSTRAINT "Invoice_hotelId_fkey" FOREIGN KEY ("hotelId") REFERENCES "Hotel" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
     CONSTRAINT "Invoice_supplierId_fkey" FOREIGN KEY ("supplierId") REFERENCES "Supplier" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
@@ -210,8 +210,8 @@ CREATE TABLE "AuthorityRule" (
     "description" TEXT,
     "priority" INTEGER NOT NULL DEFAULT 0,
     "isActive" BOOLEAN NOT NULL DEFAULT true,
-    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" DATETIME NOT NULL
+    "createdAt" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP NOT NULL
 );
 
 -- CreateTable
@@ -223,7 +223,7 @@ CREATE TABLE "SpendRecord" (
     "category" TEXT NOT NULL,
     "amount" REAL NOT NULL,
     "orderCount" INTEGER NOT NULL,
-    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "createdAt" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT "SpendRecord_hotelId_fkey" FOREIGN KEY ("hotelId") REFERENCES "Hotel" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
@@ -239,7 +239,7 @@ CREATE TABLE "AuditLog" (
     "afterState" TEXT,
     "ipAddress" TEXT,
     "userAgent" TEXT,
-    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+    "createdAt" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 -- CreateIndex

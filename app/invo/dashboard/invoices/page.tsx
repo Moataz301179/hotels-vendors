@@ -1,6 +1,5 @@
+import { auth, currentUser } from "@clerk/nextjs/server";
 import { prisma } from "@/lib/prisma";
-import { cookies } from "next/headers";
-import { jwtVerify } from "jose";
 import {
   FileText,
   Search,
@@ -8,37 +7,46 @@ import {
   Download,
   Banknote,
 } from "lucide-react";
-import { getJwtSecret } from "@/lib/session";
 import { cn } from "@/lib/utils";
 
 async function getInvoices() {
-  const cookieStore = await cookies();
-  const token = cookieStore.get("hv_session")?.value;
-  if (!token) return null;
+  const { userId } = await auth();
+  if (!userId) return null;
 
-  try {
-    const { payload } = await jwtVerify(token, getJwtSecret(), { clockTolerance: 60 });
-    const tenantId = payload.tenantId as string;
+  const clerkUser = await currentUser();
+  if (!clerkUser) return null;
 
-    const invoices = await prisma.invoice.findMany({
-      where: { tenantId },
-      include: {
-        factoringRequests: true,
-      },
-      orderBy: { createdAt: "desc" },
-    });
+  const email = clerkUser.emailAddresses[0]?.emailAddress;
+  const user = await prisma.user.findFirst({
+    where: {
+      OR: [
+        { id: userId },
+        ...(email ? [{ email }] : []),
+      ],
+    },
+    select: { tenantId: true },
+  });
 
-    const stats = {
-      total: invoices.length,
-      paid: invoices.filter((i) => i.paymentStatus === "PAID").length,
-      pending: invoices.filter((i) => i.paymentStatus === "PENDING" || !i.paymentStatus).length,
-      factored: invoices.filter((i) => i.factoringStatus === "PAID").length,
-    };
+  if (!user?.tenantId) return null;
 
-    return { invoices, stats };
-  } catch {
-    return null;
-  }
+  const tenantId = user.tenantId;
+
+  const invoices = await prisma.invoice.findMany({
+    where: { tenantId },
+    include: {
+      factoringRequests: true,
+    },
+    orderBy: { createdAt: "desc" },
+  });
+
+  const stats = {
+    total: invoices.length,
+    paid: invoices.filter((i) => i.paymentStatus === "PAID").length,
+    pending: invoices.filter((i) => i.paymentStatus === "PENDING" || !i.paymentStatus).length,
+    factored: invoices.filter((i) => i.factoringStatus === "PAID").length,
+  };
+
+  return { invoices, stats };
 }
 
 export default async function InvoicesPage() {

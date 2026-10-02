@@ -1,6 +1,5 @@
+import { auth, currentUser } from "@clerk/nextjs/server";
 import { prisma } from "@/lib/prisma";
-import { cookies } from "next/headers";
-import { jwtVerify } from "jose";
 import {
   Banknote,
   Clock,
@@ -10,39 +9,48 @@ import {
   ShieldCheck,
   TrendingUp,
 } from "lucide-react";
-import { getJwtSecret } from "@/lib/session";
 
 async function getFactoringData() {
-  const cookieStore = await cookies();
-  const token = cookieStore.get("hv_session")?.value;
-  if (!token) return null;
+  const { userId } = await auth();
+  if (!userId) return null;
 
-  try {
-    const { payload } = await jwtVerify(token, getJwtSecret(), { clockTolerance: 60 });
-    const tenantId = payload.tenantId as string;
+  const clerkUser = await currentUser();
+  if (!clerkUser) return null;
 
-    const [requests, factorableInvoices] = await Promise.all([
-      prisma.factoringRequest.findMany({
-        where: { tenantId },
-        include: { invoice: true },
-        orderBy: { createdAt: "desc" },
-        take: 10,
-      }),
-      prisma.invoice.findMany({
-        where: {
-          tenantId,
-          factoringStatus: "AVAILABLE",
-          paymentStatus: { not: "PAID" },
-        },
-        orderBy: { createdAt: "desc" },
-        take: 5,
-      }),
-    ]);
+  const email = clerkUser.emailAddresses[0]?.emailAddress;
+  const user = await prisma.user.findFirst({
+    where: {
+      OR: [
+        { id: userId },
+        ...(email ? [{ email }] : []),
+      ],
+    },
+    select: { tenantId: true },
+  });
 
-    return { requests, factorableInvoices };
-  } catch {
-    return null;
-  }
+  if (!user?.tenantId) return null;
+
+  const tenantId = user.tenantId;
+
+  const [requests, factorableInvoices] = await Promise.all([
+    prisma.factoringRequest.findMany({
+      where: { tenantId },
+      include: { invoice: true },
+      orderBy: { createdAt: "desc" },
+      take: 10,
+    }),
+    prisma.invoice.findMany({
+      where: {
+        tenantId,
+        factoringStatus: "AVAILABLE",
+        paymentStatus: { not: "PAID" },
+      },
+      orderBy: { createdAt: "desc" },
+      take: 5,
+    }),
+  ]);
+
+  return { requests, factorableInvoices };
 }
 
 export default async function FactoringPage() {

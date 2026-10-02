@@ -5,9 +5,9 @@ import { SiteFooter } from "@/components/marketing/site-footer";
 import { SupplierOnboardingBot } from "@/components/ai-assistant/supplier-onboarding-chatbot";
 
 export const metadata: Metadata = {
-  title: "HotelsVendors — B2B Procurement & Fintech for Egyptian Hospitality",
+  title: "HotelsVendors — Hospitality Procurement Intelligence",
   description:
-    "Egypt's B2B hospitality procurement platform. AI demand forecasting, embedded factoring, ETA e-invoicing, and shared logistics for hotel chains.",
+    "HotelsVendors watches hospitality procurement signals, detects money leaks and opportunities, and turns evidence into actionable outcomes.",
   keywords: [
     "B2B hospitality procurement Egypt",
     "automated factoring lines Cairo",
@@ -24,18 +24,18 @@ export const metadata: Metadata = {
     "سلسلة التوريد الفندقية",
   ],
   openGraph: {
-    title: "HotelsVendors — Egypt's B2B Hospitality Procurement Infrastructure",
+    title: "HotelsVendors — Virtual Shadow for Hospitality Procurement",
     description:
-      "AI-automated procurement. Embedded reverse factoring. ETA e-invoicing compliance. Purpose-built for Egyptian coastal hotel chains.",
+      "A Virtual Shadow across hotels, suppliers, carriers and funders that turns procurement signals into evidence, opportunities, actions and outcomes.",
     type: "website",
     locale: "en_EG",
     alternateLocale: "ar_EG",
   },
   twitter: {
     card: "summary_large_image",
-    title: "HotelsVendors — Egypt's B2B Hospitality Procurement Infrastructure",
+    title: "HotelsVendors — Hospitality Procurement Intelligence",
     description:
-      "AI-automated procurement. Embedded reverse factoring. ETA e-invoicing compliance.",
+      "Watch signals, detect money leaks, surface opportunities and act on evidence across the hospitality network.",
   },
   alternates: {
     canonical: "https://www.hotelsvendors.com",
@@ -59,7 +59,7 @@ const JSON_LD = {
   },
   "url": "https://hotelsvendors.com",
   "logo": "https://hotelsvendors.com/logo-white.svg",
-  "description": "Egypt's B2B hospitality procurement infrastructure platform. AI-automated demand forecasting, embedded reverse factoring, ETA e-invoicing compliance, and shared-route coastal logistics.",
+  "description": "HotelsVendors hospitality procurement intelligence: a Virtual Shadow that watches signals, detects money leaks and opportunities, and records outcomes.",
   "address": {
     "@type": "PostalAddress",
     "addressCountry": "EG",

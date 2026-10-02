@@ -23,6 +23,8 @@ const VALID_TRANSITIONS: Record<OrderStatus, OrderStatus[]> = {
   DELIVERED: ["DISPUTED"],
   DISPUTED: ["DELIVERED", "CANCELLED"],
   CANCELLED: [], // Terminal state
+  ACCEPTED: ["CONFIRMED", "CANCELLED"],
+  FULFILLED: [], // Terminal state
 };
 
 // ─────────────────────────────────────────

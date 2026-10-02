@@ -1,0 +1,41 @@
+{
+  "manifest_version": "1.2",
+  "last_updated": "2026-09-24T00:15:00Z",
+  "business_employee_skills": {
+    "note": "Business employees (PROCUREMENT INTELLIGENCE LEAD, HEAD OF GROWTH & SALES INTELLIGENCE, REVENUE & MONETIZATION LEAD) share the existing installed skill set. No additional external skills required. All 12 installed skills are reused across the expanded 12-employee organization.",
+    "shared_skills": [
+      "systematic-debugging — all 12 employees",
+      "test-driven-development — BACKEND, QA, AI/AGENT, PROCUREMENT INTELLIGENCE, GROWTH, REVENUE",
+      "tdd — BACKEND, QA, PROCUREMENT INTELLIGENCE, GROWTH, REVENUE",
+      "requesting-code-review — ORCHESTRATOR, ARCHITECTURE, BACKEND, SECURITY, INTEGRATION, AI/AGENT, QA, DEVOPS, PROCUREMENT INTELLIGENCE, GROWTH, REVENUE",
+      "code-review (mattpocock) — ARCHITECTURE, SECURITY, PROCUREMENT INTELLIGENCE, REVENUE",
+      "architecture-decision-records — ORCHESTRATOR, ARCHITECTURE, PROCUREMENT INTELLIGENCE, GROWTH, REVENUE",
+      "simplify-code — ARCHITECTURE, BACKEND",
+      "domain-modeling — ARCHITECTURE, BACKEND, PROCUREMENT INTELLIGENCE, GROWTH, REVENUE",
+      "grill-with-docs — ORCHESTRATOR, ARCHITECTURE, PROCUREMENT INTELLIGENCE, GROWTH, REVENUE",
+      "wayfinder — ORCHESTRATOR",
+      "diagnosing-bugs — BACKEND, DEVOPS, QA, ARCHITECTURE, PROCUREMENT INTELLIGENCE, GROWTH, REVENUE",
+      "github — ORCHESTRATOR, QA",
+      "web-deployment-verification — DEVOPS",
+      "security-and-hardening — SECURITY"
+    ],
+    "gap_analysis": {
+      "finding": "No genuine capability gap exists for the 3 business employees. The 12 installed skills cover all required capabilities: debugging, TDD, code review, architecture records, domain modeling, requirement sharpening, planning, bug diagnosis.",
+      "additional_skills_evaluated": [
+        {
+          "name": "subagent-driven-development",
+          "status": "DEFERRED — orchestrator already uses delegate_task directly. Evaluate post-bootstrap."
+        },
+        {
+          "name": "prisma (clawhub)",
+          "status": "REJECTED — builtin + docs sufficient."
+        },
+        {
+          "name": "nextjs-app-router-audit (clawhub)",
+          "status": "REJECTED — builtin + docs sufficient."
+        }
+      ],
+      "conclusion": "Install zero additional skills for business employee bootstrap. All capability needs are met by existing 12 skills."
+    }
+  }
+}

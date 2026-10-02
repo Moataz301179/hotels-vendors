@@ -1,3 +1,4 @@
+import { ClerkProvider } from "@clerk/nextjs";
 import type { Metadata, Viewport } from "next";
 import { Inter_Tight, Playfair_Display, JetBrains_Mono, Cairo, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
@@ -53,11 +54,11 @@ const cairo = Cairo({
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.hotelsvendors.com"),
   title: {
-    default: "HotelsVendors — B2B Procurement & Fintech for Egyptian Hospitality",
+    default: "HotelsVendors — Hospitality Procurement Intelligence",
     template: "%s | HotelsVendors",
   },
   description:
-    "Egypt's B2B hospitality procurement platform. AI demand forecasting, embedded factoring, ETA e-invoicing, and shared logistics for hotel chains.",
+    "HotelsVendors watches hospitality procurement signals, detects money leaks and opportunities, and turns evidence into actionable outcomes.",
   keywords: [
     "B2B hospitality procurement Egypt",
     "automated factoring lines Cairo",
@@ -177,9 +178,6 @@ export default function RootLayout({
                 if (typeof navigator !== 'undefined' && 'serviceWorker' in navigator) {
                   if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
                     window.addEventListener('load', function() {
-                      // Remove any previously-registered service worker so the
-                      // browser can never serve stale cached assets. The retire
-                      // sw.js clears old caches and unregisters itself.
                       navigator.serviceWorker.getRegistrations().then(function(regs) {
                         regs.forEach(function(reg) { reg.unregister(); });
                       });
@@ -229,13 +227,15 @@ export default function RootLayout({
           background: "var(--bg-canvas)",
         }}
       >
-        <SkipLink />
-        <LanguageProvider>
-          <NotificationProvider>
-            <ThemeProvider>{children}</ThemeProvider>
-          </NotificationProvider>
-        </LanguageProvider>
-        <CookieConsentBanner />
+        <ClerkProvider>
+          <SkipLink />
+          <LanguageProvider>
+            <NotificationProvider>
+              <ThemeProvider>{children}</ThemeProvider>
+            </NotificationProvider>
+          </LanguageProvider>
+          <CookieConsentBanner />
+        </ClerkProvider>
       </body>
     </html>
   );

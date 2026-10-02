@@ -1,4 +1,5 @@
-import { getSessionToken, verifySession } from "@/lib/session";
+import { auth, currentUser } from "@clerk/nextjs/server";
+import { prisma } from "@/lib/prisma";
 
 export interface ServerSession {
   user?: {
@@ -9,19 +10,41 @@ export interface ServerSession {
   };
 }
 
+/**
+ * Get the current server session from Clerk.
+ * Replaces custom JWT session with Clerk auth().
+ */
 export async function getServerSession(): Promise<ServerSession | null> {
-  const token = await getSessionToken();
-  if (!token) return null;
+  const { userId } = await auth();
+  if (!userId) return null;
 
-  const payload = await verifySession(token);
-  if (!payload) return null;
+  const clerkUser = await currentUser();
+  if (!clerkUser) return null;
+
+  const email = clerkUser.emailAddresses[0]?.emailAddress;
+  const user = await prisma.user.findFirst({
+    where: {
+      OR: [
+        { id: userId },
+        ...(email ? [{ email }] : []),
+      ],
+    },
+    select: {
+      id: true,
+      tenantId: true,
+      role: true,
+      platformRole: true,
+    },
+  });
+
+  if (!user) return null;
 
   return {
     user: {
-      id: payload.userId,
-      tenantId: payload.tenantId,
-      role: payload.platformRole,
-      platformRole: payload.platformRole,
+      id: user.id,
+      tenantId: user.tenantId || "",
+      role: user.role,
+      platformRole: user.platformRole,
     },
   };
 }

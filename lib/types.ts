@@ -181,3 +181,27 @@ export interface AppContextData {
   financing?: Financing[];
   products?: Product[];
 }
+
+// ─── Contract ───────────────────────────────────────────────
+export type AgreementType = "fixed" | "volume" | "rate-card";
+export type ContractStatus = "active" | "expired" | "pending";
+
+export interface Contract {
+  id: string;
+  contractId: string;
+  supplierId: string;
+  supplierName: string;
+  hotelId: string;
+  hotelName: string;
+  agreementType: AgreementType;
+  startDate: string;
+  endDate: string;
+  status: ContractStatus;
+  value: number;
+  currency: string;
+  volumeDiscount?: number;
+  negotiatedRate?: number;
+  category?: string;
+  autoRenew: boolean;
+  daysToExpiry: number;
+}

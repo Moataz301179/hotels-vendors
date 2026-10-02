@@ -1,30 +1,29 @@
+import { auth, currentUser } from "@clerk/nextjs/server";
 import { prisma } from "@/lib/prisma";
-import { cookies } from "next/headers";
-import { jwtVerify } from "jose";
 import { User, Building2, CreditCard, Bell, Shield, ChevronRight } from "lucide-react";
-import { getJwtSecret } from "@/lib/session";
 
 async function getUserProfile() {
-  const cookieStore = await cookies();
-  const token = cookieStore.get("hv_session")?.value;
-  if (!token) return null;
+  const { userId } = await auth();
+  if (!userId) return null;
 
-  try {
-    const { payload } = await jwtVerify(token, getJwtSecret(), { clockTolerance: 60 });
-    const userId = payload.userId as string;
+  const clerkUser = await currentUser();
+  if (!clerkUser) return null;
 
-    const user = await prisma.user.findUnique({
-      where: { id: userId },
-      include: {
-        tenant: { select: { name: true } },
-        supplier: { select: { name: true, taxId: true, bankName: true, bankAccount: true } },
-      },
-    });
+  const email = clerkUser.emailAddresses[0]?.emailAddress;
+  const user = await prisma.user.findFirst({
+    where: {
+      OR: [
+        { id: userId },
+        ...(email ? [{ email }] : []),
+      ],
+    },
+    include: {
+      tenant: { select: { name: true } },
+      supplier: { select: { name: true, taxId: true, bankName: true, bankAccount: true } },
+    },
+  });
 
-    return user;
-  } catch {
-    return null;
-  }
+  return user;
 }
 
 export default async function SettingsPage() {

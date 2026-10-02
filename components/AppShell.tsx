@@ -4,8 +4,8 @@ import Link from "next/link";
 import { useEffect, useState, type ReactNode } from "react";
 import { usePrefs } from "@/lib/i18n/language-context";
 import { useApp } from "@/lib/store";
+import { useUser, UserButton } from "@clerk/nextjs";
 import type { Role } from "@/lib/types";
-import { initials } from "@/lib/format";
 import { Btn, EmptyState } from "./ui";
 import {
   IcCart,
@@ -14,7 +14,6 @@ import {
   IcLock,
   IcMenu,
   IcMoon,
-  IcOut,
   IcSun,
   IcX,
   Logo,
@@ -147,20 +146,26 @@ export function ToastHost() {
 }
 
 export function RequireAuth({ children }: { children: ReactNode }) {
-  const { user } = useApp();
-  const [ready, setReady] = useState(false);
-  useEffect(() => setReady(true), []);
+  const { isLoaded, isSignedIn } = useUser();
+
   useEffect(() => {
-    if (ready && !user) window.location.href = "/login";
-  }, [ready, user]);
-  if (!user) return null;
+    if (isLoaded && !isSignedIn) {
+      window.location.href = "/sign-in";
+    }
+  }, [isLoaded, isSignedIn]);
+
+  if (!isLoaded || !isSignedIn) return null;
   return <>{children}</>;
 }
 
 export function Guard({ roles, children }: { roles: Role[]; children: ReactNode }) {
-  const { user } = useApp();
+  const { user, isLoaded } = useUser();
   const { t } = usePrefs();
-  if (user && !roles.includes(user.role)) {
+
+  if (!isLoaded) return null;
+
+  const role = (user?.publicMetadata?.role as Role) || "hotel_admin";
+  if (user && !roles.includes(role)) {
     return (
       <div className="mx-auto max-w-2xl px-4 py-16">
         <EmptyState
@@ -168,7 +173,7 @@ export function Guard({ roles, children }: { roles: Role[]; children: ReactNode 
           title={t("guard.t")}
           sub={t("guard.sub")}
           action={
-            <Link href="/login">
+            <Link href="/sign-in">
               <Btn variant="outline" size="sm">{t("guard.toLogin")}</Btn>
             </Link>
           }
@@ -187,11 +192,23 @@ export default function AppShell({
   children: ReactNode;
 }) {
   const { t } = usePrefs();
-  const { user, cartCount, logout } = useApp();
+  const { cartCount } = useApp();
+  const { user, isLoaded } = useUser();
   const [open, setOpen] = useState(false);
 
+  if (!isLoaded) return null;
   if (!user) return null;
-  const items = navFor(user.role, cartCount);
+
+  // Map Clerk user to app user shape for nav/guard compatibility
+  const appUser = {
+    id: user.id,
+    name: user.fullName || user.primaryEmailAddress?.emailAddress || "User",
+    role: (user.publicMetadata?.role as Role) || "hotel_admin",
+    email: user.primaryEmailAddress?.emailAddress || "",
+    tenantId: user.organizationMemberships?.[0]?.id || "",
+  };
+
+  const items = navFor(appUser.role, cartCount);
 
   return (
     <div className="sf-alt min-h-screen">
@@ -205,7 +222,7 @@ export default function AppShell({
           >
             <IcMenu className="text-xl" />
           </button>
-          <Link href={homeFor(user.role)} className="flex items-center gap-2.5">
+          <Link href={homeFor(appUser.role)} className="flex items-center gap-2.5">
             <Logo className="h-8 w-8 text-white" />
             <div className="leading-none">
               <div className="text-[15px] font-bold tracking-tight">HotelsVendors</div>
@@ -240,7 +257,7 @@ export default function AppShell({
             })}
           </nav>
           <div className="ms-auto flex items-center gap-2">
-            {user.role !== "supplier_manager" && user.role !== "platform_admin" && user.role !== "partner_officer" && user.role !== "carrier" ? (
+            {appUser.role !== "supplier_manager" && appUser.role !== "platform_admin" && appUser.role !== "partner_officer" && appUser.role !== "carrier" ? (
               <Link
                 href="/cart"
                 className="relative hidden h-9 w-9 items-center justify-center rounded text-ink-200 hover:bg-white/10 sm:flex"
@@ -255,23 +272,15 @@ export default function AppShell({
               </Link>
             ) : null}
             <LangThemeControls />
-            <div className="hidden items-center gap-2.5 rounded bg-white/5 px-2.5 py-1.5 sm:flex">
-              <span className="flex h-7 w-7 items-center justify-center rounded bg-brass-500 text-[11px] font-bold text-white">
-                {initials(user.name)}
-              </span>
-              <div className="leading-tight">
-                <div className="text-[12px] font-semibold">{user.name}</div>
-                <div className="text-[10px] text-ink-400">{t(`role.${user.role}`)}</div>
-              </div>
-            </div>
-            <button
-              onClick={logout}
-              className="flex h-9 w-9 items-center justify-center rounded text-ink-300 transition-colors hover:bg-white/10 hover:text-white"
-              aria-label={t("nav.signOut")}
-              title={t("nav.signOut")}
-            >
-              <IcOut className="text-lg" />
-            </button>
+            <UserButton
+              afterSignOutUrl="/sign-in"
+              appearance={{
+                elements: {
+                  avatarBox: "h-8 w-8",
+                  userButtonBox: "flex-row-reverse",
+                },
+              }}
+            />
           </div>
         </div>
       </header>
@@ -291,8 +300,8 @@ export default function AppShell({
               </button>
             </div>
             <div className="mb-4 rounded bg-white/5 px-3 py-2.5">
-              <div className="text-sm font-semibold">{user.name}</div>
-              <div className="text-xs text-ink-400">{t(`role.${user.role}`)}</div>
+              <div className="text-sm font-semibold">{appUser.name}</div>
+              <div className="text-xs text-ink-400">{t(`role.${appUser.role}`)}</div>
             </div>
             <nav className="flex-1 overflow-y-auto" aria-label="mobile">
               {items.map((it) => (
@@ -311,13 +320,6 @@ export default function AppShell({
                 </Link>
               ))}
             </nav>
-            <button
-              onClick={logout}
-              className="mt-3 flex items-center gap-2 rounded border border-white/15 px-3 py-3 text-sm font-medium text-ink-200 hover:bg-white/5"
-            >
-              <IcOut className="text-base" />
-              {t("nav.signOut")}
-            </button>
           </div>
         </div>
       ) : null}

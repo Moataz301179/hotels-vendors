@@ -1,5 +1,6 @@
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "debian-openssl-3.0.x"]
 }
 
 datasource db {
@@ -2559,12 +2560,14 @@ enum OrderStatus {
   PENDING_APPROVAL
   APPROVED
   REJECTED
+  ACCEPTED
   CONFIRMED
   IN_TRANSIT
   PARTIALLY_DELIVERED
   DELIVERED
   DISPUTED
   CANCELLED
+  FULFILLED
 }
 
 enum ApprovalAction {
@@ -3851,4 +3854,66 @@ model NetworkInsight {
   updatedAt         DateTime  @updatedAt
   @@index([tenantId, sourceEntityType, relationshipType])
   @@map("network_insights")
+}
+
+// Restored from Source A (v0.1.0 accumulated business models) — business-only preservation
+
+model SavingsLedger {
+  id                String        @id @default(cuid())
+  tenantId          String
+  opportunityId     String?
+  type              String
+  status            String        @default("POTENTIAL")
+  baseline          Decimal?      @db.Decimal(14, 2)
+  potentialSaving   Decimal?      @db.Decimal(14, 2)
+  expectedSaving    Decimal?      @db.Decimal(14, 2)
+  negotiatedAmount  Decimal?      @db.Decimal(14, 2)
+  realizedAmount    Decimal?      @db.Decimal(14, 2)
+  verifiedAmount    Decimal?      @db.Decimal(14, 2)
+  evidence          Json?
+  transactionId     String?
+  supplierId        String?
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+  @@map("savings_ledger")
+}
+
+model SpendUploadRecord {
+  id                String               @id @default(cuid())
+  tenantId          String
+  sourceType        String
+  rawData           Json
+  normalizedDate    DateTime?
+  supplierId        String?
+  supplierName      String               @default("Unknown")
+  productId         String?
+  productName       String?
+  sku               String?
+  category          String?
+  quantity          Int?
+  unitPrice         Decimal?             @db.Decimal(12, 2)
+  totalAmount       Decimal?             @db.Decimal(12, 2)
+  poNumber          String?
+  invoiceNumber     String?
+  createdAt         DateTime             @default(now())
+  updatedAt         DateTime             @updatedAt
+  @@map("spend_upload_record")
+}
+
+model IntelligenceEdge {
+  id                  String    @id @default(cuid())
+  tenantId            String
+  entityId            String
+  relatedEntityId     String
+  relationshipType    String
+  validFrom           DateTime  @default(now())
+  validTo             DateTime?
+  confidence          Float?
+  auditLogId          String?
+  provenanceClass     String    @default("OBSERVED")
+  entityUuid          String?   @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  status              String?   @default("ACTIVE")
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+  @@map("intelligence_edge")
 }

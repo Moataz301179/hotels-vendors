@@ -6,7 +6,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { createHash } from "crypto";
-import { verifySession, getSessionToken } from "@/lib/session";
+import { auth } from "@clerk/nextjs/server";
 import { captureException } from "@sentry/nextjs";
 import { appendAuditEntry } from "@/lib/audit/tamper-proof";
 import { reserveIdempotency } from "@/lib/redis";
@@ -77,23 +77,37 @@ export interface AuthContext {
 }
 
 export async function authenticate(request: NextRequest): Promise<AuthContext> {
-  // Primary: session cookie (web). Fallback: Authorization Bearer (mobile / API clients).
-  let token = await getSessionToken();
-  if (!token) {
-    token = getBearerToken(request) ?? undefined;
-  }
+  // Primary: Clerk session (web). Fallback: x-user-id header (set by middleware for API clients).
+  const { userId, orgId, orgRole, sessionClaims } = await auth();
 
-  if (!token) {
+  if (!userId) {
+    // Fallback: check for service bearer token or x-user-id header (mobile / API clients)
+    const bearerToken = getBearerToken(request);
+    if (bearerToken) {
+      // Validate service key as fallback
+      try {
+        requireServiceKey(request);
+        const serviceUserId = request.headers.get("x-user-id");
+        if (!serviceUserId) {
+          throw new ApiError("Unauthorized", 401);
+        }
+        return {
+          userId: serviceUserId,
+          platformRole: (request.headers.get("x-platform-role") || "SUPPLIER"),
+          tenantId: (request.headers.get("x-tenant-id") || ""),
+        };
+      } catch {
+        throw new ApiError("Unauthorized", 401);
+      }
+    }
     throw new ApiError("Unauthorized", 401);
   }
 
-  const session = await verifySession(token);
-  if (!session) {
-    throw new ApiError("Invalid or expired session", 401);
-  }
+  // Extract role and tenant from Clerk metadata
+  const platformRole = orgRole || (sessionClaims?.role as string) || "";
+  const tenantId = orgId || (sessionClaims?.tenantId as string) || "";
 
-  // Tenant ID comes from the JWT session — NEVER trust client-sent headers
-  return { userId: session.userId, platformRole: session.platformRole, tenantId: session.tenantId };
+  return { userId, platformRole, tenantId };
 }
 
 export async function optionalAuth(request: NextRequest): Promise<AuthContext | null> {

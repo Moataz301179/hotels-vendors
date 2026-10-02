@@ -1,21 +1,22 @@
 import { NextRequest } from "next/server";
+import { currentUser } from "@clerk/nextjs/server";
 import { prisma } from "@/lib/prisma";
-import { getSessionToken, verifySession } from "@/lib/session";
 import { apiRoute, success, error } from "@/lib/api-utils";
 
 export const GET = apiRoute(async (_request: NextRequest) => {
-  const token = await getSessionToken();
-  if (!token) {
+  const clerkUser = await currentUser();
+  if (!clerkUser) {
     return error("Unauthorized", 401);
   }
 
-  const session = await verifySession(token);
-  if (!session) {
-    return error("Invalid or expired session", 401);
-  }
-
-  const user = await prisma.user.findUnique({
-    where: { id: session.userId },
+  const email = clerkUser.emailAddresses[0]?.emailAddress;
+  const user = await prisma.user.findFirst({
+    where: {
+      OR: [
+        { id: clerkUser.id },
+        ...(email ? [{ email }] : []),
+      ],
+    },
     include: { hotel: true, approvals: { take: 5, orderBy: { createdAt: "desc" } } },
   });
 

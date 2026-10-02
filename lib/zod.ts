@@ -19,6 +19,7 @@ import {
   FactoringCompanyStatus,
   CreditFacilityStatus,
   OutletType,
+  PaymentMethod,
   TripStatus,
 } from "@prisma/client";
 
@@ -353,4 +354,26 @@ export const PaginationSchema = z.object({
   search: z.string().optional(),
   sortBy: z.string().optional(),
   sortOrder: z.enum(["asc", "desc"]).default("desc"),
+});
+
+/* ── Purchase Order Schemas ── */
+export const AcceptPoschema = z.object({
+  note: z.string().optional(),
+});
+
+export const FulfillPoschema = z.object({
+  trackingNumber: z.string().optional(),
+  carrier: z.string().optional(),
+  shippedAt: z.string().datetime().optional(),
+  estimatedDelivery: z.string().datetime().optional(),
+  notes: z.string().optional(),
+});
+
+/* ── Settlement Schemas ── */
+export const SettlementSchema = z.object({
+  invoiceId: z.string().cuid(),
+  paymentMethod: z.nativeEnum(PaymentMethod).default(PaymentMethod.BANK_TRANSFER),
+  amount: z.number().positive().optional(),
+  referenceCode: z.string().optional(),
+  notes: z.string().optional(),
 });

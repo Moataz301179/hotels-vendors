@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useClerk } from "@clerk/nextjs";
 import { LogOut, User, Shield, ChevronDown } from "lucide-react";
 
 interface UserDropdownProps {
@@ -17,6 +18,7 @@ export function UserDropdown({ user }: UserDropdownProps) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const router = useRouter();
+  const { signOut } = useClerk();
 
   useEffect(() => {
     function handleClick(e: MouseEvent) {
@@ -27,8 +29,8 @@ export function UserDropdown({ user }: UserDropdownProps) {
   }, []);
 
   const handleLogout = async () => {
-    await fetch("/api/v1/auth/logout", { method: "POST" });
-    router.push("/login");
+    await signOut();
+    router.push("/sign-in");
   };
 
   return (

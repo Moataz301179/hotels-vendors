@@ -236,10 +236,8 @@ const KEYWORD_MAP: Record<string, string> = {
   // ═══════════════════════════════════════════════════════════════
   //  KITCHEN & F&B EQUIPMENT
   // ═══════════════════════════════════════════════════════════════
-  mixer:      "https://images.unsplash.com/photo-1574269909862-7e1d70bb8078?w=600&q=80",
-  blender:    "https://images.unsplash.com/photo-1574269909862-7e1d70bb8078?w=600&q=80",
-  cabinet:    "https://images.unsplash.com/photo-1594620302200-9a762244a156?w=600&q=80",
-  shelf:      "https://images.unsplash.com/photo-1594620302200-9a762244a156?w=600&q=80",
+  // REMOVED 2026-10-01: mixer/blender mapped to toaster-oven image (verified wrong subject via llava:7b);
+  // REMOVED 2026-10-01: cabinet/shelf mapped to bookshelf image (verified wrong subject via llava:7b);
   chair:      "https://images.unsplash.com/photo-1505843490538-5133c6c7d0e1?w=600&q=80",
   desk:       "https://images.unsplash.com/photo-1518455027359-f3f8164ba6bd?w=600&q=80",
 

@@ -1,32 +1,17 @@
 /**
- * Edge Middleware — Authentication, Tenant Injection, Role-Based Route Guards
+ * Edge Middleware — Clerk Auth + HotelsVendors Security Layer
  *
  * G2: RBAC IS SERVER-SIDE ONLY
- * - Every request to protected routes is verified at the edge
+ * - Clerk provides authentication (sessions, users, organizations)
+ * - HotelsVendors adds: CSP, tenant injection, role-based route guards, INVO subdomain routing
  * - Tenant ID is injected into headers ( NEVER trust client-sent headers )
- * - Role-based route access enforced before reaching any page or API
  */
 
+import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
-import { jwtVerify } from "jose";
 import { csrfMiddleware } from "@/lib/security/csrf";
 
-const SESSION_COOKIE = "hv_session";
 const CSRF_COOKIE = "hv_csrf";
-
-const _sessionSecret = process.env.SESSION_SECRET;
-if (!_sessionSecret) {
-  if (process.env.NODE_ENV === "production") {
-    throw new Error(
-      "FATAL: SESSION_SECRET environment variable is required in production. " +
-      "Generate one with: openssl rand -hex 32"
-    );
-  }
-  console.warn("[Auth] WARNING: Using development fallback for SESSION_SECRET. Do NOT deploy without setting SESSION_SECRET.");
-}
-const SECRET = new TextEncoder().encode(
-  _sessionSecret || "dev-secret-do-not-use-in-production"
-);
 
 /* ── Route Configuration ── */
 
@@ -36,10 +21,11 @@ const PUBLIC_PATHS = [
   "/register",
   "/forgot-password",
   "/verify-email",
+  "/sign-in",
+  "/sign-up",
   "/catalog",
   "/sandbox",
   "/demo",
-
   "/hotels",
   "/hotels/join",
   "/marketplace",
@@ -107,11 +93,38 @@ const ROLE_DEFAULT_PATH: Record<string, string> = {
   MARKETING: "/marketing/page",
 };
 
+/* ── Clerk Protected Route Matcher ── */
+
+const isClerkProtected = createRouteMatcher([
+  "/dashboard(.*)",
+  "/hotel(.*)",
+  "/supplier(.*)",
+  "/factoring(.*)",
+  "/shipping(.*)",
+  "/admin(.*)",
+  "/marketing(.*)",
+  "/analytics(.*)",
+  "/ai-agents(.*)",
+  "/procurement(.*)",
+  "/orders(.*)",
+  "/payments(.*)",
+  "/scheduler(.*)",
+  "/security(.*)",
+  "/dispute(.*)",
+  "/settings(.*)",
+  "/eta(.*)",
+  "/api/v1/(.*)",
+]);
+
 /* ── Helpers ── */
 
 function isPublicPath(path: string): boolean {
   if (PUBLIC_PATHS.includes(path)) return true;
   return PUBLIC_PREFIXES.some((prefix) => path.startsWith(prefix));
+}
+
+function isApiPath(path: string): boolean {
+  return path.startsWith("/api/");
 }
 
 function isProtectedPath(path: string): boolean {
@@ -135,29 +148,9 @@ function isProtectedPath(path: string): boolean {
   );
 }
 
-function isApiPath(path: string): boolean {
-  return path.startsWith("/api/");
-}
-
-async function verifySession(token: string) {
-  try {
-    const { payload } = await jwtVerify(token, SECRET, {
-      clockTolerance: 60,
-    });
-    const userId = payload.userId as string;
-    const platformRole = payload.platformRole as string;
-    const tenantId = payload.tenantId as string;
-    if (!userId || !platformRole || !tenantId) return null;
-    return { userId, platformRole, tenantId };
-  } catch {
-    return null;
-  }
-}
-
-/* ── Middleware ── */
-
 /* ── Security Headers ── */
-function addSecurityHeaders(response: NextResponse): NextResponse {
+
+function addSecurityHeaders(response: NextResponse, nonce: string): NextResponse {
   response.headers.set("X-Frame-Options", "DENY");
   response.headers.set("X-Content-Type-Options", "nosniff");
   response.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
@@ -166,14 +159,6 @@ function addSecurityHeaders(response: NextResponse): NextResponse {
     "Permissions-Policy",
     "camera=(), microphone=(), geolocation=(), interest-cohort=()"
   );
-  // SEC-07 nonce-based CSP scaffold.
-  // Per-request nonce replaces script-src 'unsafe-inline'/'unsafe-eval'.
-  // TODO(SEC-07 migration): inline <script> tags must move to nonce'd or external scripts:
-  //   - app/layout.tsx (2 inline scripts, ~lines 161/193)
-  //   - app/(marketing)/layout.tsx (~line 106)
-  // NOTE: 'unsafe-inline'/'unsafe-eval' are REMOVED — pages with inline <script> will be
-  // blocked by CSP until each script is given nonce={headers().get('x-nonce')} or externalized.
-  const nonce = Buffer.from(crypto.randomUUID()).toString("base64");
   const csp = [
     "default-src 'self'",
     `script-src 'self' 'nonce-${nonce}' 'strict-dynamic'`,
@@ -190,143 +175,132 @@ function addSecurityHeaders(response: NextResponse): NextResponse {
   return response;
 }
 
-export async function middleware(request: NextRequest) {
+/* ── Clerk Middleware ── */
+
+export default clerkMiddleware(async (auth, request: NextRequest) => {
   const { pathname } = request.nextUrl;
   const host = request.headers.get("host") || "";
+  const nonce = Buffer.from(crypto.randomUUID()).toString("base64");
 
   // ── INVO Subdomain Routing ──
-  // invo.hotelsvendors.com/ → serves /invo page
-  // invo.hotelsvendors.com/docs → serves /invo/docs page
   if (host.startsWith("invo.")) {
     const url = request.nextUrl.clone();
-    // Root path → rewrite to /invo
     if (pathname === "/") {
       url.pathname = "/invo";
-      return addSecurityHeaders(NextResponse.rewrite(url));
+      return addSecurityHeaders(NextResponse.rewrite(url), nonce);
     }
-    // API paths under subdomain → route to /api/v1/invo
     if (pathname.startsWith("/api/") && !pathname.startsWith("/api/v1/invo")) {
-      // Allow API calls on invo subdomain to reach the INVO API routes
-      return addSecurityHeaders(NextResponse.next());
+      return addSecurityHeaders(NextResponse.next(), nonce);
     }
-    // Other paths → prepend /invo if not already
     if (!pathname.startsWith("/invo") && !pathname.startsWith("/api/")) {
       url.pathname = `/invo${pathname}`;
-      return addSecurityHeaders(NextResponse.rewrite(url));
+      return addSecurityHeaders(NextResponse.rewrite(url), nonce);
     }
   }
 
-  // Redirect legacy /demo and /demo/checkout to /sandbox
+  // Redirect legacy /demo to /sandbox
   if (pathname === "/demo" || pathname.startsWith("/demo/")) {
-    return addSecurityHeaders(NextResponse.redirect(new URL("/sandbox", request.url)));
+    return addSecurityHeaders(NextResponse.redirect(new URL("/sandbox", request.url)), nonce);
   }
 
   // Allow public paths without auth
   if (isPublicPath(pathname)) {
-    return addSecurityHeaders(NextResponse.next());
+    return addSecurityHeaders(NextResponse.next(), nonce);
   }
 
-  // Read session: cookie first, then Authorization Bearer header (mobile app / API clients)
-  const authHeader = request.headers.get("authorization");
-  const bearerToken = authHeader?.toLowerCase().startsWith("bearer ") ? authHeader.slice(7).trim() : null;
-  const token = request.cookies.get(SESSION_COOKIE)?.value || bearerToken;
+  // Read the Clerk session explicitly. Do not rely on auth.protect()'s
+  // internal rewrite, which can produce a 404 outside a full Clerk browser flow.
+  const { userId, orgId, orgRole, sessionClaims } = await auth();
 
-  // ── API routes: require valid session ──
+  // Protected page routes always redirect to the real Clerk sign-in route.
+  // API routes are handled below and return a normal 401 JSON response.
+  if (isClerkProtected(request) && !isApiPath(pathname) && !userId) {
+    const loginUrl = new URL("/sign-in", request.url);
+    loginUrl.searchParams.set("redirect", pathname);
+    return addSecurityHeaders(NextResponse.redirect(loginUrl), nonce);
+  }
+
+  // API routes: inject headers + CSRF protection
   if (isApiPath(pathname)) {
-    if (!token) {
-      return addSecurityHeaders(NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 }));
+    if (!userId) {
+      return addSecurityHeaders(
+        NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 }),
+        nonce
+      );
     }
-    const session = await verifySession(token);
-    if (!session) {
-      return addSecurityHeaders(NextResponse.json({ success: false, error: "Invalid or expired session" }, { status: 401 }));
-    }
-    const requestHeaders = new Headers(request.headers);
-    requestHeaders.set("x-user-id", session.userId);
-    requestHeaders.set("x-tenant-id", session.tenantId);
-    requestHeaders.set("x-platform-role", session.platformRole);
-    // NOTE: x-session-token intentionally NOT set — prevents JWT leak via headers
 
-    // CSRF protection for state-changing API routes (skip only login/register and webhooks)
+    const requestHeaders = new Headers(request.headers);
+    requestHeaders.set("x-user-id", userId);
+    requestHeaders.set("x-tenant-id", orgId || (sessionClaims?.tenantId as string) || "");
+    requestHeaders.set("x-platform-role", orgRole || (sessionClaims?.role as string) || "");
+
+    // CSRF protection for state-changing API routes
     const isStateChanging = ["POST", "PUT", "DELETE", "PATCH"].includes(request.method);
-    const isExemptPath = pathname === "/api/v1/auth/login" ||
+    const isExemptPath =
+      pathname === "/api/v1/auth/login" ||
       pathname === "/api/v1/auth/register" ||
       pathname === "/api/v1/oliv/webhook" ||
       pathname.startsWith("/api/webhooks");
-    // CSRF applies to cookie-authenticated browsers. Bearer-token clients
-    // (mobile app) are immune to CSRF by construction — no ambient cookie.
-    const isBearerRequest = Boolean(bearerToken);
-    if (isStateChanging && !isExemptPath && !isBearerRequest) {
+
+    if (isStateChanging && !isExemptPath) {
       const csrfResult = await csrfMiddleware(request);
-      if (csrfResult) return addSecurityHeaders(csrfResult);
+      if (csrfResult) return addSecurityHeaders(csrfResult, nonce);
     }
 
-    return addSecurityHeaders(NextResponse.next({ request: { headers: requestHeaders } }));
+    return addSecurityHeaders(
+      NextResponse.next({ request: { headers: requestHeaders } }),
+      nonce
+    );
   }
 
-  // No token on protected route → redirect to login
-  if (!token && isProtectedPath(pathname)) {
-    const loginUrl = new URL("/login", request.url);
-    loginUrl.searchParams.set("redirect", pathname);
-    return addSecurityHeaders(NextResponse.redirect(loginUrl));
-  }
-
-  // No token on non-protected route → allow through
-  if (!token) {
-    return addSecurityHeaders(NextResponse.next());
-  }
-
-  // Verify token
-  const session = await verifySession(token);
-
-  // Invalid/expired token on protected route → clear cookie, redirect to login
-  if (!session && isProtectedPath(pathname)) {
-    const response = NextResponse.redirect(new URL("/login", request.url));
-    response.cookies.delete(SESSION_COOKIE);
-    return addSecurityHeaders(response);
-  }
-
-  // Invalid token on non-protected route → allow through (will fail at API layer if needed)
-  if (!session) {
-    return addSecurityHeaders(NextResponse.next());
-  }
-
-  const { userId, platformRole, tenantId } = session;
-
-  // Inject tenant + auth headers into the request for downstream handlers
-  const requestHeaders = new Headers(request.headers);
-  requestHeaders.set("x-user-id", userId);
-  requestHeaders.set("x-tenant-id", tenantId);
-  requestHeaders.set("x-platform-role", platformRole);
-
-  // Redirect /dashboard (non-existent) to role-specific dashboard
-  if (pathname === "/dashboard") {
-    const target = ROLE_DEFAULT_PATH[platformRole] || "/hotel";
-    return addSecurityHeaders(NextResponse.redirect(new URL(target, request.url)));
-  }
-
-  // Role-based route guards
+  // Page routes: role-based access control
   if (isProtectedPath(pathname)) {
+    if (!userId) {
+      // Clerk's auth.protect() already redirects to sign-in if unauthenticated
+      // This is a fallback
+      const loginUrl = new URL("/sign-in", request.url);
+      loginUrl.searchParams.set("redirect", pathname);
+      return addSecurityHeaders(NextResponse.redirect(loginUrl), nonce);
+    }
+
+    const platformRole = orgRole || (sessionClaims?.role as string) || "";
+
     // ADMIN can access everything
     if (platformRole === "ADMIN") {
-      return addSecurityHeaders(NextResponse.next({ request: { headers: requestHeaders } }));
+      const requestHeaders = new Headers(request.headers);
+      requestHeaders.set("x-user-id", userId);
+      requestHeaders.set("x-tenant-id", orgId || (sessionClaims?.tenantId as string) || "");
+      requestHeaders.set("x-platform-role", platformRole);
+      return addSecurityHeaders(
+        NextResponse.next({ request: { headers: requestHeaders } }),
+        nonce
+      );
     }
 
-    // Check if user has access to this route
+    // Check role-based route access
     const allowedRoutes = ROLE_ROUTES[platformRole] || [];
-    const hasAccess = allowedRoutes.some((route) =>
-      pathname.startsWith(route)
-    );
+    const hasAccess = allowedRoutes.some((route) => pathname.startsWith(route));
 
     if (!hasAccess) {
-      // Redirect to their default dashboard
       const target = ROLE_DEFAULT_PATH[platformRole] || "/hotel";
-      return addSecurityHeaders(NextResponse.redirect(new URL(target, request.url)));
+      return addSecurityHeaders(NextResponse.redirect(new URL(target, request.url)), nonce);
     }
   }
 
-  const response = addSecurityHeaders(NextResponse.next({ request: { headers: requestHeaders } }));
+  // Build response with auth headers
+  const requestHeaders = new Headers(request.headers);
+  if (userId) {
+    requestHeaders.set("x-user-id", userId);
+    requestHeaders.set("x-tenant-id", orgId || (sessionClaims?.tenantId as string) || "");
+    requestHeaders.set("x-platform-role", orgRole || (sessionClaims?.role as string) || "");
+  }
 
-  // Set CSRF cookie for page routes (non-API) so frontend JS can read it
+  const response = addSecurityHeaders(
+    NextResponse.next({ request: { headers: requestHeaders } }),
+    nonce
+  );
+
+  // Set CSRF cookie for page routes
   if (!isApiPath(pathname) && !request.cookies.get(CSRF_COOKIE)?.value) {
     const { generateCsrfToken } = await import("@/lib/security/csrf");
     const csrfToken = await generateCsrfToken();
@@ -340,19 +314,12 @@ export async function middleware(request: NextRequest) {
   }
 
   return response;
-}
+});
 
 /* ── Matcher ── */
 
 export const config = {
   matcher: [
-    /*
-     * Match all request paths except:
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     * - public files (handled by web server)
-     */
     "/((?!_next/static|_next/image|favicon.ico|.*\\.png|.*\\.jpg|.*\\.svg).*)",
   ],
 };

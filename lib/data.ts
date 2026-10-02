@@ -3,6 +3,8 @@
 
 // ─── Type Definitions ──────────────────────────────────────────
 
+import type { Contract } from './types';
+
 export interface Carrier {
   id: string;
   name: string;

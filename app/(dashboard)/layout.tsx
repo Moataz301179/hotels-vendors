@@ -1,76 +1,54 @@
 import type { Metadata } from "next";
-import { cookies } from "next/headers";
-import { jwtVerify } from "jose";
+import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { DashboardShell } from "@/components/layout/dashboard-shell";
-import { prisma } from "@/lib/prisma";
-import { getJwtSecret } from "@/lib/session";
-
-const SESSION_COOKIE = "hv_session";
 
 export const metadata: Metadata = {
   title: {
-    default: "Dashboard — Hotels Vendors",
-    template: "%s — Hotels Vendors",
+    default: "Dashboard — HotelsVendors",
+    template: "%s — HotelsVendors",
   },
   description:
-    "Role-specific command center for the Egyptian hospitality procurement hub.",
+    "HotelsVendors Virtual Shadow intelligence workspace for hospitality procurement.",
 };
+
+type DashboardRole =
+  | "admin"
+  | "hotel"
+  | "supplier"
+  | "factoring"
+  | "shipping"
+  | "marketing";
+
+const VALID_ROLES = new Set<DashboardRole>([
+  "admin",
+  "hotel",
+  "supplier",
+  "factoring",
+  "shipping",
+  "marketing",
+]);
 
 export default async function DashboardLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  const cookieStore = await cookies();
-  const token = cookieStore.get(SESSION_COOKIE)?.value;
+  const { userId, orgRole, sessionClaims } = await auth();
 
-  if (!token) {
-    redirect("/login");
+  if (!userId) {
+    redirect("/sign-in");
   }
 
-  let role: string | null = null;
-  let userId: string | null = null;
-  try {
-    const { payload } = await jwtVerify(token, getJwtSecret(), { clockTolerance: 60 });
-    role = (payload.platformRole as string)?.toLowerCase() || null;
-    userId = payload.userId as string || null;
-  } catch {
-    redirect("/login");
-  }
+  const claimRole =
+    orgRole ||
+    (sessionClaims?.platformRole as string | undefined) ||
+    (sessionClaims?.role as string | undefined) ||
+    "HOTEL";
 
-  if (!role) {
-    redirect("/login");
-  }
-
-  let userData = null;
-  if (userId) {
-    try {
-      const user = await prisma.user.findUnique({
-        where: { id: userId },
-        include: { tenant: { select: { name: true } } },
-      });
-      if (user) {
-        userData = {
-          id: user.id,
-          name: user.name,
-          email: user.email,
-          role: user.role,
-          platformRole: user.platformRole,
-          tenantName: user.tenant?.name,
-          createdAt: user.createdAt.toISOString(),
-        };
-      }
-    } catch {
-      // Silently fail
-    }
-  }
-
-  const validRole = role as "admin" | "hotel" | "supplier" | "factoring" | "shipping" | "marketing";
+  const role = claimRole.toLowerCase() as DashboardRole;
+  const validRole = VALID_ROLES.has(role) ? role : "hotel";
 
   return (
-    <DashboardShell
-      role={validRole}
-      user={userData || null}
-    >
+    <DashboardShell role={validRole} user={null}>
       {children}
     </DashboardShell>
   );

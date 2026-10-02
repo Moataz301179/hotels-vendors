@@ -1,0 +1,30 @@
+import { NextRequest } from "next/server";
+import { prisma } from "@/lib/prisma";
+import { apiRoute, authenticate, success, error, requirePermission } from "@/lib/api-utils";
+
+export const GET = apiRoute(async (request: NextRequest, { params }: { params: Promise<{ id: string }> }) => {
+  const auth = await authenticate(request);
+  await requirePermission(auth, "order:read");
+  const resolved = await params;
+  if (!resolved) return error("Missing parameter", 400);
+  const { id } = resolved;
+
+  const record = await prisma.order.findUnique({ where: { id }, select: { tenantId: true } });
+  if (!record || record.tenantId !== auth.tenantId) return error("Not found", 404);
+
+  const order = await prisma.order.findUnique({
+    where: { id },
+    include: {
+      hotel: { select: { id: true, name: true, city: true, taxId: true } },
+      supplier: { select: { id: true, name: true, tier: true, taxId: true, bankAccount: true, bankName: true } },
+      property: true,
+      outlet: true,
+      items: { include: { product: { select: { id: true, name: true, sku: true, unitOfMeasure: true, category: true } } } },
+      approvals: { include: { approver: { select: { id: true, name: true, role: true } } }, orderBy: { createdAt: "desc" } },
+      invoices: { select: { id: true, invoiceNumber: true, total: true, status: true, etaStatus: true, paymentStatus: true } },
+      goodsReceiptNotes: { select: { id: true, grnNumber: true, status: true, receivedAt: true, acceptedAt: true, lineItems: true } },
+    },
+  });
+
+  return success({ order });
+});

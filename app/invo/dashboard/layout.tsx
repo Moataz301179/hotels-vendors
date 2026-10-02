@@ -1,11 +1,7 @@
-import { cookies } from "next/headers";
-import { jwtVerify } from "jose";
+import { auth, currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { InvoDashboardShell } from "./_components/invo-dashboard-shell";
-import { getJwtSecret } from "@/lib/session";
-
-const SESSION_COOKIE = "hv_session";
 
 export interface UserData {
   id: string;
@@ -17,32 +13,33 @@ export interface UserData {
 }
 
 async function getUserData(): Promise<UserData | null> {
-  const cookieStore = await cookies();
-  const token = cookieStore.get(SESSION_COOKIE)?.value;
-  if (!token) return null;
+  const { userId } = await auth();
+  if (!userId) return null;
 
-  try {
-    const { payload } = await jwtVerify(token, getJwtSecret(), { clockTolerance: 60 });
-    const userId = payload.userId as string;
-    if (!userId) return null;
+  const clerkUser = await currentUser();
+  if (!clerkUser) return null;
 
-    const user = await prisma.user.findUnique({
-      where: { id: userId },
-      include: { tenant: { select: { name: true } } },
-    });
-    if (!user) return null;
+  const email = clerkUser.emailAddresses[0]?.emailAddress;
+  const user = await prisma.user.findFirst({
+    where: {
+      OR: [
+        { id: userId },
+        ...(email ? [{ email }] : []),
+      ],
+    },
+    include: { tenant: { select: { name: true } } },
+  });
 
-    return {
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      role: user.role,
-      platformRole: user.platformRole,
-      tenantName: user.tenant?.name,
-    };
-  } catch {
-    return null;
-  }
+  if (!user) return null;
+
+  return {
+    id: user.id,
+    name: user.name,
+    email: user.email,
+    role: user.role,
+    platformRole: user.platformRole,
+    tenantName: user.tenant?.name,
+  };
 }
 
 export default async function InvoDashboardLayout({
@@ -52,7 +49,7 @@ export default async function InvoDashboardLayout({
 }) {
   const user = await getUserData();
   if (!user) {
-    redirect("/login?next=/invo/dashboard");
+    redirect("/sign-in?next=/invo/dashboard");
   }
 
   return (
