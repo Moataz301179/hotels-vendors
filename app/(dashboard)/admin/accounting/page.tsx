@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from "react";
 import {
-  Wallet, TrendingUp, ArrowUpRight, ArrowDownRight, DollarSign,
-  FileText, Landmark, Download, Filter, RefreshCw, CreditCard, Banknote
+  Wallet, TrendingUp, DollarSign,
+  Landmark, Download, CreditCard
 } from "lucide-react";
 
 interface AccountingData {
@@ -40,40 +40,41 @@ interface AccountingData {
 
 export default function AdminAccountingPage() {
   const [data, setData] = useState<AccountingData | null>(null);
-  const [loading, setLoading] = useState(true);
   const [period, setPeriod] = useState<"month" | "quarter" | "year">("month");
 
   useEffect(() => {
-    fetchAccounting();
-  }, [period]);
-
-  const fetchAccounting = async () => {
-    setLoading(true);
-    try {
-      const res = await fetch(`/api/v1/admin/accounting?period=${period}`);
-      const json = await res.json();
-      if (json.success) {
-        const d = json.data;
-        setData({
-          totalRevenue: d.totalRevenue ?? 0,
-          platformFees: d.platformFees ?? 0,
-          factoringCommissions: 0,
-          subscriptionRevenue: 0,
-          pendingPayouts: d.outstandingInvoices?.total ?? 0,
-          completedPayouts: 0,
-          netProfit: d.platformFees ?? 0,
-          operatingCosts: 0,
-          monthlyBreakdown: (d.monthlyRevenue ?? []).map((m: { month: string; revenue: number }) => ({ month: new Date(m.month).toLocaleDateString('en', { month: 'short' }), revenue: Number(m.revenue ?? 0), costs: 0, profit: 0, fees: 0, factoring: 0 })),
-          recentTransactions: (d.recentTransactions ?? []).map((tx: { id: string; orderNumber: string; total: number; status: string; createdAt: string }) => ({ id: tx.id, type: 'ORDER', description: `Order ${tx.orderNumber}`, amount: Number(tx.total ?? 0), status: tx.status, date: tx.createdAt })),
-          feeCollection: [{ source: 'Measured platform fees', amount: Number(d.platformFees ?? 0), percentage: 100 }],
-        });
-      } else {
-        setData(null);
+    let cancelled = false;
+    const load = async () => {
+      try {
+        const res = await fetch(`/api/v1/admin/accounting?period=${period}`);
+        const json = await res.json();
+        if (cancelled) return;
+        if (json.success) {
+          const d = json.data;
+          setData({
+            totalRevenue: d.totalRevenue ?? 0,
+            platformFees: d.platformFees ?? 0,
+            factoringCommissions: 0,
+            subscriptionRevenue: 0,
+            pendingPayouts: d.outstandingInvoices?.total ?? 0,
+            completedPayouts: 0,
+            netProfit: d.platformFees ?? 0,
+            operatingCosts: 0,
+            monthlyBreakdown: (d.monthlyRevenue ?? []).map((m: { month: string; revenue: number }) => ({ month: new Date(m.month).toLocaleDateString('en', { month: 'short' }), revenue: Number(m.revenue ?? 0), costs: 0, profit: 0, fees: 0, factoring: 0 })),
+            recentTransactions: (d.recentTransactions ?? []).map((tx: { id: string; orderNumber: string; total: number; status: string; createdAt: string }) => ({ id: tx.id, type: 'ORDER', description: `Order ${tx.orderNumber}`, amount: Number(tx.total ?? 0), status: tx.status, date: tx.createdAt })),
+            feeCollection: [{ source: 'Measured platform fees', amount: Number(d.platformFees ?? 0), percentage: 100 }],
+          });
+        } else {
+          setData(null);
+        }
+      } catch {
+        if (!cancelled) setData(null);
+      } finally {
       }
-    } finally {
-      setLoading(false);
-    }
-  };
+    };
+    void load();
+    return () => { cancelled = true; };
+  }, [period]);
 
   const formatEGP = (amount: number) => `EGP ${amount.toLocaleString()}`;
 

@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { apiRoute, authenticate, error, success, requirePermission } from "@/lib/api-utils";
+import { apiRoute, authenticate, success, requirePermission } from "@/lib/api-utils";
 import { createIntelligenceService } from "@/lib/intelligence/services";
 
 export const GET = apiRoute(async (request: NextRequest) => {
