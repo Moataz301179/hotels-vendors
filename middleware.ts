@@ -164,7 +164,7 @@ function addSecurityHeaders(response: NextResponse, nonce: string): NextResponse
     "script-src 'self' 'unsafe-inline' https://*.clerk.accounts.dev https://*.clerk.com",
     "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
     "font-src 'self' https://fonts.gstatic.com",
-    "img-src 'self' data: blob: https://images.unsplash.com https://cdn.jsdelivr.net https://api.qrserver.com",
+    "img-src 'self' data: blob: https://images.unsplash.com https://cdn.jsdelivr.net https://api.qrserver.com https://img.clerk.com https://*.clerk.com",
     "connect-src 'self' https://api.oliv.finance https://sandbox.oliv.finance https://invoicing.eta.gov.eg https://api.fawry.com https://*.clerk.accounts.dev https://*.clerk.com",
     "frame-ancestors 'none'",
     "base-uri 'self'",

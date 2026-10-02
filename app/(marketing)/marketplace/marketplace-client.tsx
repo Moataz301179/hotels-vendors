@@ -1,46 +1,35 @@
 "use client";
 
 import Link from "next/link";
-import { Suspense, useState, useEffect, useMemo } from "react";
+import { Suspense, useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { ArrowRight, Search, ShoppingCart, FileCheck, Shield, Clock, Banknote, Upload, BarChart3, X, Loader2, Building2 } from "lucide-react";
-import { getProductImage, getCategoryImage } from "@/lib/marketplace/product-images";
+import { ArrowRight, Building2, CheckCircle2, Search, ShieldCheck, Truck, X } from "lucide-react";
 
 interface Product {
   id: string;
   name: string;
   description?: string;
   category: string;
-  subcategory?: string;
   unitPrice: number;
   unitOfMeasure: string;
-  images?: string;
+  images?: string | string[];
   supplier?: { id: string; name: string; city?: string; tier?: string };
 }
 
 const categories = [
-  { id: "fb", name: "F&B", desc: "Food, beverages and kitchen supply", color: "#0D9488" },
-  { id: "hk", name: "Housekeeping", desc: "Chemicals, cleaning and guest operations", color: "#2563EB" },
-  { id: "lin", name: "Linens", desc: "Bed, bath and textile supply", color: "#7C3AED" },
-  { id: "ffe", name: "FF&E", desc: "Furniture, fixtures and equipment", color: "#B45309" },
+  { name: "Food & Beverage", short: "F&B", desc: "Food, beverage and kitchen supply", image: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=1200&q=85" },
+  { name: "Housekeeping", short: "Housekeeping", desc: "Chemicals, consumables and operating supplies", image: "https://images.unsplash.com/photo-1583947215259-38e31be8751f?w=1200&q=85" },
+  { name: "Guest Experience", short: "Guest", desc: "Amenities, linens and room essentials", image: "https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=1200&q=85" },
+  { name: "FF&E", short: "FF&E", desc: "Furniture, fixtures and capital equipment", image: "https://images.unsplash.com/photo-1505693314120-0d443867891c?w=1200&q=85" },
 ];
 
-const supplierFeatures = [
-  { icon: Upload, title: "Catalog Upload", desc: "Upload your catalog with fixed prices. Set per-hotel or per-group pricing." },
-  { icon: ShoppingCart, title: "PO Matching", desc: "Receive purchase orders directly from hotel procurement teams." },
-  { icon: Banknote, title: "Embedded Factoring", desc: "Settle faster through non-recourse factoring on validated invoices." },
-  { icon: FileCheck, title: "ETA Invoicing", desc: "Every invoice is auto-generated with RSA-2048 signing and UUID tracking." },
-  { icon: BarChart3, title: "Sales Analytics", desc: "Track orders, revenue, and buyer behavior across properties." },
-  { icon: Shield, title: "Verified Badge", desc: "Complete KYC and get the verified supplier badge." },
-];
-
-function formatPrice(price: number): string {
-  return "EGP " + price.toLocaleString("en-EG");
+function formatPrice(price: number) {
+  return `EGP ${price.toLocaleString("en-EG")}`;
 }
 
-function productFallbackImage(name: string, category: string): string {
-  const resolved = getProductImage({ name, category });
-  return resolved.type === "url" ? resolved.src : getCategoryImage(category);
+function imageForProduct(p: Product) {
+  const raw = Array.isArray(p.images) ? p.images[0] : p.images;
+  return raw || categories.find(c => c.name.toLowerCase().includes(p.category.toLowerCase()))?.image || categories[0].image;
 }
 
 function MarketplaceContent() {
@@ -50,213 +39,80 @@ function MarketplaceContent() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    async function fetchProducts() {
-      try {
-        const res = await fetch("/api/v1/products?limit=100");
-        const json = await res.json();
-        if (json.success && json.data?.data) {
-          setProducts(json.data.data);
-        }
-      } catch { /* ignore */ }
-      setLoading(false);
-    }
-    fetchProducts();
+    fetch("/api/v1/products?limit=100")
+      .then(r => r.ok ? r.json() : null)
+      .then(json => setProducts(json?.success ? (json.data?.data ?? []) : []))
+      .catch(() => setProducts([]))
+      .finally(() => setLoading(false));
   }, []);
 
   const q = query.trim().toLowerCase();
-
-  const filteredProducts = useMemo(() => {
-    if (!q) return products;
-    return products.filter(
-      (p) =>
-        p.name.toLowerCase().includes(q) ||
-        (p.description && p.description.toLowerCase().includes(q)) ||
-        p.category.toLowerCase().includes(q) ||
-        (p.supplier?.name && p.supplier.name.toLowerCase().includes(q))
-    );
-  }, [q, products]);
-
-  const filteredCategories = useMemo(() => {
-    if (!q) return categories;
-    return categories.filter(
-      (c) => c.name.toLowerCase().includes(q) || c.desc.toLowerCase().includes(q)
-    );
-  }, [q]);
-
-  const hasResults = filteredProducts.length > 0 || filteredCategories.length > 0;
+  const filtered = useMemo(() => !q ? products : products.filter(p =>
+    [p.name, p.description, p.category, p.supplier?.name].filter(Boolean).some(v => String(v).toLowerCase().includes(q))
+  ), [products, q]);
 
   return (
-    <main className="min-h-screen bg-canvas text-foreground">
-      {/* Hero */}
-      <section className="pt-28 pb-16 relative overflow-hidden">
-        <div className="relative z-10 mx-auto max-w-7xl px-6">
-          <span className="text-[11px] font-medium text-foreground-muted uppercase tracking-[0.15em] mb-3 block">Marketplace</span>
-          <h1 className="text-[clamp(30px,5vw,52px)] font-medium leading-[1.05] tracking-tight mb-5 text-foreground">
-            {products.length} products live<br />Fixed prices. No bidding. ETA-native.
-          </h1>
-          <p className="text-[15px] text-foreground-secondary max-w-2xl leading-relaxed mb-8">
-            The ETA-native procurement catalog for Egyptian hospitality. Suppliers publish fixed-price stock, hotels order directly, and invoices are generated ETA-compliant.
-          </p>
-          <div className="max-w-2xl mb-8">
-            <div className="flex gap-2">
-              <div className="flex-1 relative">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground-muted" />
-                <input
-                  type="text"
-                  value={query}
-                  onChange={(e) => setQuery(e.target.value)}
-                  placeholder="Search products, suppliers, or categories..."
-                  className="w-full pl-11 pr-10 py-3.5 rounded-xl bg-surface-1 border border-border-subtle text-sm text-foreground placeholder:text-foreground-muted outline-none focus:border-accent-base/60 transition-all"
-                />
-                {query && (
-                  <button
-                    onClick={() => setQuery("")}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-foreground-secondary hover:text-foreground transition-colors"
-                    aria-label="Clear search"
-                  >
-                    <X size={16} />
-                  </button>
-                )}
-              </div>
+    <main className="min-h-screen bg-[#F7F8FA] text-[#0F172A]">
+      <section className="relative overflow-hidden border-b border-[#E2E8F0] bg-white pt-28">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_78%_25%,rgba(37,99,235,.09),transparent_35%)]" />
+        <div className="relative mx-auto grid max-w-[1240px] gap-12 px-5 pb-16 md:px-8 lg:grid-cols-[.9fr_1.1fr] lg:items-end lg:pb-20">
+          <div>
+            <div className="mb-5 inline-flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[.18em] text-[#2563EB]"><span className="h-1.5 w-1.5 rounded-full bg-[#0D9488]" /> Hospitality marketplace</div>
+            <h1 className="max-w-3xl text-[clamp(40px,6vw,68px)] font-semibold leading-[.98] tracking-[-.055em]">Buy the supply your hotel actually needs.</h1>
+            <p className="mt-6 max-w-xl text-[16px] leading-7 text-[#596579]">A procurement layer for verified hospitality supply — organized by category, supplier and buying need. Live inventory is shown only when it is actually published.</p>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <Link href="/rfq" className="inline-flex items-center gap-2 rounded-xl bg-[#2563EB] px-5 py-3 text-sm font-semibold text-white shadow-[0_12px_30px_rgba(37,99,235,.16)] hover:bg-[#1D4ED8]">Request a quote <ArrowRight size={15} /></Link>
+              <Link href="/become-supplier" className="inline-flex items-center gap-2 rounded-xl border border-[#CBD5E1] bg-white px-5 py-3 text-sm font-semibold hover:bg-[#F1F5F9]">List your supply</Link>
             </div>
-            {query && (
-              <p className="text-[12px] text-foreground-secondary mt-3">
-                {hasResults ? (
-                  <>Showing results for <span className="text-accent-base font-medium">&ldquo;{query}&rdquo;</span></>
-                ) : (
-                  <>No matches for <span className="text-foreground font-medium">&ldquo;{query}&rdquo;</span></>
-                )}
-              </p>
-            )}
           </div>
-          <div className="flex flex-wrap gap-3">
-            <Link href="/register?sector=procurement" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(var(--accent-base-rgb),0.2)]" style={{ backgroundColor: "var(--accent-base)", color: "var(--surface)" }}>Start Selling <ArrowRight size={14} /></Link>
-            <Link href="/register?sector=procurement" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl border border-border-subtle text-foreground-secondary hover:text-foreground transition-colors">Register as Buyer</Link>
+          <div className="rounded-[26px] border border-[#DDE3EC] bg-[#0D1420] p-3 shadow-[0_24px_70px_rgba(15,23,42,.14)]">
+            <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+              {categories.map(c => <div key={c.short} className="group relative aspect-[1.15] overflow-hidden rounded-2xl">
+                <img src={c.image} alt={c.name} className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#07101C] via-[#07101C]/25 to-transparent" />
+                <div className="absolute inset-x-3 bottom-3"><span className="text-[11px] font-semibold text-white">{c.short}</span><p className="mt-0.5 text-[9px] leading-4 text-[#C8D1DD]">{c.desc}</p></div>
+              </div>)}
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Trust Bar */}
-      <section className="py-8 border-y border-border-subtle bg-canvas">
-        <div className="mx-auto max-w-7xl px-6">
-          <div className="flex flex-wrap justify-center gap-8">
-            {[
-              { icon: Shield, label: `${products.length} products`, desc: "Live in catalog" },
-              { icon: Clock, label: "Fast settlement via factoring", desc: "Non-recourse, on validated invoices" },
-              { icon: FileCheck, label: "ETA Compliant", desc: "Auto-generated invoices" },
-            ].map((b) => (
-              <div key={b.label} className="flex items-center gap-3">
-                <b.icon size={16} style={{ color: "var(--accent-base)" }} />
-                <div>
-                  <p className="text-[11px] font-medium text-foreground-secondary">{b.label}</p>
-                  <p className="text-[9px] text-foreground-muted">{b.desc}</p>
-                </div>
-              </div>
-            ))}
+      <section className="border-b border-[#E2E8F0] bg-[#F8FAFC] py-5">
+        <div className="mx-auto flex max-w-[1240px] flex-wrap items-center gap-x-8 gap-y-3 px-5 text-[11px] text-[#596579] md:px-8">
+          <span className="inline-flex items-center gap-2"><ShieldCheck size={14} className="text-[#0D9488]" /> Supplier verification</span>
+          <span className="inline-flex items-center gap-2"><CheckCircle2 size={14} className="text-[#0D9488]" /> Evidence-linked procurement</span>
+          <span className="inline-flex items-center gap-2"><Truck size={14} className="text-[#2563EB]" /> Carrier-aware delivery</span>
+          <span className="inline-flex items-center gap-2"><Building2 size={14} className="text-[#2563EB]" /> Hotel buying workflows</span>
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-[1240px] px-5 py-14 md:px-8 md:py-18">
+        <div className="mb-7 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+          <div><p className="text-[10px] font-semibold uppercase tracking-[.18em] text-[#64748B]">Live supplier inventory</p><h2 className="mt-2 text-2xl font-semibold tracking-[-.03em]">Published products, not demo cards.</h2><p className="mt-2 text-sm text-[#64748B]">{loading ? "Checking the live catalog…" : `${filtered.length} published product${filtered.length === 1 ? "" : "s"} currently available.`}</p></div>
+          <div className="relative w-full md:w-[360px]">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-[#94A3B8]" size={16} />
+            <input value={query} onChange={e => setQuery(e.target.value)} placeholder="Search products or suppliers" className="h-11 w-full rounded-xl border border-[#CBD5E1] bg-white pl-11 pr-10 text-sm outline-none focus:border-[#2563EB]" />
+            {query && <button onClick={() => setQuery("")} className="absolute right-3 top-1/2 -translate-y-1/2 text-[#64748B]"><X size={15} /></button>}
           </div>
         </div>
+
+        {filtered.length > 0 ? <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {filtered.slice(0, 24).map(p => <article key={p.id} className="overflow-hidden rounded-2xl border border-[#E2E8F0] bg-white shadow-[0_8px_30px_rgba(15,23,42,.05)]">
+            <div className="aspect-[4/3] overflow-hidden bg-[#F1F5F9]"><img src={imageForProduct(p)} alt={p.name} className="h-full w-full object-cover" /></div>
+            <div className="p-4"><p className="text-[10px] font-semibold uppercase tracking-[.12em] text-[#2563EB]">{p.category}</p><h3 className="mt-2 line-clamp-2 text-sm font-semibold">{p.name}</h3><p className="mt-1 text-[11px] text-[#64748B]">{p.supplier?.name || "Verified supplier"}</p><p className="mt-3 text-sm font-semibold">{formatPrice(p.unitPrice)} <span className="font-normal text-[#94A3B8]">/ {p.unitOfMeasure}</span></p></div>
+          </article>)}
+        </div> : <div className="rounded-[24px] border border-dashed border-[#CBD5E1] bg-white px-6 py-14 text-center">
+          <p className="text-lg font-semibold">No published inventory to show yet.</p>
+          <p className="mx-auto mt-2 max-w-lg text-sm leading-6 text-[#64748B]">HotelsVendors does not fill the marketplace with fabricated products. Suppliers publish real catalog inventory, and those records appear here.</p>
+          <div className="mt-6 flex justify-center gap-3"><Link href="/become-supplier" className="rounded-xl bg-[#2563EB] px-5 py-3 text-sm font-semibold text-white">Become a supplier</Link><Link href="/rfq" className="rounded-xl border border-[#CBD5E1] px-5 py-3 text-sm font-semibold">Request supply</Link></div>
+        </div>}
       </section>
 
-      {/* Product Showcase */}
-      <section className="py-16 relative overflow-hidden">
-        <div className="relative z-10 mx-auto max-w-7xl px-6">
-          <div className="flex items-center justify-between mb-8">
-            <div>
-              <h2 className="text-[11px] font-medium text-foreground-muted uppercase tracking-[0.15em] mb-2">Products</h2>
-              <p className="text-[13px] text-foreground-secondary">Browse our catalog of hospitality products</p>
-            </div>
-          </div>
-          {loading ? (
-            <div className="flex items-center justify-center py-16">
-              <Loader2 size={24} className="animate-spin" style={{ color: "var(--accent-base)" }} />
-            </div>
-          ) : filteredProducts.length > 0 ? (
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-              {filteredProducts.slice(0, 24).map((p) => (
-                <div key={p.id} className="group rounded-xl overflow-hidden border border-border-subtle transition-all hover:border-foreground/25 cursor-pointer bg-surface-1">
-                  <div className="relative h-32 overflow-hidden">
-                    <img src={(Array.isArray(p.images) ? p.images[0] : p.images) || productFallbackImage(p.name, p.category)} alt={p.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
-                    <div className="absolute top-2 left-2">
-                      <span className="text-[9px] font-medium px-2 py-0.5 rounded-full" style={{ backgroundColor: "rgba(var(--accent-base-rgb),0.15)", color: "var(--accent-base)" }}>{p.category.replace(/_/g, " ")}</span>
-                    </div>
-                  </div>
-                  <div className="p-3">
-                    <h4 className="text-[11px] font-medium text-foreground mb-1 leading-tight line-clamp-2">{p.name}</h4>
-                    <p className="text-[10px] text-foreground-muted mb-1.5">{p.supplier?.name || "Supplier"}</p>
-                    <p className="text-[12px] font-semibold text-accent-base">{formatPrice(p.unitPrice)}/{p.unitOfMeasure}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="grid gap-4 rounded-2xl border border-border-subtle bg-surface-1 p-5 md:grid-cols-[1fr_auto] md:items-center">
-  <div>
-    <div className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[.15em] text-foreground-muted"><Building2 size={14} /> Verified supply only</div>
-    <h3 className="mt-2 text-lg font-semibold text-foreground">No verified supplier inventory is published yet.</h3>
-    <p className="mt-2 max-w-2xl text-[13px] leading-6 text-foreground-secondary">The marketplace does not invent products or prices. Connect a supplier catalog and live inventory will appear here with its real imagery, price and availability.</p>
-  </div>
-  <Link href="/register?sector=supplier" className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#2563EB] px-5 py-3 text-[13px] font-semibold text-white">Publish real supply <ArrowRight size={14} /></Link>
-</div>
-          )}
-        </div>
-      </section>
-
-      {/* Product Categories */}
-      <section className="py-16 border-t border-border-subtle bg-surface-1/40">
-        <div className="mx-auto max-w-7xl px-6">
-          <h2 className="text-[11px] font-medium text-foreground-muted uppercase tracking-[0.15em] mb-6">Product Categories</h2>
-          {filteredCategories.length > 0 ? (
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-              {filteredCategories.map((cat) => (
-                <div key={cat.name} className="group relative rounded-xl overflow-hidden border cursor-pointer transition-all hover:border-foreground/25 bg-surface-1" style={{ borderColor: `${cat.color}55` }}>
-                  <img src={getCategoryImage(cat.id)} alt={cat.name} className="w-full h-40 object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" />
-                  <div className="absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-black/75 to-transparent">
-                    <h3 className="text-[15px] font-semibold mb-0.5 text-white">{cat.name}</h3>
-                    <p className="text-[11px] text-white/75 leading-tight">{cat.desc}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <p className="text-[13px] text-foreground-muted py-8 text-center">No categories match your search.</p>
-          )}
-        </div>
-      </section>
-
-      {/* Supplier Features */}
-      <section className="py-16 border-t border-border-subtle bg-canvas">
-        <div className="mx-auto max-w-7xl px-6">
-          <h2 className="text-[11px] font-medium text-foreground-muted uppercase tracking-[0.15em] mb-8 text-center">Why Suppliers Choose HotelsVendors</h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {supplierFeatures.map((f) => (
-              <div key={f.title} className="rounded-xl p-6 border border-border-subtle transition-all hover:border-accent-base/40 bg-surface-1">
-                <f.icon size={20} className="mb-4" style={{ color: "var(--accent-base)" }} />
-                <h3 className="text-[14px] font-medium text-foreground mb-2">{f.title}</h3>
-                <p className="text-[12px] text-foreground-muted leading-relaxed">{f.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* CTA */}
-      <section className="py-16">
-        <div className="mx-auto max-w-7xl px-6 text-center">
-          <h2 className="text-[24px] font-medium mb-4 text-foreground">Publish your stock for Egyptian hotels</h2>
-          <p className="text-[13px] text-foreground-secondary mb-8 max-w-lg mx-auto">Add products with fixed prices and quantities. Hotels order directly; invoices are ETA-compliant automatically.</p>
-          <Link href="/register?sector=procurement" className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-medium rounded-xl transition-all hover:shadow-[0_0_30px_rgba(var(--accent-base-rgb),0.2)]" style={{ backgroundColor: "var(--accent-base)", color: "var(--surface)" }}>
-            Register as Supplier <ArrowRight size={14} />
-          </Link>
-        </div>
+      <section className="border-t border-[#E2E8F0] bg-white py-14">
+        <div className="mx-auto max-w-[1240px] px-5 md:px-8"><div className="grid gap-4 md:grid-cols-4">{categories.map(c => <Link key={c.name} href={`/categories?q=${encodeURIComponent(c.short)}`} className="group overflow-hidden rounded-2xl border border-[#E2E8F0] bg-[#F8FAFC]"><div className="aspect-[16/9] overflow-hidden"><img src={c.image} alt={c.name} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" /></div><div className="p-4"><h3 className="font-semibold">{c.name}</h3><p className="mt-1 text-xs leading-5 text-[#64748B]">{c.desc}</p><span className="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-[#2563EB]">Explore <ArrowRight size={13} /></span></div></Link>)}</div></div>
       </section>
     </main>
   );
 }
 
-export default function MarketplaceClient() {
-  return (
-    <Suspense fallback={<div className="min-h-screen bg-canvas" />}>
-      <MarketplaceContent />
-    </Suspense>
-  );
-}
+export default function MarketplaceClient() { return <Suspense fallback={<div className="min-h-screen bg-[#F7F8FA]" />}><MarketplaceContent /></Suspense>; }
