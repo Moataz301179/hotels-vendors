@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import {
   Wallet, TrendingUp, DollarSign,
-  Landmark, Download, CreditCard
+  Landmark, Download, CreditCard, Banknote
 } from "lucide-react";
 
 interface AccountingData {
