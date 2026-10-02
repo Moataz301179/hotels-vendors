@@ -65,21 +65,46 @@ jobs:
 
       - name: Prepare deployment environment
         run: |
-          mkdir -p /tmp/deploy-env
-          cat > /tmp/deploy-env/.env << 'ENVEOF'
-          SESSION_SECRET=${{ secrets.SESSION_SECRET }}
-          HOTELSVENDORS_HMAC_SECRET=${{ secrets.HOTELSVENDORS_HMAC_SECRET }}
-          DATABASE_URL=${{ secrets.DATABASE_URL }}
-          ENCRYPTION_MASTER_KEY=${{ secrets.ENCRYPTION_MASTER_KEY }}
-          REDIS_URL=${{ secrets.REDIS_URL }}
-          NEXT_PUBLIC_APP_URL=https://www.hotelsvendors.com
-          NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_dW5pdGVkLXRyZWVmcm9nLTIyMy5jbGVyay5hY2NvdW50cy5kZXYk
-          NODE_ENV=production
-          ENVEOF
-          ssh -o StrictHostKeyChecking=accept-new ${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_IP }} "mkdir -p /var/www/hv-release-production"
-          scp -o StrictHostKeyChecking=accept-new /tmp/deploy-env/.env ${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_IP }}:/var/www/hv-release-production/.env
-          echo "  .env transferred to VPS"
+          ssh -o StrictHostKeyChecking=accept-new ${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_IP }} << 'ENVSETUP'
+            set -euo pipefail
+            mkdir -p /var/www/hv-release-production
 
+            # Preserve the known-good production runtime environment on the VPS.
+            # The GitHub production secret previously pointed DATABASE_URL at localhost,
+            # which cannot reach the Neon database from the VPS.
+            if [ -s /var/www/hv-release-production/.env ] &&                grep -q '^DATABASE_URL=' /var/www/hv-release-production/.env &&                ! grep -q '^DATABASE_URL=.*localhost' /var/www/hv-release-production/.env; then
+              echo "  Preserving existing production .env"
+            elif [ -s /var/www/hv-release-13028baf/.env ] &&                  grep -q '^DATABASE_URL=' /var/www/hv-release-13028baf/.env &&                  ! grep -q '^DATABASE_URL=.*localhost' /var/www/hv-release-13028baf/.env; then
+              cp /var/www/hv-release-13028baf/.env /var/www/hv-release-production/.env
+              echo "  Restored production .env from known-good active release"
+            else
+              cat > /var/www/hv-release-production/.env << 'ENVEOF'
+SESSION_SECRET=${{ secrets.SESSION_SECRET }}
+HOTELSVENDORS_HMAC_SECRET=${{ secrets.HOTELSVENDORS_HMAC_SECRET }}
+DATABASE_URL=${{ secrets.DATABASE_URL }}
+ENCRYPTION_MASTER_KEY=${{ secrets.ENCRYPTION_MASTER_KEY }}
+REDIS_URL=${{ secrets.REDIS_URL }}
+NEXT_PUBLIC_APP_URL=https://www.hotelsvendors.com
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_dW5pdGVkLXRyZWVmcm9nLTIyMy5jbGVyay5hY2NvdW50cy5kZXYk
+NODE_ENV=production
+ENVEOF
+              echo "  Created production .env from GitHub secrets"
+            fi
+
+            sed -i 's#^NEXT_PUBLIC_APP_URL=.*#NEXT_PUBLIC_APP_URL=https://www.hotelsvendors.com#' /var/www/hv-release-production/.env
+            if ! grep -q '^NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=' /var/www/hv-release-production/.env; then
+              printf '
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_dW5pdGVkLXRyZWVmcm9nLTIyMy5jbGVyay5hY2NvdW50cy5kZXYk
+' >> /var/www/hv-release-production/.env
+            fi
+            if ! grep -q '^NODE_ENV=' /var/www/hv-release-production/.env; then
+              printf '
+NODE_ENV=production
+' >> /var/www/hv-release-production/.env
+            fi
+
+            echo "  Production env prepared without exposing secret values"
+          ENVSETUP
       - name: Stamp and synchronize canonical release source
         run: |
           mkdir -p public
