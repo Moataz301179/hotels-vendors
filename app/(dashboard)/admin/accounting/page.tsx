@@ -52,40 +52,24 @@ export default function AdminAccountingPage() {
     try {
       const res = await fetch(`/api/v1/admin/accounting?period=${period}`);
       const json = await res.json();
-      if (json.success) setData(json.data);
-    } catch {
-      setData({
-        totalRevenue: 485000,
-        platformFees: 25000,
-        factoringCommissions: 85000,
-        subscriptionRevenue: 120000,
-        pendingPayouts: 45000,
-        completedPayouts: 440000,
-        netProfit: 180000,
-        operatingCosts: 305000,
-        monthlyBreakdown: [
-          { month: "Jan", revenue: 85000, costs: 42000, profit: 43000, fees: 4200, factoring: 12000 },
-          { month: "Feb", revenue: 92000, costs: 44000, profit: 48000, fees: 4600, factoring: 14000 },
-          { month: "Mar", revenue: 105000, costs: 48000, profit: 57000, fees: 5200, factoring: 16000 },
-          { month: "Apr", revenue: 118000, costs: 52000, profit: 66000, fees: 5900, factoring: 19000 },
-          { month: "May", revenue: 132000, costs: 58000, profit: 74000, fees: 6600, factoring: 22000 },
-          { month: "Jun", revenue: 145000, costs: 62000, profit: 83000, fees: 7200, factoring: 25000 },
-        ],
-        recentTransactions: [
-          { id: "TXN-001", type: "PLATFORM_FEE", description: "Platform fee - Order #ORD-1234", amount: 850, status: "COMPLETED", date: "2026-07-15T10:00:00Z" },
-          { id: "TXN-002", type: "FACTORING", description: "Factoring commission - ", amount: 2500, status: "COMPLETED", date: "2026-07-15T09:00:00Z" },
-          { id: "TXN-003", type: "SUBSCRIPTION", description: "Supplier subscription - ABC Cleaning", amount: 500, status: "PENDING", date: "2026-07-14T18:00:00Z" },
-          { id: "TXN-004", type: "PLATFORM_FEE", description: "Platform fee - Order #ORD-1235", amount: 1200, status: "COMPLETED", date: "2026-07-14T16:00:00Z" },
-          { id: "TXN-005", type: "FACTORING", description: "Factoring commission - ", amount: 3200, status: "COMPLETED", date: "2026-07-14T14:00:00Z" },
-        ],
-        feeCollection: [
-          { source: "Platform Fees (2%)", amount: 25000, percentage: 51 },
-          { source: "Factoring Commissions", amount: 85000, percentage: 17.5 },
-          { source: "Subscriptions", amount: 120000, percentage: 24.7 },
-          { source: "ETA Processing", amount: 15000, percentage: 3.1 },
-          { source: "Other", amount: 40000, percentage: 8.2 },
-        ],
-      });
+      if (json.success) {
+        const d = json.data;
+        setData({
+          totalRevenue: d.totalRevenue ?? 0,
+          platformFees: d.platformFees ?? 0,
+          factoringCommissions: 0,
+          subscriptionRevenue: 0,
+          pendingPayouts: d.outstandingInvoices?.total ?? 0,
+          completedPayouts: 0,
+          netProfit: d.platformFees ?? 0,
+          operatingCosts: 0,
+          monthlyBreakdown: (d.monthlyRevenue ?? []).map((m: { month: string; revenue: number }) => ({ month: new Date(m.month).toLocaleDateString('en', { month: 'short' }), revenue: Number(m.revenue ?? 0), costs: 0, profit: 0, fees: 0, factoring: 0 })),
+          recentTransactions: (d.recentTransactions ?? []).map((tx: { id: string; orderNumber: string; total: number; status: string; createdAt: string }) => ({ id: tx.id, type: 'ORDER', description: `Order ${tx.orderNumber}`, amount: Number(tx.total ?? 0), status: tx.status, date: tx.createdAt })),
+          feeCollection: [{ source: 'Measured platform fees', amount: Number(d.platformFees ?? 0), percentage: 100 }],
+        });
+      } else {
+        setData(null);
+      }
     } finally {
       setLoading(false);
     }

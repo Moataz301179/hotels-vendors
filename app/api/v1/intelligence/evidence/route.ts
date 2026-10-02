@@ -1,10 +1,10 @@
+import { NextRequest } from "next/server";
+import { apiRoute, authenticate, success, requirePermission } from "@/lib/api-utils";
+import { createEvidenceService } from "@/lib/intelligence/services";
 
-// Intelligence workspace route: evidence
-// Binds to real HotelsVendors services; no simulated data; provenance enforced.
-import { createIntelligenceService } from "@/lib/intelligence/services";
-
-// Server-side authorization enforced (middleware RBAC + tenant isolation)
-export async function GET(request: Request) {
-  const ctx = { tenantId: "verified-tenant", role: "lead:generation:run" };
-  return new Response(JSON.stringify({ status: "real", route: "evidence", data: [] }), { status: 200, headers: { "Content-Type": "application/json" } });
-}
+export const GET = apiRoute(async (request: NextRequest) => {
+  const auth = await authenticate(request);
+  await requirePermission(auth, "report:read");
+  const provenance = request.nextUrl.searchParams.get("provenance") ?? undefined;
+  return success({ status: "live", evidence: await createEvidenceService().queryEvidence(auth.tenantId, provenance) });
+});
