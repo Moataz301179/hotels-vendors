@@ -66,6 +66,7 @@ jobs:
       - name: Prepare deployment environment
         run: |
           ENV_STATE=$(ssh -o StrictHostKeyChecking=accept-new ${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_IP }} '
+            mkdir -p /var/www/hv-release-production
             if [ -s /var/www/hv-release-production/.env ] &&
                grep -q "^DATABASE_URL=" /var/www/hv-release-production/.env &&
                ! grep -q "^DATABASE_URL=.*localhost" /var/www/hv-release-production/.env; then
