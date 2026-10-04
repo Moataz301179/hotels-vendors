@@ -182,7 +182,7 @@ export const POST = apiRoute(async (request: NextRequest) => {
 });
 
 /* ── POST /api/v1/erp/eta-sync — Push ETA invoice for tax compliance ── */
-export async function POST_ETA(request: NextRequest) {
+async function POST_ETA(request: NextRequest) {
   const auth = await authenticate(request);
   const body = await request.json();
   const { orderId, invoiceUuid, erpProvider, etaPayload } = EtaSyncSchema.parse(body);
@@ -203,5 +203,3 @@ export async function POST_ETA(request: NextRequest) {
 
   return success({ status: "tax_synced", invoiceUuid, erpProvider, taxPayload });
 }
-
-export { POST_ETA as POST_ETA_SYNC };

@@ -11,7 +11,7 @@ import { apiRoute, authenticate, success, error, requirePermission } from "@/lib
 import { listProviders, getProvider, acquireProductCatalog } from "@/lib/sourcing/product-acquisition";
 
 /* ── POST Acquire ── */
-export async function POST_ACQUIRE(request: NextRequest) {
+async function POST_ACQUIRE(request: NextRequest) {
   const auth = await authenticate(request);
   await requirePermission(auth, "catalog:manage");
 
@@ -41,7 +41,7 @@ export async function POST_ACQUIRE(request: NextRequest) {
 }
 
 /* ── GET Preview candidates ── */
-export async function GET_PREVIEW(request: NextRequest) {
+async function GET_PREVIEW(request: NextRequest) {
   const auth = await authenticate(request);
   await requirePermission(auth, "catalog:manage");
 

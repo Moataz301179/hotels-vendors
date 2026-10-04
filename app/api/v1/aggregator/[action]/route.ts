@@ -39,7 +39,7 @@ async function ingestFeed(tenantId: string, vendorId: string, items: any[]) {
 }
 
 /* POST /ingest */
-export async function POST_ingest(request: NextRequest) {
+async function POST_ingest(request: NextRequest) {
   const auth = await authenticate(request);
   const body = await request.json();
   const vendorId = (body.vendorId as string) || "";
@@ -51,7 +51,7 @@ export async function POST_ingest(request: NextRequest) {
 }
 
 /* POST /checkout */
-export async function POST_checkout(request: NextRequest) {
+async function POST_checkout(request: NextRequest) {
   const auth = await authenticate(request);
   const body = await request.json();
   const lines = Array.isArray(body.lines) ? body.lines : [];

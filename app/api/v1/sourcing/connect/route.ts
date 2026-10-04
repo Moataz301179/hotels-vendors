@@ -59,7 +59,7 @@ export const POST = apiRoute(async (request: NextRequest) => {
 });
 
 /* POST sync a connected source */
-export async function POST_sync(request: NextRequest, id: string) {
+async function POST_sync(request: NextRequest, id: string) {
   const auth = await authenticate(request);
   const src = connectedSources.get(id);
   if (!src) return error("Source not found", 404);
