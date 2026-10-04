@@ -43,6 +43,10 @@ jobs:
   deploy-hostinger:
     name: Deploy to Hostinger VPS (PM2)
     needs: [ci]
+    # Production is protected while the platform consolidation is being rebuilt.
+    # Set the repository/environment variable PRODUCTION_RELEASE_READY=true only
+    # after database, application, migration, security, and live smoke tests pass.
+    if: ${{ vars.PRODUCTION_RELEASE_READY == 'true' }}
     runs-on: ubuntu-latest
     environment: production
     steps:
