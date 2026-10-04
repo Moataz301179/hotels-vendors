@@ -1,0 +1,52 @@
+name: Inspect production release (read only)
+on:
+  push:
+    branches: [diagnostics/production-release-20261005]
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.HOSTINGER_SSH_KEY }}
+          log-public-key: false
+      - name: Inspect release and database readiness without credentials
+        env:
+          VPS_USER: ${{ secrets.HOSTINGER_USER }}
+          VPS_HOST: ${{ secrets.HOSTINGER_IP }}
+        run: |
+          ssh -o StrictHostKeyChecking=accept-new "$VPS_USER@$VPS_HOST" 'node -' <<'INSPECT'
+          const fs = require('fs'), cp = require('child_process');
+          const processes = JSON.parse(cp.execFileSync('pm2',['jlist'],{encoding:'utf8'}));
+          for (const p of processes.filter(p => /hotel|hv-/i.test(p.name))) {
+            const e=p.pm2_env || {};
+            console.log(JSON.stringify({name:p.name,status:e.status,cwd:e.pm_cwd,script:e.pm_exec_path,port:e.PORT || e.env?.PORT}));
+          }
+          const dirs = new Set(processes.filter(p=>/hotel|hv-/i.test(p.name)).map(p=>p.pm2_env?.pm_cwd).filter(Boolean));
+          for (const d of ['/var/www/hv-release-production','/var/www/hv-release-13028baf','/var/www/hv-deploy','/var/www/hotelsvendors-platform','/var/www/hotelsvendors']) dirs.add(d);
+          for (const d of dirs) {
+            if (!fs.existsSync(d)) continue;
+            console.log('DIRECTORY '+d);
+            try { console.log('GIT '+cp.execFileSync('git',['-C',d,'rev-parse','HEAD'],{encoding:'utf8'}).trim()); } catch {}
+            for (const f of ['public/release.json','public/version.json']) {
+              try { const v=JSON.parse(fs.readFileSync(d+'/'+f,'utf8')); console.log(JSON.stringify({file:f,commit:v.commit||v.sha,deployedAt:v.deployedAt})); } catch {}
+            }
+            for (const f of ['.env','.env.production','.env.local']) {
+              if (!fs.existsSync(d+'/'+f)) continue;
+              const values={};
+              for (const line of fs.readFileSync(d+'/'+f,'utf8').split('\n')) {
+                const m=line.match(/^([A-Z_0-9]+)=(.*)$/);
+                if (m) values[m[1]]=m[2].trim().replace(/^["']|["']$/g,'');
+              }
+              let database='missing';
+              try { const u=new URL(values.DATABASE_URL); database=['localhost','127.0.0.1','::1'].includes(u.hostname)?'loopback':'remote'; } catch {}
+              console.log(JSON.stringify({envFile:f,database,sessionSecretPresent:!!values.SESSION_SECRET,encryptionKeyPresent:!!values.ENCRYPTION_MASTER_KEY,clerkKeyPresent:!!values.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}));
+            }
+          }
+          for (const url of ['https://www.hotelsvendors.com/release.json','http://127.0.0.1:3008/release.json']) {
+            try { const v=JSON.parse(cp.execFileSync('curl',['-fsS','--max-time','10',url],{encoding:'utf8'})); console.log(JSON.stringify({url,commit:v.commit||v.sha,deployedAt:v.deployedAt})); } catch {console.log('RELEASE_UNAVAILABLE '+url);}
+          }
+          INSPECT
