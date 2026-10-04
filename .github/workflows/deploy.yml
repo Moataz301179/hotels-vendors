@@ -38,7 +38,6 @@ jobs:
           HOTELSVENDORS_HMAC_SECRET: "dummy-hmac-secret-for-ci-build-only-32chars-minimum"
           ENCRYPTION_MASTER_KEY: "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
           NEXT_PUBLIC_APP_URL: "https://www.hotelsvendors.com"
-          # Clerk is initialized during Next.js build/prerender; CI must receive the same public build-time key used by production.
           NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: "pk_test_dW5pdGVkLXRyZWVmcm9nLTIyMy5jbGVyay5hY2NvdW50cy5kZXYk"
 
   deploy-hostinger:
@@ -59,8 +58,6 @@ jobs:
       - name: Add Hostinger to known hosts
         run: |
           mkdir -p ~/.ssh
-          # Tolerant keyscan — transient network/DNS failures must not kill the deploy.
-          # The ssh command below uses StrictHostKeyChecking=accept-new as the reliable fallback.
           (ssh-keyscan -T 10 -H ${{ secrets.HOSTINGER_IP }} >> ~/.ssh/known_hosts 2>/dev/null) || true
 
       - name: Prepare deployment environment
@@ -100,7 +97,7 @@ jobs:
             echo "  Kept a known-good VPS production .env"
           fi
 
-      - name: Stamp and synchronize canonical release source
+      - name: Stamp and synchronize production release source
         run: |
           mkdir -p public
           printf '{"commit":"%s","deployedAt":"%s"}\n' \
@@ -110,7 +107,7 @@ jobs:
             --exclude 'node_modules' --exclude '.next' \
             -e "ssh -o StrictHostKeyChecking=accept-new" \
             ./ ${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_IP }}:/var/www/hv-release-production/
-          echo "  Canonical source synchronized: ${{ github.sha }}"
+          echo "  Production source synchronized: ${{ github.sha }}"
 
       - name: Deploy to VPS (PM2)
         run: |
@@ -125,11 +122,8 @@ jobs:
 
             set -euo pipefail
 
-            echo "[1/6] Canonical source synchronized by GitHub Actions."
+            echo "[1/6] Production source synchronized by GitHub Actions."
 
-            # VPS is a deployment target, not a development workspace.
-            # Remove stale/untracked application source so old routes cannot enter
-            # the production build after git reset. Preserve ignored runtime files.
             echo "  Source cleanup completed during rsync."
             true
 
@@ -160,23 +154,18 @@ jobs:
             npx prisma migrate deploy
 
             echo "[6/6] Building application (standalone)..."
-            # Rebuild from a clean Next.js output so stale chunks cannot survive a deploy.
             rm -rf .next
             if ! NEXT_TELEMETRY_DISABLED=1 npm run build; then
               echo "  ERROR: Production build failed — aborting deploy"
               exit 1
             fi
 
-            # Verify the build produced real Next.js assets before we touch the live process.
             if [ ! -d .next/static ] || [ -z "$(ls -A .next/static 2>/dev/null)" ]; then
               echo "  ERROR: Build produced no static assets"
               exit 1
             fi
 
             echo "─── Restarting PM2 ───"
-            # The live server is a standard Next.js start process on port 3008.
-            # Remove both the current release process name and the historical process
-            # name so PM2 cannot resurrect a competing listener on the same port.
             pm2 delete hotels-vendors-production >/dev/null 2>&1 || true
             pm2 delete hotels-vendors-13028-3008 >/dev/null 2>&1 || true
             fuser -k 3008/tcp 2>/dev/null || true
@@ -253,8 +242,8 @@ jobs:
           fi
 
           if ! curl -fsS --retry 3 https://www.hotelsvendors.com/ | grep -Fq 'Find the money leaks before they become expensive.'; then
-            echo "  ERROR: Public domain is not serving the expected canonical homepage"
+            echo "  ERROR: Public domain is not serving the expected production homepage"
             exit 1
           fi
 
-          echo "  Public release identity and canonical homepage confirmed."
+          echo "  Public release identity and production homepage confirmed."
