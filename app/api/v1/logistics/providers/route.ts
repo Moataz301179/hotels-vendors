@@ -10,8 +10,8 @@ import { listProviders, getProvider } from "@/lib/logistics/providers";
 import { quoteCorridor, arbitrageBestRate } from "@/lib/logistics/cost-matrix";
 import { prisma } from "@/lib/prisma";
 
-export const providerCache: Record<string, string> = {};
-export async function readConnectedKeys(): Promise<string[]> { return Object.keys(providerCache); }
+const providerCache: Record<string, string> = {};
+async function readConnectedKeys(): Promise<string[]> { return Object.keys(providerCache); }
 
 export const GET = apiRoute(async (request: NextRequest) => {
   const auth = await authenticate(request);

@@ -23,7 +23,7 @@ const CreateRfqSchema = z.object({
 });
 
 /* ── Pricing Evaluator — decides FIXED checkout vs RFQ ── */
-export async function evaluatePricingMode(productId: string, quantity: number, tenantId: string) {
+async function evaluatePricingMode(productId: string, quantity: number, tenantId: string) {
   const product = await prisma.product.findUnique({
     where: { id: productId, tenantId, deletedAt: null },
     select: {
