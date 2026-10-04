@@ -24,7 +24,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           repository: Moataz301179/hotels-vendors-platform
-          ref: 50801e452402a8384953593540486c2c8ca8ff24
+          ref: 5bc0e303f88eaa65e38fb0be6f037dc46cd01d44
       - uses: actions/setup-node@v4
         with:
           node-version: 20
@@ -40,7 +40,7 @@ jobs:
           cp -a .next/standalone/. release/
           cp -a .next/static release/.next/static
           cp -a public release/public
-          node -e 'const fs=require("fs");fs.writeFileSync("release/public/release.json",JSON.stringify({commit:"50801e452402a8384953593540486c2c8ca8ff24",buildId:fs.readFileSync(".next/BUILD_ID","utf8").trim()}))'
+          node -e 'const fs=require("fs");fs.writeFileSync("release/public/release.json",JSON.stringify({commit:"5bc0e303f88eaa65e38fb0be6f037dc46cd01d44",buildId:fs.readFileSync(".next/BUILD_ID","utf8").trim()}))'
           PORT=3100 HOSTNAME=127.0.0.1 NODE_ENV=production node release/server.js >/tmp/hv-release-smoke.log 2>&1 &
           pid=$!
           trap 'kill "$pid" 2>/dev/null || true' EXIT
@@ -78,12 +78,12 @@ jobs:
           VPS_USER: ${{ secrets.HOSTINGER_USER }}
           VPS_HOST: ${{ secrets.HOSTINGER_IP }}
         run: |
-          scp -o StrictHostKeyChecking=accept-new hv-release.tgz "$VPS_USER@$VPS_HOST:/tmp/hv-50801e4.tgz"
+          scp -o StrictHostKeyChecking=accept-new hv-release.tgz "$VPS_USER@$VPS_HOST:/tmp/hv-5bc0e30.tgz"
           ssh -o StrictHostKeyChecking=accept-new "$VPS_USER@$VPS_HOST" 'node -' <<'RELEASE'
           const fs=require('fs'),cp=require('child_process'),path=require('path');
-          const sha='50801e452402a8384953593540486c2c8ca8ff24';
-          const oldDir='/var/www/hv-releases/ui-0e5978b-20261004';
-          const dir='/var/www/hv-releases/network-'+sha.slice(0,12)+'-20261005';
+          const sha='5bc0e303f88eaa65e38fb0be6f037dc46cd01d44';
+          const oldDir='/var/www/hv-releases/network-50801e452402-20261005';
+          const dir='/var/www/hv-releases/premium-'+sha.slice(0,12)+'-20261005';
           const pm2=(...args)=>cp.execFileSync('pm2',args,{stdio:'pipe'});
           const processes=JSON.parse(pm2('jlist').toString());
           const old=processes.find(p=>p.name==='hotels-vendors-production');
@@ -91,7 +91,7 @@ jobs:
           if(fs.existsSync(dir))throw Error('Release directory already exists');
           if(processes.some(p=>p.name==='hotels-vendors-release-candidate'))throw Error('Candidate process already exists');
           fs.mkdirSync(dir,{mode:0o755});
-          cp.execFileSync('tar',['-xzf','/tmp/hv-50801e4.tgz','-C',dir]);
+          cp.execFileSync('tar',['-xzf','/tmp/hv-5bc0e30.tgz','-C',dir]);
           fs.copyFileSync(oldDir+'/.env',dir+'/.env');
           fs.chmodSync(dir+'/.env',0o600);
           const env={};
@@ -121,7 +121,9 @@ jobs:
             if(!home.includes('See where the')||!home.includes('A shadow across the trade'))throw Error('Homepage regression');
             const css=home.match(/href="([^"]+\.css[^"]*)"/);
             if(!css||!(await fetch('http://127.0.0.1:'+port+css[1])).ok)throw Error('CSS missing');
-            for(const [route,status] of [['/demand-aggregation',307],['/api/v2/demand',401]]) {
+            if(!(await fetch('http://127.0.0.1:'+port+'/hero-clean.jpeg')).ok)throw Error('Hero photograph missing');
+            if(!(await fetch('http://127.0.0.1:'+port+'/_next/image?url=%2Fhero-clean.jpeg&w=1080&q=75')).ok)throw Error('Responsive image optimization failed');
+            for(const [route,status] of [['/demand-aggregation',307],['/dashboard',307],['/orders',307],['/suppliers',307],['/admin',307],['/api/v2/demand',401],['/api/v2/catalog',401],['/api/v2/orders',401],['/api/v2/dashboard',401],['/api/v2/suppliers/verification',401]]) {
               const r=await fetch('http://127.0.0.1:'+port+route,{redirect:'manual'});
               if(r.status!==status)throw Error('Access protection regression '+route);
             }
@@ -131,7 +133,14 @@ jobs:
             try{
               const {Client}=require(dir+'/node_modules/pg');
               const db=new Client({connectionString:env.DATABASE_URL,connectionTimeoutMillis:10000});
-              try { await db.connect(); await db.query('SELECT 1'); const r=await db.query("SELECT table_name FROM information_schema.tables WHERE table_schema='public' AND table_name IN ('Order','OrderItem','Product','Hotel','Property')");if(r.rowCount!==5)throw Error('Demand schema incomplete'); } finally { await db.end(); }
+              try {
+                await db.connect();
+                const {Prisma}=require(dir+'/node_modules/@prisma/client');
+                const names=['User','Tenant','Role','Supplier','Hotel','Property','Product','RfqRequest','ProcurementQuote','Order','OrderItem','AuthorityRule','AuditLog','Opportunity','EvidenceRecord','SavingsLedger','Invoice','CarrierProfile','FactoringCompany','FactoringRequest','Shipment','OnboardingProgress'];
+                const r=await db.query("SELECT table_name,column_name FROM information_schema.columns WHERE table_schema='public'");
+                const columns=new Set(r.rows.map(r=>r.table_name+'.'+r.column_name));
+                for(const model of Prisma.dmmf.datamodel.models.filter(m=>names.includes(m.name)))for(const f of model.fields.filter(f=>f.kind!=='object'))if(!columns.has((model.dbName||model.name)+'.'+(f.dbName||f.name)))throw Error('Production schema missing '+model.name+'.'+f.name);
+              } finally { await db.end(); }
               console.log('Database read-only preflight passed');
               pm2('start',candidateFile);
               await check(3030);
