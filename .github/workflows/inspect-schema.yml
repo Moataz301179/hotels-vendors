@@ -1,0 +1,30 @@
+name: Verify production schema (read only)
+on:
+  push:
+    branches: [diagnostics/production-release-20261005]
+    paths: [.github/workflows/inspect-schema.yml]
+permissions:
+  contents: read
+jobs:
+  schema:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.HOSTINGER_SSH_KEY }}
+          log-public-key: false
+      - env:
+          VPS_USER: ${{ secrets.HOSTINGER_USER }}
+          VPS_HOST: ${{ secrets.HOSTINGER_IP }}
+        run: |
+          ssh -o StrictHostKeyChecking=accept-new "$VPS_USER@$VPS_HOST" 'node -' <<'SCHEMA'
+          const fs=require('fs'),cp=require('child_process');
+          const p=JSON.parse(cp.execFileSync('pm2',['jlist'],{stdio:'pipe'})).find(x=>x.name==='hotels-vendors-production');
+          if(!p||p.pm2_env.pm_cwd!=='/var/www/hv-releases/network-50801e452402-20261005')throw Error('Unexpected production identity');
+          const dir=p.pm2_env.pm_cwd,env={};
+          for(const line of fs.readFileSync(dir+'/.env','utf8').split('\n')){const m=line.match(/^([A-Z_0-9]+)=(.*)$/);if(m)env[m[1]]=m[2].trim().replace(/^["']|["']$/g,'');}
+          const {Client}=require(dir+'/node_modules/pg');
+          const {Prisma}=require(dir+'/node_modules/@prisma/client');
+          const names=['User','Tenant','Role','Supplier','Hotel','Property','Product','RfqRequest','ProcurementQuote','Order','OrderItem','AuthorityRule','AuditLog','Opportunity','EvidenceRecord','SavingsLedger','Invoice','CarrierProfile','FactoringCompany','FactoringRequest','Shipment','OnboardingProgress'];
+          (async()=>{const db=new Client({connectionString:p.pm2_env.DATABASE_URL||env.DATABASE_URL,connectionTimeoutMillis:10000});try{await db.connect();const result=await db.query("SELECT table_name,column_name FROM information_schema.columns WHERE table_schema='public'");const columns=new Set(result.rows.map(r=>r.table_name+'.'+r.column_name));const missing=[];for(const model of Prisma.dmmf.datamodel.models.filter(m=>names.includes(m.name)))for(const f of model.fields.filter(f=>f.kind!=='object')){const key=(model.dbName||model.name)+'.'+(f.dbName||f.name);if(!columns.has(key))missing.push(key)}if(missing.length)throw Error('Missing schema columns: '+missing.join(', '));console.log('SCHEMA_COMPATIBLE '+names.length+' core models; no writes or migrations performed');}finally{await db.end()}})().catch(e=>{console.error(e.message);process.exitCode=1});
+          SCHEMA
