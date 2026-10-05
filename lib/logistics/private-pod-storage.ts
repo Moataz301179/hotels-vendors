@@ -1,5 +1,5 @@
 import { randomUUID } from "node:crypto";
-import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { mkdir, readFile, unlink, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 
 export const MAX_POD_PHOTO_BYTES = 10 * 1024 * 1024;
@@ -74,5 +74,15 @@ export async function readPrivatePodPhoto(reference: string): Promise<{ bytes: B
   } catch (error) {
     if ((error as NodeJS.ErrnoException).code === "ENOENT") return null;
     throw error;
+  }
+}
+
+export async function deletePrivatePodPhoto(reference: string): Promise<void> {
+  if (!isPrivatePodPhotoReference(reference)) return;
+  const fileName = reference.slice(PRIVATE_REFERENCE_PREFIX.length);
+  try {
+    await unlink(join(STORAGE_DIR, fileName));
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error;
   }
 }
