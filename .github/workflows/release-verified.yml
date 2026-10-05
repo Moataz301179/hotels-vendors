@@ -82,7 +82,7 @@ jobs:
           ssh -o StrictHostKeyChecking=accept-new "$VPS_USER@$VPS_HOST" 'node -' <<'RELEASE'
           const fs=require('fs'),cp=require('child_process'),path=require('path');
           const sha='55abcd7ac52fcc5f05324661496ac771dd74cc75';
-          const oldDir='/var/www/hv-releases/premium-fa0b81d77290-20261005';
+          const oldDir='/var/www/hv-releases/premium-a669f66a82c9-20261005';
           const dir='/var/www/hv-releases/premium-'+sha.slice(0,12)+'-20261005';
           const pm2=(...args)=>cp.execFileSync('pm2',args,{stdio:'pipe'});
           const processes=JSON.parse(pm2('jlist').toString());
