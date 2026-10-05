@@ -8,6 +8,7 @@ export const runtime = "nodejs";
 /** Serve POD evidence only to authenticated users in the stop's tenant. */
 export const GET = apiRoute(async (request: NextRequest) => {
   const auth = await authenticate(request);
+  if (auth.platformRole !== "SHIPPING" && auth.platformRole !== "ADMIN") throw new ApiError("Forbidden", 403);
   const stopId = new URL(request.url).searchParams.get("stopId");
   if (!stopId) throw new ApiError("stopId query param required", 400);
 
