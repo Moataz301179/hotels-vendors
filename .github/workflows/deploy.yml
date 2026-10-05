@@ -102,7 +102,7 @@ jobs:
           mkdir -p public
           printf '{"commit":"%s","deployedAt":"%s"}\n' \
             "${{ github.sha }}" "$(date -u +%Y-%m-%dT%H:%M:%SZ)" > public/release.json
-          rsync -az --delete \
+          rsync -az --delete --backup --backup-dir="/var/www/hv-unwanted/${{ github.sha }}" \
             --exclude '.env' --exclude '.env.*' --exclude '.git' \
             --exclude 'node_modules' --exclude '.next' \
             -e "ssh -o StrictHostKeyChecking=accept-new" \
