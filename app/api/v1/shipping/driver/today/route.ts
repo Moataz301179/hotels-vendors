@@ -90,7 +90,7 @@ export const GET = apiRoute(async (_request: NextRequest) => {
   }));
 
   const completedStops = stops.filter((s) =>
-    ["DELIVERED", "POD_CAPTURED", "ARRIVED"].includes(String(s.status))
+    ["DELIVERED", "POD_CAPTURED"].includes(String(s.status))
   ).length;
 
   return success({
