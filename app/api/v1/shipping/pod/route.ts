@@ -31,14 +31,15 @@ export const POST = apiRoute(async (request: NextRequest) => {
   const auth = await authenticate(request);
   const contentType = request.headers.get("content-type") ?? "";
   let validated: z.infer<typeof PodSchema>;
-  let photoFile: File | undefined;\n  let photoReference: string | undefined;
+  let photoFile: File | undefined;
 
   if (contentType.toLowerCase().includes("multipart/form-data")) {
     const form = await request.formData();
     const photo = form.get("photo");
+    const receivedBy = readFormString(form, "receivedBy")?.trim();
     validated = PodSchema.parse({
       stopId: readFormString(form, "stopId"),
-      receivedBy: readFormString(form, "receivedBy"),
+      receivedBy: receivedBy || undefined,
       notes: readFormString(form, "notes"),
       status: readFormString(form, "status") ?? "POD_CAPTURED",
     });
@@ -47,11 +48,7 @@ export const POST = apiRoute(async (request: NextRequest) => {
       if (!(photo instanceof File)) {
         throw new ApiError("A delivery photo is required", 400);
       }
-      try {
-        photoFile = photo;
-      } catch (error) {
-        throw new ApiError(error instanceof Error ? error.message : "Invalid delivery photo", 400);
-      }
+      photoFile = photo;
     } else if (photo instanceof File && photo.size > 0) {
       throw new ApiError("Photos are only accepted for completed deliveries", 400);
     }
@@ -63,40 +60,58 @@ export const POST = apiRoute(async (request: NextRequest) => {
     where: { id: validated.stopId, tenantId: auth.tenantId, deletedAt: null },
     include: { trip: { select: { id: true, tripNumber: true, status: true } } },
   });
-
   if (!stop) throw new ApiError("Trip stop not found", 404);
 
-  if (photoFile) {\n    try {\n      photoReference = (await storePrivatePodPhoto(photoFile)).reference;\n    } catch (error) {\n      throw new ApiError(error instanceof Error ? error.message : "Invalid delivery photo", 400);\n    }\n  }\n\n  const noteParts = [
-    validated.receivedBy ? `Received by: ${validated.receivedBy}` : undefined,
+  let photoReference: string | undefined;
+  if (photoFile) {
+    try {
+      photoReference = (await storePrivatePodPhoto(photoFile)).reference;
+    } catch (error) {
+      throw new ApiError(error instanceof Error ? error.message : "Invalid delivery photo", 400);
+    }
+  }
+
+  const noteParts = [
+    validated.receivedBy ? "Received by: " + validated.receivedBy : undefined,
     validated.notes,
   ].filter(Boolean);
   const savedNotes = noteParts.length > 0 ? noteParts.join("\n").slice(0, 500) : undefined;
-  let updated: Awaited<ReturnType<typeof prisma.$transaction>>;\n  try {\n    updated = await prisma.$transaction(async (tx) => {
-    const updatedStop = await tx.tripStop.update({
-      where: { id: validated.stopId },
-      data: {
-        ...(photoReference ? { podPhotoUrl: photoReference } : validated.photoUrl ? { podPhotoUrl: validated.photoUrl } : {}),
-        ...(validated.signatureUrl ? { signatureUrl: validated.signatureUrl } : {}),
-        ...(savedNotes !== undefined ? { notes: savedNotes } : {}),
-        status: validated.status,
-        ...(validated.status === "POD_CAPTURED" ? { actualArrival: new Date(), arrivedAt: new Date() } : {}),
-      },
-      include: {
-        trip: { select: { id: true, tripNumber: true } },
-        hotel: { select: { id: true, name: true } },
-      },
-    });
 
-    const allStops = await tx.tripStop.findMany({ where: { tripId: stop.tripId, deletedAt: null } });
-    const allCaptured = allStops.every((item) => item.status === "POD_CAPTURED" || item.status === "DELIVERED");
-    if (allCaptured && stop.trip.status !== "COMPLETED") {
-      await tx.trip.update({
-        where: { id: stop.tripId },
-        data: { status: "COMPLETED", completedAt: new Date() },
+  const updated = await (async () => {
+    try {
+      return await prisma.$transaction(async (tx) => {
+        const updatedStop = await tx.tripStop.update({
+          where: { id: validated.stopId },
+          data: {
+            ...(photoReference ? { podPhotoUrl: photoReference } : validated.photoUrl ? { podPhotoUrl: validated.photoUrl } : {}),
+            ...(validated.signatureUrl ? { signatureUrl: validated.signatureUrl } : {}),
+            ...(savedNotes !== undefined ? { notes: savedNotes } : {}),
+            status: validated.status,
+            ...(validated.status === "POD_CAPTURED" ? { actualArrival: new Date(), arrivedAt: new Date() } : {}),
+          },
+          include: {
+            trip: { select: { id: true, tripNumber: true } },
+            hotel: { select: { id: true, name: true } },
+          },
+        });
+
+        const allStops = await tx.tripStop.findMany({
+          where: { tripId: stop.tripId, deletedAt: null },
+        });
+        const allCaptured = allStops.every((item) => item.status === "POD_CAPTURED" || item.status === "DELIVERED");
+        if (allCaptured && stop.trip.status !== "COMPLETED") {
+          await tx.trip.update({
+            where: { id: stop.tripId },
+            data: { status: "COMPLETED", completedAt: new Date() },
+          });
+        }
+        return { stop: updatedStop, tripComplete: allCaptured };
       });
+    } catch (error) {
+      if (photoReference) await deletePrivatePodPhoto(photoReference).catch(() => undefined);
+      throw error;
     }
-    return { stop: updatedStop, tripComplete: allCaptured };
-  });
+  })();
 
   return success({
     ...updated,
