@@ -2,7 +2,7 @@ import { NextRequest } from "next/server";
 import { z } from "zod";
 import { apiRoute, authenticate, success, ApiError } from "@/lib/api-utils";
 import { prisma } from "@/lib/prisma";
-import { storePrivatePodPhoto } from "@/lib/logistics/private-pod-storage";
+import { deletePrivatePodPhoto, storePrivatePodPhoto } from "@/lib/logistics/private-pod-storage";
 
 export const runtime = "nodejs";
 
@@ -31,7 +31,7 @@ export const POST = apiRoute(async (request: NextRequest) => {
   const auth = await authenticate(request);
   const contentType = request.headers.get("content-type") ?? "";
   let validated: z.infer<typeof PodSchema>;
-  let photoReference: string | undefined;
+  let photoFile: File | undefined;\n  let photoReference: string | undefined;
 
   if (contentType.toLowerCase().includes("multipart/form-data")) {
     const form = await request.formData();
@@ -48,7 +48,7 @@ export const POST = apiRoute(async (request: NextRequest) => {
         throw new ApiError("A delivery photo is required", 400);
       }
       try {
-        photoReference = (await storePrivatePodPhoto(photo)).reference;
+        photoFile = photo;
       } catch (error) {
         throw new ApiError(error instanceof Error ? error.message : "Invalid delivery photo", 400);
       }
@@ -66,12 +66,12 @@ export const POST = apiRoute(async (request: NextRequest) => {
 
   if (!stop) throw new ApiError("Trip stop not found", 404);
 
-  const noteParts = [
+  if (photoFile) {\n    try {\n      photoReference = (await storePrivatePodPhoto(photoFile)).reference;\n    } catch (error) {\n      throw new ApiError(error instanceof Error ? error.message : "Invalid delivery photo", 400);\n    }\n  }\n\n  const noteParts = [
     validated.receivedBy ? `Received by: ${validated.receivedBy}` : undefined,
     validated.notes,
   ].filter(Boolean);
   const savedNotes = noteParts.length > 0 ? noteParts.join("\n").slice(0, 500) : undefined;
-  const updated = await prisma.$transaction(async (tx) => {
+  let updated: Awaited<ReturnType<typeof prisma.$transaction>>;\n  try {\n    updated = await prisma.$transaction(async (tx) => {
     const updatedStop = await tx.tripStop.update({
       where: { id: validated.stopId },
       data: {
