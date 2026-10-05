@@ -241,7 +241,7 @@ jobs:
             exit 1
           fi
 
-          if ! curl -fsS --retry 3 https://www.hotelsvendors.com/ | grep -Fq 'Find the money leaks before they become expensive.'; then
+          if ! curl -fsS --retry 3 https://www.hotelsvendors.com/ | grep -Fq 'Source smarter. Buy stronger.'; then
             echo "  ERROR: Public domain is not serving the expected production homepage"
             exit 1
           fi
