@@ -21,7 +21,7 @@ export function HeroSection() {
               <span className="h-1.5 w-1.5 rounded-full bg-[#0D9488]" /> Virtual Shadow
             </div>
             <h1 className="max-w-2xl text-[clamp(44px,6vw,74px)] font-semibold leading-[.97] tracking-[-.06em]">
-              Find the money leaks before they become expensive.
+              Source smarter. Buy stronger.
             </h1>
             <p className="mt-6 max-w-xl text-[17px] leading-7 text-[#596579]">
               HotelsVendors watches procurement signals across hotels, suppliers, carriers and funders — then turns evidence into a clear next action.
