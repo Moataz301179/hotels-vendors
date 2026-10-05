@@ -24,7 +24,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           repository: Moataz301179/hotels-vendors-platform
-          ref: a669f66a82c9cd1fb5a8867598c4e4acfa0cff04
+          ref: 55abcd7ac52fcc5f05324661496ac771dd74cc75
       - uses: actions/setup-node@v4
         with:
           node-version: 20
@@ -40,7 +40,7 @@ jobs:
           cp -a .next/standalone/. release/
           cp -a .next/static release/.next/static
           cp -a public release/public
-          node -e 'const fs=require("fs");fs.writeFileSync("release/public/release.json",JSON.stringify({commit:"a669f66a82c9cd1fb5a8867598c4e4acfa0cff04",buildId:fs.readFileSync(".next/BUILD_ID","utf8").trim()}))'
+          node -e 'const fs=require("fs");fs.writeFileSync("release/public/release.json",JSON.stringify({commit:"55abcd7ac52fcc5f05324661496ac771dd74cc75",buildId:fs.readFileSync(".next/BUILD_ID","utf8").trim()}))'
           PORT=3100 HOSTNAME=127.0.0.1 NODE_ENV=production node release/server.js >/tmp/hv-release-smoke.log 2>&1 &
           pid=$!
           trap 'kill "$pid" 2>/dev/null || true' EXIT
@@ -78,11 +78,11 @@ jobs:
           VPS_USER: ${{ secrets.HOSTINGER_USER }}
           VPS_HOST: ${{ secrets.HOSTINGER_IP }}
         run: |
-          scp -o StrictHostKeyChecking=accept-new hv-release.tgz "$VPS_USER@$VPS_HOST:/tmp/hv-a669f66.tgz"
+          scp -o StrictHostKeyChecking=accept-new hv-release.tgz "$VPS_USER@$VPS_HOST:/tmp/hv-55abcd7.tgz"
           ssh -o StrictHostKeyChecking=accept-new "$VPS_USER@$VPS_HOST" 'node -' <<'RELEASE'
           const fs=require('fs'),cp=require('child_process'),path=require('path');
-          const sha='a669f66a82c9cd1fb5a8867598c4e4acfa0cff04';
-          const oldDir='/var/www/hv-releases/premium-fa0b81d77290-20261005';
+          const sha='55abcd7ac52fcc5f05324661496ac771dd74cc75';
+          const oldDir='/var/www/hv-releases/premium-55abcd7ac52f-20261005';
           const dir='/var/www/hv-releases/premium-'+sha.slice(0,12)+'-20261005';
           const pm2=(...args)=>cp.execFileSync('pm2',args,{stdio:'pipe'});
           const processes=JSON.parse(pm2('jlist').toString());
@@ -91,7 +91,7 @@ jobs:
           if(fs.existsSync(dir))throw Error('Release directory already exists');
           if(processes.some(p=>p.name==='hotels-vendors-release-candidate'))throw Error('Candidate process already exists');
           fs.mkdirSync(dir,{mode:0o755});
-          cp.execFileSync('tar',['-xzf','/tmp/hv-a669f66.tgz','-C',dir]);
+          cp.execFileSync('tar',['-xzf','/tmp/hv-55abcd7.tgz','-C',dir]);
           fs.copyFileSync(oldDir+'/.env',dir+'/.env');
           fs.chmodSync(dir+'/.env',0o600);
           const env={};
