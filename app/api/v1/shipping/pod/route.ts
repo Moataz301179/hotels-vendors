@@ -29,6 +29,7 @@ function readFormString(form: FormData, key: string): string | undefined {
  */
 export const POST = apiRoute(async (request: NextRequest) => {
   const auth = await authenticate(request);
+  if (auth.platformRole !== "SHIPPING" && auth.platformRole !== "ADMIN") throw new ApiError("Forbidden", 403);
   const contentType = request.headers.get("content-type") ?? "";
   let validated: z.infer<typeof PodSchema>;
   let photoFile: File | undefined;
@@ -128,6 +129,7 @@ export const POST = apiRoute(async (request: NextRequest) => {
  */
 export const GET = apiRoute(async (request: NextRequest) => {
   const auth = await authenticate(request);
+  if (auth.platformRole !== "SHIPPING" && auth.platformRole !== "ADMIN") throw new ApiError("Forbidden", 403);
   const tripId = new URL(request.url).searchParams.get("tripId");
   if (!tripId) throw new ApiError("tripId query param required", 400);
 
