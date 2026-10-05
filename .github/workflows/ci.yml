@@ -21,8 +21,15 @@ jobs:
           node-version: 20
           cache: npm
       - run: npm ci --legacy-peer-deps
-      - name: Lint
-        run: npm run lint || true
+      - name: Lint maintained delivery and homepage paths
+        run: >-
+          npx eslint
+          'app/(marketing)/components/HeroSection.tsx'
+          app/api/v1/shipping/driver/today/route.ts
+          app/api/v1/shipping/pod/photo/route.ts
+          app/api/v1/shipping/pod/route.ts
+          lib/logistics/private-pod-storage.ts
+          tests/unit/private-pod-storage.test.ts
 
   typecheck:
     name: Type Check
@@ -78,10 +85,8 @@ jobs:
           cache: npm
       - run: npm ci --legacy-peer-deps
       - run: npx prisma generate
-      - name: Bootstrap test database (migrate + seed)
-        run: echo "skip db setup" || true
-      - name: Run tests
-        run: npm run test || true
+      - name: Run unit tests
+        run: npm run test:unit
 
   build:
     name: Build
